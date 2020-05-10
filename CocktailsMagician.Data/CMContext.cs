@@ -1,4 +1,6 @@
-﻿using CocktailsMagician.Data.Entities;
+﻿using BeerOverflow.Data.Configuration;
+using CocktailsMagician.Data.Configuration;
+using CocktailsMagician.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CocktailsMagician.Data
@@ -19,21 +21,24 @@ namespace CocktailsMagician.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<IngredientType> IngredientTypes { get; set; }
         public DbSet<CocktailReview> CocktailReviews { get; set; }
+        public DbSet<CocktailReviewLike> CocktailReviewLikes { get; set; }
+        public DbSet<BarReviewLike> BarReviewLikes { get; set; }
         public DbSet<BarReview> BarReviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            //modelBuilder.ApplyConfiguration(new CountryConfig());
-            //modelBuilder.ApplyConfiguration(new BeerConfig());
-            //modelBuilder.ApplyConfiguration(new BeerTypeConfig());
-            //modelBuilder.ApplyConfiguration(new BreweryConfig());
-            //modelBuilder.ApplyConfiguration(new UserConfig());
-            //modelBuilder.ApplyConfiguration(new RoleConfig());
-            //// modelBuilder.ApplyConfiguration(new UserRolesConfig());
-            //modelBuilder.ApplyConfiguration(new UserBeersConfig());
-            //modelBuilder.ApplyConfiguration(new ReviewConfig());
-            //modelBuilder.ApplyConfiguration(new RateReviewConfig());
+            modelBuilder.ApplyConfiguration(new BarConfig());
+            modelBuilder.ApplyConfiguration(new BarCocktailConfig());
+            modelBuilder.ApplyConfiguration(new CocktailIngredientsConfig());
+            modelBuilder.ApplyConfiguration(new IngredientConfig());
+            modelBuilder.ApplyConfiguration(new BarReviewConfig());
+            modelBuilder.ApplyConfiguration(new BarReviewLikeConfig());
+            modelBuilder.ApplyConfiguration(new CityConfig());
+            modelBuilder.ApplyConfiguration(new CocktailConfig());
+            modelBuilder.ApplyConfiguration(new CocktailReviewConfig());
+            modelBuilder.ApplyConfiguration(new CocktailReviewLikeConfig());
+            modelBuilder.ApplyConfiguration(new IngredientTypeConfig());
+            modelBuilder.ApplyConfiguration(new UserConfig());
 
             //Seeder.Seeder.SeedDatabase(modelBuilder);
 

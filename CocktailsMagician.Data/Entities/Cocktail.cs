@@ -6,9 +6,11 @@ namespace CocktailsMagician.Data.Entities
 {
     public class Cocktail
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime? UnlistedOn { get; set; }
+        public double AvgRating { get; set; }
+        public ICollection<CocktailReview> CocktailReviews { get; set; }
     }
 }

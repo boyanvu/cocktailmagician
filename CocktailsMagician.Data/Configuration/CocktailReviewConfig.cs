@@ -11,7 +11,8 @@ namespace CocktailsMagician.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<CocktailReview> builder)
         {
-            builder.HasKey(cr => new { cr.CocktailId, cr.UserId });
+            builder.HasKey(cr => cr.Id);
+            builder.HasIndex(cr => new { cr.CocktailId, cr.UserId }).IsUnique();
             builder.Property(cr => cr.Rating).IsRequired();
         }
     }

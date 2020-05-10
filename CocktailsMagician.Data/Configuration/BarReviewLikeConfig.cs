@@ -8,15 +8,12 @@ using System.Text;
 namespace CocktailsMagician.Data.Configuration
 {
 
-        public class BarReviewLikeConfig : IEntityTypeConfiguration<BarReviewLike>
+    public class BarReviewLikeConfig : IEntityTypeConfiguration<BarReviewLike>
+    {
+        public void Configure(EntityTypeBuilder<BarReviewLike> builder)
         {
-            public void Configure(EntityTypeBuilder<BarReviewLike> builder)
-            {
-                builder.HasKey(br => new { br.BarId, br.UserLikeId, br.UserReviewId });
-                builder.HasOne(br => br.UserLike)
-                .WithMany(br => br.BarReviewLikes)
-                .HasForeignKey(br => new { br.UserReviewId, br.BarId })
-                .OnDelete(DeleteBehavior.Restrict);
-        }
+            builder.HasKey(brl => new { brl.BarReviewId,brl.UserId});
+            builder.HasOne(brl => brl.User).WithMany(brl => brl.BarReviewLikes).OnDelete(DeleteBehavior.Restrict);
         }
     }
+}

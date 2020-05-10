@@ -11,7 +11,8 @@ namespace CocktailsMagician.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<BarReview> builder)
         {
-            builder.HasKey(br => new { br.BarId, br.UserId });
+            builder.HasKey(br => br.Id);
+            builder.HasIndex(br => new { br.BarId, br.UserId }).IsUnique();
             builder.Property(br => br.Rating).IsRequired();
         }
     }

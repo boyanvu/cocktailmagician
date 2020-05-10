@@ -12,16 +12,8 @@ namespace CocktailsMagician.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<CocktailReviewLike> builder)
         {
-            builder.HasKey(cr=> new {cr.CocktailId, cr.UserReviewId, cr.UserLikeId });
-            builder.HasOne(cr => cr.UserLike)
-            .WithMany(cr => cr.CocktailReviewLikes)
-            .HasForeignKey(cr => new { cr.UserReviewId, cr.CocktailId })
-            .OnDelete(DeleteBehavior.Restrict);
-
-    //        modelBuilder.Entity<ShippingDetail>()
-    //.HasMany(e => e.Analysis)
-    //.WithOne() // make sure to specify navigation property if exists, e.g. e => e.NavProp
-    //.HasForeignKey(e => new { e.ShipmentId, e.ProductId });
+            builder.HasKey(crl => new { crl.CocktailReviewId,crl.UserId });
+            builder.HasOne(crl => crl.User).WithMany(crl => crl.CocktailReviewLikes).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

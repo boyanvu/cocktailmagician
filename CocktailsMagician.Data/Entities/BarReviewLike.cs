@@ -6,13 +6,13 @@ namespace CocktailsMagician.Data.Entities
 {
     public class BarReviewLike
     {
-        public Guid BarId { get; set; }
-        public Bar Bar { get; set; }
-        public Guid UserReviewId { get; set; }
-        public User UserReview { get; set; }
+        public Guid BarReviewId { get; set; }
+        public BarReview BarReview { get; set; }
 
-        public Guid UserLikeId { get; set; }
-        public User UserLike { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
+
+        public bool IsLiked { get; set; }
         public bool IsInappropriate { get; set; }
     }
 }

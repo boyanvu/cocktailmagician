@@ -12,6 +12,7 @@ namespace CocktailsMagician.Data.Entities
         public string Website { get; set; }
         public string Description { get; set; }
         public DateTime? UnlistedOn { get; set; }
+        public string Address { get; set; }
         public Guid CityId { get; set; }
         public City City { get; set; }
         public double AvgRating { get; set; }

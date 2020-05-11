@@ -19,6 +19,7 @@ namespace BeerOverflow.Data.Configuration
             builder.Property(b => b.Phone).IsRequired();
             builder.HasIndex(b => b.Website).IsUnique();
             builder.Property(b => b.Website).IsRequired();
+            builder.Property(b => b.Address).IsRequired();
         }
     }
 }

@@ -11,9 +11,12 @@
     <Compile Remove="Migrations\20200510200844_Initial_Db_build.Designer.cs" />
     <Compile Remove="Migrations\20200510201422_Initial_Db_build.cs" />
     <Compile Remove="Migrations\20200510201422_Initial_Db_build.Designer.cs" />
+    <Compile Remove="Migrations\20200511081637_modified_User_Entity.cs" />
+    <Compile Remove="Migrations\20200511081637_modified_User_Entity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
       <PrivateAssets>all</PrivateAssets>

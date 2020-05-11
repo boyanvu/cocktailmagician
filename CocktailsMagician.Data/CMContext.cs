@@ -1,11 +1,14 @@
 ﻿using BeerOverflow.Data.Configuration;
 using CocktailsMagician.Data.Configuration;
 using CocktailsMagician.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace CocktailsMagician.Data
 {
-    public class CMContext : DbContext
+    public class CMContext : IdentityDbContext<User, Role, Guid>
     {
         public CMContext(DbContextOptions<CMContext> options)
             : base(options)
@@ -18,6 +21,7 @@ namespace CocktailsMagician.Data
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<CocktailIngredients> CocktailIngredients { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<IngredientType> IngredientTypes { get; set; }
         public DbSet<CocktailReview> CocktailReviews { get; set; }
@@ -27,6 +31,7 @@ namespace CocktailsMagician.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.ApplyConfiguration(new BarConfig());
             modelBuilder.ApplyConfiguration(new BarCocktailConfig());
             modelBuilder.ApplyConfiguration(new CocktailIngredientsConfig());
@@ -40,9 +45,11 @@ namespace CocktailsMagician.Data
             modelBuilder.ApplyConfiguration(new IngredientTypeConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
 
+
+            base.OnModelCreating(modelBuilder);
             //Seeder.Seeder.SeedDatabase(modelBuilder);
 
-            //base.OnModelCreating(modelBuilder);
+
 
         }
     }

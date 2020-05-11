@@ -1,13 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CocktailsMagician.Data.Entities
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
-        public Guid Id { get; set; }
-        public string  Username { get; set; }
+        //public Guid Id { get; set; }
+        //public string  Username { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public bool isBanned { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? DeletedOn { get; set; }
         public ICollection<BarReview> BarReviews { get; set; }

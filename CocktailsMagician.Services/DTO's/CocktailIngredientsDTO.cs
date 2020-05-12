@@ -11,7 +11,7 @@ namespace CocktailsMagician.Services.DTO_s
         public String CocktailName { get; set; }
         public Guid IngredientId { get; set; }
         public String IngredientName { get; set; }
-        public int Quantity { get; set; }
-        public string Uom { get; set; }
+        //public int Quantity { get; set; }
+        //public string Uom { get; set; }
     }
 }

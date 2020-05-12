@@ -10,8 +10,8 @@ namespace CocktailsMagician.Data.Entities
         public Cocktail Cocktail { get; set; }
         public Guid IngredientId { get; set; }
         public Ingredient Ingredient { get; set; }
-        public int Quantity { get; set; }
-        public string Uom { get; set; }
+        //public int Quantity { get; set; }
+        //public string Uom { get; set; }
 
     }
 }

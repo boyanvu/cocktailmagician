@@ -45,12 +45,8 @@ namespace CocktailsMagician.Data
             modelBuilder.ApplyConfiguration(new IngredientTypeConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
 
-
             base.OnModelCreating(modelBuilder);
-            //Seeder.Seeder.SeedDatabase(modelBuilder);
-
-
-
+            Seeder.Seeder.SeedDatabase(modelBuilder);
         }
     }
 }

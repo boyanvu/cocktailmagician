@@ -20,5 +20,19 @@ namespace CocktailsMagician.Services.Mappers
 
             return cocktailDTO;
         }
+
+        public static Cocktail CocktailDTOMapToModel(this CocktailDTO cocktailDTO)
+        {
+            var cocktail = new Cocktail();
+            cocktail.Id = cocktailDTO.Id;
+            cocktail.Name = cocktailDTO.Name;
+            cocktail.Description = cocktailDTO.Description;
+            cocktail.UnlistedOn = cocktailDTO.UnlistedOn;
+            cocktail.AvgRating = cocktailDTO.AvgRating;
+            cocktail.CocktailReviews = cocktailDTO.CocktailReviews;
+
+
+            return cocktail;
+        }
     }
 }

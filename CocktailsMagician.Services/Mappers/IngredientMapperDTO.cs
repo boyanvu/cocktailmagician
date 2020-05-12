@@ -22,5 +22,19 @@ namespace CocktailsMagician.Services.Mappers
 
             return ingredientDTO;
         }
+
+        public static Ingredient IngredientDTOMapToModel(this IngredientDTO ingredientDTO)
+        {
+            var ingredient = new Ingredient();
+            ingredient.Id = ingredientDTO.Id;
+            ingredient.Name = ingredientDTO.Name;
+            ingredient.Id = ingredientDTO.Id;
+            ingredient.Abv = ingredientDTO.Abv;
+            ingredient.Description = ingredientDTO.Description;
+            ingredient.UnlistedOn = ingredientDTO.UnlistedOn;
+            ingredient.TypeId = ingredientDTO.TypeId;
+
+            return ingredient;
+        }
     }
 }

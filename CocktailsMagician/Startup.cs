@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using CocktailsMagician.Data;
 using CocktailsMagician.Data.Entities;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using CocktailsMagician.Services.Contracts;
+using CocktailsMagician.Services.Services;
+
 
 namespace CocktailsMagician
 {
@@ -40,6 +40,8 @@ namespace CocktailsMagician
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<CMContext>();
+
+            services.AddScoped<IBarService, BarService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

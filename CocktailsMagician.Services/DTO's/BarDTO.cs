@@ -16,6 +16,7 @@ namespace CocktailsMagician.Services.DTO_s
         public Guid CityId { get; set; }
         public City City { get; set; }
         public double AvgRating { get; set; }
+        public string Address { get; set; }
         public ICollection<BarReview> BarReviews { get; set; }
     }
 }

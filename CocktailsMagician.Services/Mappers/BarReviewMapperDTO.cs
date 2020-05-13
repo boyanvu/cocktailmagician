@@ -20,9 +20,19 @@ namespace CocktailsMagician.Services.Mappers
             barReviewDTO.UserName = barReview.User.UserName;
             barReviewDTO.BarReviewLikes = barReview.BarReviewLikes;
 
-
             return barReviewDTO;
         }
 
+        public static BarReview BarReviewDTOMapToModel(this BarReviewDTO barReviewDTO)
+        {
+            var barReview = new BarReview();
+            barReview.BarId = barReviewDTO.BarId;
+            barReview.UserId = barReviewDTO.UserId;
+            barReview.Rating = barReviewDTO.Rating;
+            barReview.Comment = barReviewDTO.Comment;
+            barReview.ReviewedOn = DateTime.UtcNow;
+
+            return barReview;
+        }
     }
 }

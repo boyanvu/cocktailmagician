@@ -21,8 +21,21 @@ namespace CocktailsMagician.Services.Mappers
             barDTO.AvgRating = bar.AvgRating;
             barDTO.UnlistedOn = bar.UnlistedOn;
             barDTO.BarReviews = bar.BarReviews;
+            barDTO.Address = bar.Address;
 
             return barDTO;
+        }
+        public static Bar BarDTOMapToModel(this BarDTO barDTO)
+        {
+            var bar = new Bar();
+            bar.Name = barDTO.Name;
+            bar.Phone = barDTO.Phone;
+            bar.Website = barDTO.Website;
+            bar.Description = barDTO.Description;
+            bar.Address = barDTO.Address;
+            bar.CityId = barDTO.CityId;
+
+            return bar;
         }
     }
 }

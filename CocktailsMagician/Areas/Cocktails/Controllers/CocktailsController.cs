@@ -54,9 +54,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 return NotFound();
             }
 
-            var cocktailVM = cocktail.CocktailDTOMapToVM();
-
-            return View(cocktailVM);
+            return View(cocktail.CocktailDTOMapToVM());
         }
 
         // GET: Cocktails/Cocktails/Create
@@ -157,9 +155,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 return NotFound();
             }
 
-            var cocktailVM = cocktail.CocktailDTOMapToVM();
-
-            return View(cocktailVM);
+            return View(cocktail.CocktailDTOMapToVM());
 
         }
 

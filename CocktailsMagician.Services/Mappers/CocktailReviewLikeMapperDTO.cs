@@ -8,7 +8,7 @@ namespace CocktailsMagician.Services.Mappers
 {
     public static class CocktailReviewLikeMapperDTO
     {
-        public static CocktailReviewLikeDTO BarMapReviewLikeDTO(this CocktailReviewLike cocktailReviewLike)
+        public static CocktailReviewLikeDTO CocktailReviewLikeMapToDTO(this CocktailReviewLike cocktailReviewLike)
         {
             var cocktailReviewLikeDTO = new CocktailReviewLikeDTO();
             cocktailReviewLikeDTO.CocktailReviewId = cocktailReviewLike.CocktailReviewId;

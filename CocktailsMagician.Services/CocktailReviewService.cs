@@ -20,7 +20,7 @@ namespace CocktailsMagician.Services
             this._cmContext = context;
         }
 
-        public async Task<CocktailReviewDTO> CreateCocktailReview(string cocktailName, string userName, int rating, string? comment)
+        public async Task<CocktailReviewDTO> CreateCocktailReview(string cocktailName, string userName, int rating, string comment)
         {
 
             var user = await _cmContext.Users.FirstOrDefaultAsync(u => u.UserName == userName);

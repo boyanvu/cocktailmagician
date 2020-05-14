@@ -11,6 +11,6 @@ namespace CocktailsMagician.Services.Contracts
         Task<IEnumerable<BarDTO>> GetAllBarsAsync();
         Task<BarDTO> CreateBarAsync(BarDTO barDTO);
         Task<bool> DeleteBarAsync(Guid id);
-        Task<BarDTO> UpdateBarAsync(Guid id, string name, string phone, string website, string description, Guid cityId, string address);
+        Task<BarDTO> UpdateBarAsync(/*Guid id, string name, string phone, string website, string description, Guid cityId, string address*/BarDTO barDTO);
     }
 }

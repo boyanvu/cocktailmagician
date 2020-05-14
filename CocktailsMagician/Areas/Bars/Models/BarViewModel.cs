@@ -1,11 +1,12 @@
 ﻿using CocktailsMagician.Data.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace CocktailsMagician.Services.DTO_s
+namespace CocktailsMagician.Areas.Bars.Models
 {
-    public class BarDTO
+    public class BarViewModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -13,10 +14,10 @@ namespace CocktailsMagician.Services.DTO_s
         public string Website { get; set; }
         public string Description { get; set; }
         public DateTime? UnlistedOn { get; set; }
-        public Guid CityId { get; set; }
-        public string City { get; set; }
-        public double AvgRating { get; set; }
         public string Address { get; set; }
-        public ICollection<BarReview> BarReviews { get; set; }
+        public Guid CityId { get; set; }
+        public string? City { get; set; }
+        public double AvgRating { get; set; }
+        public List<BarReview> BarReviews { get; set; } = new List<BarReview>();
     }
 }

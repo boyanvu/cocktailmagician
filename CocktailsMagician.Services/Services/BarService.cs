@@ -21,6 +21,7 @@ namespace CocktailsMagician.Services.Services
         public async Task<BarDTO> GetBarAsync(Guid id)
         {
             var bar = await _cmContext.Bars
+                .Include(b=>b.City)
                 .FirstOrDefaultAsync(b => b.Id == id);
             if (bar == null)
             {
@@ -33,6 +34,7 @@ namespace CocktailsMagician.Services.Services
         public async Task<IEnumerable<BarDTO>> GetAllBarsAsync()
         {
             var barsDto = await _cmContext.Bars
+                .Include(b => b.City)
                 .Select(b => b.MapBarToDTO())
                 .ToListAsync();
             return barsDto;
@@ -42,7 +44,7 @@ namespace CocktailsMagician.Services.Services
             try
             {
                 var bar = barDTO.BarDTOMapToModel();
-                await _cmContext.Bars.AddAsync(bar);
+                _cmContext.Bars.Add(bar);
                 await _cmContext.SaveChangesAsync();
                 return barDTO;
             }
@@ -52,7 +54,7 @@ namespace CocktailsMagician.Services.Services
             }
         }
 
-        public async Task<BarDTO> UpdateBarAsync(Guid id, string name, string phone, string website, string description, Guid cityId, string address)
+        public async Task<BarDTO> UpdateBarAsync(/*Guid id, string name, string phone, string website, string description, Guid cityId, string address*/BarDTO barDTO)
         {
             var bar = await _cmContext.Bars
                 .FirstOrDefaultAsync(b => b.UnlistedOn == null);
@@ -62,32 +64,41 @@ namespace CocktailsMagician.Services.Services
                 throw new ArgumentNullException();
             }
 
-            if (name != null)
-                bar.Name = name;
+            if (barDTO.Name != null)
+                bar.Name = barDTO.Name;
 
-            if (phone != null)
-                bar.Phone = phone;
+            if (barDTO.Phone != null)
+                bar.Phone = barDTO.Phone;
 
-            if (website != null)
-                bar.Website = website;
+            if (barDTO.Website != null)
+                bar.Website = barDTO.Website;
 
-            if (description != null)
-                bar.Description = description;
+            if (barDTO.Description != null)
+                bar.Description = barDTO.Description;
 
-            if (cityId != null)
-                if (await _cmContext.Cities.FindAsync(cityId) == null)
+            if (barDTO.CityId != null)
+            {
+                if (!await _cmContext.Cities.AnyAsync(c => c.Id == barDTO.CityId))
                 {
                     throw new ArgumentException();
                 }
-            bar.CityId = cityId;
+                bar.CityId = barDTO.CityId;
+            }
 
-            if (address != null)
-                bar.Address = address;
+            if (barDTO.Address != null)
+                bar.Address = barDTO.Address;
 
-            await _cmContext.SaveChangesAsync();
-
-            var barDto = await this.GetBarAsync(id);
-            return barDto;
+            try
+            {
+                await _cmContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+           
+            //var barDto = bar.MapBarToDTO();
+            return barDTO;
         }
 
         public async Task<bool> DeleteBarAsync(Guid id)

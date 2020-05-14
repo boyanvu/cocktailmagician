@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CocktailsMagician.Data;
 using CocktailsMagician.Services.Contracts;
@@ -30,7 +29,7 @@ namespace CocktailsMagician.Services.Services
             return barReviewDTO;
         }
 
-        public IQueryable<BarReview> GetBarReviewsAsync(Guid barId,Guid userId)
+        public IQueryable<BarReview> GetBarReviewsAsync(Guid barId, Guid userId)
         {
             var barReviewQry = _cmContext.BarReviews as IQueryable<BarReview>;
             if (barId != null)
@@ -44,16 +43,6 @@ namespace CocktailsMagician.Services.Services
             return barReviewQry;
         }
 
-        public async Task<BarReviewDTO> GetBarReviewAsync(Guid barReviewId)
-        {
-            var barReview = await _cmContext.BarReviews.FindAsync(barReviewId);
-            if (barReview == null)
-            {
-                throw new ArgumentNullException("The review is missing.");
-            }
-            var barReviewDTO = barReview.BarMapReviewDTO();
-            return barReviewDTO;
-        }
         public async Task<IEnumerable<BarReviewDTO>> GetAllBarReviewsAsync()
         {
             var barReviews = await _cmContext.BarReviews
@@ -69,12 +58,12 @@ namespace CocktailsMagician.Services.Services
             {
                 throw new ArgumentException("This bar has already been reviewed by the user");
             }
-            
+
             var bar = await _cmContext.Bars
                 .Where(b => b.UnlistedOn == null)
                 .FirstOrDefaultAsync(b => b.Id == barId);
 
-            if (bar==null)
+            if (bar == null)
             {
                 throw new ArgumentNullException("Bar is not available.");
             }
@@ -85,9 +74,9 @@ namespace CocktailsMagician.Services.Services
             {
                 throw new ArgumentNullException("User is not available");
             }
-            if (rating<1 || rating>5)
+            if (rating < 1 || rating > 5)
             {
-                throw new ArgumentOutOfRangeException("Rating must be bewtwee 1 and 5.");
+                throw new ArgumentOutOfRangeException("Rating must be bewtween 1 and 5.");
             }
             var barReview = new BarReview();
             barReview.BarId = barId;
@@ -95,18 +84,45 @@ namespace CocktailsMagician.Services.Services
             barReview.Rating = rating;
             barReview.Comment = comment;
             barReview.ReviewedOn = DateTime.UtcNow;
-
-            _cmContext.BarReviews.Add(barReview);
-            await _cmContext.SaveChangesAsync();
-
-            var barReviewDTO = await this.GetBarReviewsAsync(barId, userId)
-                .Select(br=>br.BarMapReviewDTO()).FirstOrDefaultAsync();
+            try
+            {
+                _cmContext.BarReviews.Add(barReview);
+                await _cmContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            var barReviewDTO = barReview.BarMapReviewDTO();
 
             return barReviewDTO;
         }
-        public Task<BarReviewDTO> UpdateBarReviewAsync(Guid reviewId, int rating, string comment)
+        public async Task<BarReviewDTO> UpdateBarReviewAsync(Guid reviewId, int? rating, string comment)
         {
-            throw new NotImplementedException();
+            var barReview = await _cmContext.BarReviews.FindAsync(reviewId);
+            if (barReview == null)
+            {
+                throw new ArgumentException("Missing bar review");
+            }
+            if (rating != null)
+            {
+                if (rating < 1 || rating > 5)
+                {
+                    throw new ArgumentOutOfRangeException("Rating must be bewtween 1 and 5.");
+                }
+                barReview.Rating = (int)rating;
+            }
+            barReview.Comment = comment;
+
+            try
+            {
+                await _cmContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return barReview.BarMapReviewDTO();
         }
         public Task<bool> DeleteBarReviewAsync(Guid reviewId)
         {

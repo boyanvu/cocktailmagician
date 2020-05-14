@@ -42,6 +42,7 @@ namespace CocktailsMagician
                 .AddEntityFrameworkStores<CMContext>();
 
             services.AddScoped<IBarService, BarService>();
+            services.AddScoped<IBarReviewService, BarReviewService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -68,8 +69,13 @@ namespace CocktailsMagician
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }

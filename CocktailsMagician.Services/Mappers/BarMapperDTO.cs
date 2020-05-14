@@ -16,7 +16,7 @@ namespace CocktailsMagician.Services.Mappers
             barDTO.Phone = bar.Phone;
             barDTO.Website = bar.Website;
             barDTO.Description = bar.Description;
-            barDTO.City = bar.City;
+            barDTO.City = bar.City.Name;
             barDTO.CityId = bar.CityId;
             barDTO.AvgRating = bar.AvgRating;
             barDTO.UnlistedOn = bar.UnlistedOn;

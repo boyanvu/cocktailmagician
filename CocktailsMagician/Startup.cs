@@ -49,6 +49,7 @@ namespace CocktailsMagician
             services.AddScoped<ICocktailReviewService, CocktailReviewService>();
             services.AddScoped<ICocktailReviewLikeService, CocktailReviewLikeService>();
             services.AddScoped<IBarService, BarService>();
+            services.AddScoped<IBarReviewService, BarReviewService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

@@ -57,6 +57,7 @@ namespace CocktailsMagician.Services.Services
         public async Task<BarDTO> UpdateBarAsync(/*Guid id, string name, string phone, string website, string description, Guid cityId, string address*/BarDTO barDTO)
         {
             var bar = await _cmContext.Bars
+                .Where(b=>b.Id == barDTO.Id)
                 .FirstOrDefaultAsync(b => b.UnlistedOn == null);
 
             if (bar == null)
@@ -88,14 +89,9 @@ namespace CocktailsMagician.Services.Services
             if (barDTO.Address != null)
                 bar.Address = barDTO.Address;
 
-            try
-            {
+
                 await _cmContext.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+
            
             //var barDto = bar.MapBarToDTO();
             return barDTO;

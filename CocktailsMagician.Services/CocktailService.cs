@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CocktailsMagician.Services.Mappers;
+using CocktailsMagician.Data.Entities;
 
 namespace CocktailsMagician.Services
 {
@@ -50,12 +51,41 @@ namespace CocktailsMagician.Services
             return true;
         }
 
-        public async Task<IEnumerable<CocktailDTO>> GetAllCocktails()
+        public async Task<IQueryable<CocktailDTO>> GetAllCocktails(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return await _cmContext.Cocktails
-               .Where(c => c.UnlistedOn == null)
-               .Select(c => c.CocktailMapToDTO())
-               .ToListAsync();
+
+            var cocktails = (IQueryable<Cocktail>)_cmContext.Cocktails;
+
+         
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                cocktails = cocktails
+                    .Where(s => s.Name.Contains(searchString));                                      
+            }
+
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    cocktails = cocktails.OrderByDescending(s => s.Name);
+                    break;
+                case "rating":
+                    cocktails = cocktails.OrderBy(s => s.AvgRating);
+                    break;
+                case "rating_desc":
+                    cocktails = cocktails.OrderByDescending(s => s.AvgRating);
+                    break;
+                default:
+                    cocktails = cocktails.OrderBy(c => c.Name);
+                    break;
+            }
+
+            var cocktailsDTO = cocktails
+                .Where(c => c.UnlistedOn == null)
+                .Select(c => c.CocktailMapToDTO());
+
+
+            return cocktailsDTO;
         }
 
         public async Task<CocktailDTO> GetCocktail(Guid id)

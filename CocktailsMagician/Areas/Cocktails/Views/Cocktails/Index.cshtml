@@ -1,4 +1,6 @@
-﻿@model IEnumerable<CocktailsMagician.Areas.Cocktails.Models.CocktailViewModel>
+﻿@model X.PagedList.IPagedList<CocktailsMagician.Areas.Cocktails.Models.CocktailViewModel>
+@using X.PagedList.Mvc.Core
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
 
 
 @{
@@ -11,20 +13,30 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UnlistedOn)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().UnlistedOn)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AvgRating)
+                @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th></th>
         </tr>
@@ -54,3 +66,13 @@
         }
     </tbody>
 </table>
+<br />
+
+<center>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+</center>
+
+

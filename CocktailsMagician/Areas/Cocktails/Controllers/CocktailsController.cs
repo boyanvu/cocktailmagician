@@ -11,6 +11,7 @@ using CocktailsMagician.Services.Contracts;
 using CocktailsMagician.Mappers;
 using CocktailsMagician.Areas.Cocktails.Models;
 using CocktailsMagician.Services.DTO_s;
+using X.PagedList;
 
 namespace CocktailsMagician.Areas.Cocktails.Controllers
 {
@@ -27,16 +28,33 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         }
 
         // GET: Cocktails/Cocktails
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var cocktails = await cocktailService.GetAllCocktails();
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.RatingSortParm = sortOrder == "rating" ? "rating_desc" : "rating";
+
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+
+            var cocktails = await cocktailService.GetAllCocktails(sortOrder, currentFilter, searchString, page);
 
             var cocktailsVM = cocktails
-                .Where(c => c.UnlistedOn == null)
                 .Select(c => c.CocktailDTOMapToVM())
                 .ToList();
-                
-            return View(cocktailsVM);
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(cocktailsVM.ToPagedList(pageNumber,pageSize));
         }
 
         // GET: Cocktails/Cocktails/Details/5

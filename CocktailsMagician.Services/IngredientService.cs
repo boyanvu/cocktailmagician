@@ -39,7 +39,7 @@ namespace CocktailsMagician.Services
             var ingredient = await _cmContext.Ingredients
                 .FirstOrDefaultAsync(i => i.Id == id);
 
-            if(ingredient == null)
+            if (ingredient == null)
             {
                 throw new ArgumentNullException("Ingredient doesn't exist!");
             }
@@ -62,9 +62,10 @@ namespace CocktailsMagician.Services
         public async Task<IngredientDTO> GetIngredient(Guid id)
         {
             var ingredient = await _cmContext.Ingredients
+                .Include(i => i.Type)
                 .FirstOrDefaultAsync(i => i.Id == id);
 
-            if(ingredient == null)
+            if (ingredient == null)
             {
                 throw new ArgumentNullException("Ingredient doesn't exist!");
             }
@@ -72,7 +73,7 @@ namespace CocktailsMagician.Services
             return ingredient.IngredientMapToDTO();
         }
 
-        public async Task<IngredientDTO> UpdateIngredient(Guid id, string ingrName, double? ingrAbv, string ingrDescription, int ingrTypeId)
+        public async Task<IngredientDTO> UpdateIngredient(Guid id, string ingrName, double? ingrAbv, string ingrDescription, Guid ingrTypeId)
         {
             var igredient = await _cmContext.Ingredients
                .Where(i => i.UnlistedOn == null)
@@ -92,17 +93,14 @@ namespace CocktailsMagician.Services
             if (ingrDescription != null)
                 igredient.Description = ingrDescription;
 
-       
-            if (ingrTypeId != 0)
+
+            var ingrType = await _cmContext.IngredientTypes.FindAsync(ingrTypeId);
+            if (ingrType == null)
             {
-                var ingrType = await _cmContext.IngredientTypes.FindAsync(ingrTypeId);
-                if (ingrType == null)
-                {
-                    throw new ArgumentException("Provided ingredient type is not valid!");
-                }
-                igredient.TypeId = ingrType.Id;
+                throw new ArgumentException("Provided ingredient type is not valid!");
             }
-            ;
+            igredient.TypeId = ingrType.Id;
+
             await _cmContext.SaveChangesAsync();
 
             return igredient.IngredientMapToDTO();

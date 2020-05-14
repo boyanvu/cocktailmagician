@@ -11,7 +11,7 @@ namespace CocktailsMagician.Services.Contracts
         Task<IngredientDTO> GetIngredient(Guid id);
         Task<IEnumerable<IngredientDTO>> GetAllIngredients();
         Task<IngredientDTO> CreateIngredient(IngredientDTO ingredientDTO);
-        Task<IngredientDTO> UpdateIngredient(Guid id, string ingrName, double? ingrAbv, string ingrDescription, int ingrTypeId);
+        Task<IngredientDTO> UpdateIngredient(Guid id, string ingrName, double? ingrAbv, string ingrDescription, Guid ingrTypeId);
         Task<bool> DeleteIngredient(Guid id);
     }
 }

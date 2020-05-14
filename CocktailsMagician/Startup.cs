@@ -1,6 +1,8 @@
 
 using CocktailsMagician.Data;
 using CocktailsMagician.Data.Entities;
+using CocktailsMagician.Services;
+using CocktailsMagician.Services.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -41,6 +43,11 @@ namespace CocktailsMagician
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<CMContext>();
 
+            services.AddScoped<ICocktailService, CocktailService>();
+            services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<IIngredientTypeService, IngredientTypeService>();
+            services.AddScoped<ICocktailReviewService, CocktailReviewService>();
+            services.AddScoped<ICocktailReviewLikeService, CocktailReviewLikeService>();
             services.AddScoped<IBarService, BarService>();
 
             services.AddControllersWithViews();
@@ -68,8 +75,13 @@ namespace CocktailsMagician
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }

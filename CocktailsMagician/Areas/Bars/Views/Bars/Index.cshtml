@@ -1,6 +1,5 @@
-﻿@*@model IEnumerable<CocktailsMagician.Data.Entities.Bar>*@
-@model IEnumerable<CocktailsMagician.Areas.Bars.Models.BarViewModel>
-
+﻿@model X.PagedList.IPagedList<CocktailsMagician.Areas.Bars.Models.BarViewModel>
+@using X.PagedList.Mvc.Core
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,32 +10,41 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Phone)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Phone)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Website)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Website)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UnlistedOn)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().UnlistedOn)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Address)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Address)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.City)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().City)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AvgRating)
+                @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th></th>
         </tr>
@@ -78,3 +86,10 @@
         }
     </tbody>
 </table>
+
+<center>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+</center>

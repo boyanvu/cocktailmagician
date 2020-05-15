@@ -8,6 +8,7 @@ using CocktailsMagician.Services.Contracts;
 using CocktailsMagician.Services.DTO_s;
 using Microsoft.EntityFrameworkCore;
 using CocktailsMagician.Services.Mappers;
+using CocktailsMagician.Data.Entities;
 
 namespace CocktailsMagician.Services.Services
 {
@@ -38,6 +39,43 @@ namespace CocktailsMagician.Services.Services
                 .Select(b => b.MapBarToDTO())
                 .ToListAsync();
             return barsDto;
+        }
+
+        public async Task<List<BarDTO>> GetAllBars(string sortOrder, string searchString)
+        {
+
+            var bars = (IQueryable<Bar>)_cmContext.Bars
+                .Include(b=>b.City);
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                bars = bars
+                    .Where(b => b.Name.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    bars = bars.OrderByDescending(b => b.Name);
+                    break;
+                case "rating":
+                    bars = bars.OrderBy(b => b.AvgRating);
+                    break;
+                case "rating_desc":
+                    bars = bars.OrderByDescending(b => b.AvgRating);
+                    break;
+                default:
+                    bars = bars.OrderBy(b => b.Name);
+                    break;
+            }
+
+            var barDTOs = await bars
+                //.Where(b => b.UnlistedOn == null)
+                .Select(b => b.MapBarToDTO())
+                .ToListAsync();
+
+            return barDTOs;
         }
         public async Task<BarDTO> CreateBarAsync(BarDTO barDTO)
         {

@@ -10,6 +10,7 @@ using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Services.Contracts;
 using CocktailsMagician.Mappers;
 using CocktailsMagician.Areas.Bars.Models;
+using X.PagedList;
 
 namespace CocktailsMagician.Areas.Bars.Controllers
 {
@@ -26,13 +27,32 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         }
 
         // GET: Bars/Bars
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var barDTOs = await barService.GetAllBarsAsync();
-            var barVMs = barDTOs
-                .Select(b => b.BarDTOtoVM())
-                .ToList();
-            return View(barVMs);
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.RatingSortParm = sortOrder == "rating" ? "rating_desc" : "rating";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+
+
+            var barDTOs = await barService.GetAllBars(sortOrder, searchString);
+
+
+            var barsVMs = barDTOs.Select(b => b.BarDTOtoVM());    
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(barsVMs.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Bars/Bars/Details/5

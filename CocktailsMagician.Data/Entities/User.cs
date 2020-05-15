@@ -13,6 +13,7 @@ namespace CocktailsMagician.Data.Entities
         public string LastName { get; set; }
         public bool isBanned { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public DateTime CreatedOn { get; set; }
         public DateTime? DeletedOn { get; set; }
         public ICollection<BarReview> BarReviews { get; set; }
         public ICollection<BarReviewLike> BarReviewLikes { get; set; }

@@ -12,7 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CocktailsMagician.Services.Contracts;
 using CocktailsMagician.Services.Services;
-
+using Microsoft.AspNetCore.Identity.UI.Services;
+using CocktailsMagician.Helpers;
 
 namespace CocktailsMagician
 {
@@ -50,6 +51,8 @@ namespace CocktailsMagician
             services.AddScoped<ICocktailReviewLikeService, CocktailReviewLikeService>();
             services.AddScoped<IBarService, BarService>();
             services.AddScoped<IBarReviewService, BarReviewService>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

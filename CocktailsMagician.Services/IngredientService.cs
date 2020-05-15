@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CocktailsMagician.Services.Mappers;
+using CocktailsMagician.Data.Entities;
 
 namespace CocktailsMagician.Services
 {
@@ -50,13 +51,40 @@ namespace CocktailsMagician.Services
             return true;
         }
 
-        public async Task<IEnumerable<IngredientDTO>> GetAllIngredients()
+        public async Task<List<IngredientDTO>> GetAllIngredients(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return await _cmContext.Ingredients
-                .Where(i => i.UnlistedOn == null)
-                .Include(i => i.Type)
-                .Select(i => i.IngredientMapToDTO())
-                .ToListAsync();
+            var ingredients = (IQueryable<Ingredient>)_cmContext.Ingredients;
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ingredients = ingredients
+                    .Where(s => s.Name.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    ingredients = ingredients.OrderByDescending(s => s.Name);
+                    break;
+                case "abv":
+                    ingredients = ingredients.OrderBy(s => s.Abv);
+                    break;
+                case "abv_desc":
+                    ingredients = ingredients.OrderByDescending(s => s.Abv);
+                    break;
+                default:
+                    ingredients = ingredients.OrderBy(c => c.Name);
+                    break;
+            }
+
+            var ingredientsDTO = ingredients
+              .Include(i => i.Type)
+              .Where(c => c.UnlistedOn == null)
+              .Select(c => c.IngredientMapToDTO());
+
+            return await ingredientsDTO.ToListAsync();
+
         }
 
         public async Task<IngredientDTO> GetIngredient(Guid id)

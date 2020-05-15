@@ -34,7 +34,6 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.RatingSortParm = sortOrder == "rating" ? "rating_desc" : "rating";
 
-
             if (searchString != null)
             {
                 page = 1;
@@ -44,6 +43,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 searchString = currentFilter;
             }
             ViewBag.CurrentFilter = searchString;
+
 
             var cocktails = await cocktailService.GetAllCocktails(sortOrder, currentFilter, searchString, page);
 

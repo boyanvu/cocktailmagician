@@ -51,7 +51,7 @@ namespace CocktailsMagician.Services
             return true;
         }
 
-        public async Task<IQueryable<CocktailDTO>> GetAllCocktails(string sortOrder, string currentFilter, string searchString, int? page)
+        public async Task<List<CocktailDTO>> GetAllCocktails(string sortOrder, string currentFilter, string searchString, int? page)
         {
 
             var cocktails = (IQueryable<Cocktail>)_cmContext.Cocktails;
@@ -62,7 +62,6 @@ namespace CocktailsMagician.Services
                 cocktails = cocktails
                     .Where(s => s.Name.Contains(searchString));                                      
             }
-
 
             switch (sortOrder)
             {
@@ -85,7 +84,7 @@ namespace CocktailsMagician.Services
                 .Select(c => c.CocktailMapToDTO());
 
 
-            return cocktailsDTO;
+            return await cocktailsDTO.ToListAsync();
         }
 
         public async Task<CocktailDTO> GetCocktail(Guid id)

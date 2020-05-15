@@ -9,7 +9,7 @@ namespace CocktailsMagician.Services.Contracts
     public interface IIngredientService
     {
         Task<IngredientDTO> GetIngredient(Guid id);
-        Task<IEnumerable<IngredientDTO>> GetAllIngredients();
+        Task<List<IngredientDTO>> GetAllIngredients(string sortOrder, string currentFilter, string searchString, int? page);
         Task<IngredientDTO> CreateIngredient(IngredientDTO ingredientDTO);
         Task<IngredientDTO> UpdateIngredient(Guid id, string ingrName, double? ingrAbv, string ingrDescription, Guid ingrTypeId);
         Task<bool> DeleteIngredient(Guid id);

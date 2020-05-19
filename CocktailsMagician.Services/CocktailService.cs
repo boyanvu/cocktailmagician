@@ -20,21 +20,7 @@ namespace CocktailsMagician.Services
             this._cmContext = context;
         }
 
-        public async Task<CocktailIngredientsDTO> AddIngredientToCocktail(CocktailIngredientsDTO cocktailIngredientDTO)
-        {
-
-            if (cocktailIngredientDTO == null)
-            {
-                throw new ArgumentNullException("CocktailIngredient doesn't exist!");
-            }
-
-            var cocktailIngredient = cocktailIngredientDTO.CocktailIngredientDTOMapToModel();
-
-            await _cmContext.CocktailIngredients.AddAsync(cocktailIngredient);
-            await _cmContext.SaveChangesAsync();
-
-            return cocktailIngredientDTO;
-        }
+       
 
         public async Task<CocktailDTO> CreateCocktail(CocktailDTO cocktailDTO)
         {
@@ -116,6 +102,50 @@ namespace CocktailsMagician.Services
             return cocktail.CocktailMapToDTO();
         }
 
+
+        public async Task<CocktailIngredientsDTO> AddIngredientToCocktail(CocktailIngredientsDTO cocktailIngredientDTO)
+        {
+            if (cocktailIngredientDTO == null)
+            {
+                throw new ArgumentNullException("CocktailIngredient doesn't exist!");
+            }
+
+            if (cocktailIngredientDTO.UnlistedOn != null)
+            {
+                var cocktailIngredient = await _cmContext.CocktailIngredients
+                    .FirstOrDefaultAsync(ci => ci.CocktailId == cocktailIngredientDTO.CocktailId
+                    && ci.IngredientId == cocktailIngredientDTO.IngredientId);
+
+                cocktailIngredient.UnlistedOn = null;
+            }
+            else
+            {
+                var cocktailIngredient = cocktailIngredientDTO.CocktailIngredientDTOMapToModel();
+                await _cmContext.CocktailIngredients.AddAsync(cocktailIngredient);               
+            }
+            await _cmContext.SaveChangesAsync();
+
+            return cocktailIngredientDTO;
+        }
+
+        public async Task<bool> RemoveIngredientFromCocktail(Guid cocktailId, Guid ingredientId)
+        {
+            var cocktailIngredient = await _cmContext.CocktailIngredients
+                 .Where(ci => ci.CocktailId == cocktailId && ci.IngredientId == ingredientId)
+                 .FirstOrDefaultAsync(bc => bc.UnlistedOn == null);
+
+            if (cocktailIngredient == null)
+            {
+                throw new ArgumentNullException("Cocktail - ingredient doesn't exist!");
+            }
+
+            cocktailIngredient.UnlistedOn = DateTime.UtcNow;
+
+            await _cmContext.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<CocktailDTO> UpdateCocktail(Guid id, string cName,  string cDescription)
         {
             var cocktail = await _cmContext.Cocktails
@@ -138,5 +168,53 @@ namespace CocktailsMagician.Services
 
             return cocktail.CocktailMapToDTO();
         }
+
+        public async Task<bool> DoesCocktailHaveIngredient(Guid cocktailId, Guid ingredientId)
+        {
+            var hasIngredient = await _cmContext.CocktailIngredients
+                    .Where(ci => ci.CocktailId == cocktailId && ci.IngredientId == ingredientId)
+                    .AnyAsync(ci => ci.UnlistedOn == null);
+
+            return hasIngredient;
+        }
+
+        public async Task<bool> IngredientIsUnlisted(Guid cocktailId, Guid ingredientId)
+        {
+            var cocktailIngredient = await _cmContext.CocktailIngredients
+                    .FirstOrDefaultAsync(ci => ci.CocktailId == cocktailId && ci.IngredientId == ingredientId);
+
+           if(cocktailIngredient == null)
+            {
+                return false;
+            }
+
+            var isUnlisted = false;
+
+            if(cocktailIngredient.UnlistedOn == null)
+            {
+                isUnlisted = false;
+            }
+            else
+            {
+                isUnlisted = true;
+            }
+
+            return isUnlisted;
+        }
+
+        public async Task<CocktailIngredientsDTO> GetCocktailIngredient(Guid cocktailId, Guid ingredientId)
+        {
+            var ci = await _cmContext.CocktailIngredients
+                   .FirstOrDefaultAsync(ci => ci.CocktailId == cocktailId && ci.IngredientId == ingredientId);
+
+            if(ci == null)
+            {
+                return null;
+            }
+
+            return ci.CocktailIngredientMapToDTO();
+        }
+
+
     }
 }

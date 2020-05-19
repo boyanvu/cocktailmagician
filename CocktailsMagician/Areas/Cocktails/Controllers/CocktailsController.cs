@@ -58,7 +58,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             int pageSize = 3;
             int pageNumber = (page ?? 1);
 
-            return View(cocktailsVM.ToPagedList(pageNumber,pageSize));
+            return View(cocktailsVM.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Cocktails/Cocktails/Details/5
@@ -76,7 +76,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 return NotFound();
             }
 
-         
+
 
             return View(cocktail.CocktailDTOMapToVM());
         }
@@ -88,7 +88,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             var ingredientsVM = ingredients
                 .Select(i => i.IngredientDTOMapToVM());
             cocktail.Ingredients = ingredientsVM.ToList();
-           // var allIngredients = await ingredientsVM.ToListAsync();
+            // var allIngredients = await ingredientsVM.ToListAsync();
 
             return View(cocktail);
         }
@@ -112,7 +112,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                     Description = cocktail.Description
                 };
 
-                var newCocktail = await cocktailService.CreateCocktail(cocktailDTO);                   
+                var newCocktail = await cocktailService.CreateCocktail(cocktailDTO);
 
                 foreach (var ingredient in allIngredients)
                 {
@@ -121,13 +121,14 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                         var cocktailIngredientDTO = new CocktailIngredientsDTO
                         {
                             CocktailId = cocktail.Id,
-                            IngredientId = ingredient.Id
+                            IngredientId = ingredient.Id                   
                         };
+
                         await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }        
+            }
             return View(cocktail);
         }
 
@@ -138,15 +139,25 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             {
                 return NotFound();
             }
-
-            var cocktail = await cocktailService.GetCocktail(id);  
+            var cocktail = await cocktailService.GetCocktail(id);
+            var ingredients = await ingredientService.GetAllIngredients();
+            var ingredientsVM = ingredients
+                .Select(i => i.IngredientDTOMapToVM());
 
             if (cocktail == null)
             {
                 return NotFound();
             }
+            var cocktailVM = cocktail.CocktailDTOMapToVM();
+            cocktailVM.Ingredients = ingredientsVM.ToList();
 
-            return View(cocktail.CocktailDTOMapToVM());
+            foreach (var ingredient in cocktailVM.Ingredients)
+            {
+                ingredient.isSelected = await cocktailService
+                    .DoesCocktailHaveIngredient(cocktailVM.Id, ingredient.Id);
+            }
+
+             return View(cocktailVM);
         }
 
         // POST: Cocktails/Cocktails/Edit/5
@@ -154,7 +165,8 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description")] CocktailViewModel cocktail)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description")] CocktailViewModel cocktail,
+            List<IngredientViewModel> allIngredients)
         {
             if (id != cocktail.Id)
             {
@@ -166,6 +178,45 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 try
                 {
                     await cocktailService.UpdateCocktail(cocktail.Id, cocktail.Name, cocktail.Description);
+
+                    foreach (var ingredient in allIngredients)
+                    {
+                        if (ingredient.isSelected)
+                        {
+                            var isUnlisted = await cocktailService.IngredientIsUnlisted(cocktail.Id, ingredient.Id);
+
+                            if (isUnlisted == true)
+                            {
+                                var existingCIDTO = await cocktailService.GetCocktailIngredient(cocktail.Id, ingredient.Id);
+                                await cocktailService.AddIngredientToCocktail(existingCIDTO);
+                            }
+                            else
+                            {
+                                var existingCIDTO = await cocktailService.GetCocktailIngredient(cocktail.Id, ingredient.Id);
+                                if(existingCIDTO == null)
+                                {
+                                    var cocktailIngredientDTO = new CocktailIngredientsDTO
+                                    {
+                                        CocktailId = cocktail.Id,
+                                        IngredientId = ingredient.Id
+                                    };
+                                    await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
+                                }                          
+                            }                  
+                        }
+                        else
+                        {
+                            var existingCIDTO = await cocktailService.GetCocktailIngredient(cocktail.Id, ingredient.Id);
+                            if (existingCIDTO != null)
+                            {
+                                var isUnlisted = await cocktailService.IngredientIsUnlisted(cocktail.Id, ingredient.Id);
+                                if(isUnlisted == false)
+                                {
+                                    await cocktailService.RemoveIngredientFromCocktail(cocktail.Id, ingredient.Id);
+                                }
+                            }                          
+                        }
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -198,7 +249,9 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 return NotFound();
             }
 
-            return View(cocktail.CocktailDTOMapToVM());
+            var cocktailVM = cocktail.CocktailDTOMapToVM();
+
+            return View(cocktailVM);
 
         }
 
@@ -216,5 +269,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         {
             return _context.Cocktails.Any(e => e.Id == id);
         }
+
+
     }
 }

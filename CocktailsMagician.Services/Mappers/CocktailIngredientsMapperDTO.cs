@@ -13,9 +13,10 @@ namespace CocktailsMagician.Services.Mappers
             var cocktailIngredientsDTO = new CocktailIngredientsDTO();
 
             cocktailIngredientsDTO.CocktailId = cocktailIngredient.CocktailId;
-            cocktailIngredientsDTO.CocktailName = cocktailIngredient.Cocktail.Name;
+            //cocktailIngredientsDTO.CocktailName = cocktailIngredient.Cocktail.Name;
             cocktailIngredientsDTO.IngredientId = cocktailIngredient.IngredientId;
-            cocktailIngredientsDTO.IngredientName = cocktailIngredient.Ingredient.Name;
+            cocktailIngredientsDTO.UnlistedOn = cocktailIngredient.UnlistedOn;
+            //cocktailIngredientsDTO.IngredientName = cocktailIngredient.Ingredient.Name;
             //cocktailIngredientsDTO.Quantity = cocktailIngredient.Quantity;
             //cocktailIngredientsDTO.Uom = cocktailIngredient.Uom;
 
@@ -29,6 +30,7 @@ namespace CocktailsMagician.Services.Mappers
 
             cocktailIngredients.CocktailId = cocktailIngredientDTO.CocktailId;
             cocktailIngredients.IngredientId = cocktailIngredientDTO.IngredientId;
+            cocktailIngredients.UnlistedOn = cocktailIngredientDTO.UnlistedOn;
             //cocktailIngredientsDTO.Quantity = cocktailIngredient.Quantity;
             //cocktailIngredientsDTO.Uom = cocktailIngredient.Uom;
             return cocktailIngredients;

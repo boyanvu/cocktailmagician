@@ -50,8 +50,16 @@ namespace CocktailsMagician.Services
 
             return true;
         }
+        public async Task<List<CocktailDTO>> GetAllCocktails()
+        {
+            var cocktailsDTO = await _cmContext.Cocktails
+                .Where(c => c.UnlistedOn == null)
+                .Select(c => c.CocktailMapToDTO())
+                .ToListAsync();
 
-        public async Task<List<CocktailDTO>> GetAllCocktails(string sortOrder, string currentFilter, string searchString, int? page)
+            return cocktailsDTO;
+        }
+        public async Task<List<CocktailDTO>> GetAllCocktails(string sortOrder, string searchString)
         {
 
             var cocktails = (IQueryable<Cocktail>)_cmContext.Cocktails;
@@ -100,6 +108,14 @@ namespace CocktailsMagician.Services
             return cocktail.CocktailMapToDTO();
         }
 
+        public async Task<bool> IsCocktailAvailableInBar(Guid barId, Guid cocktailId)
+        {
+            var isAvailable = await _cmContext.BarCocktails
+                    .Where(bc => bc.BarId == barId && bc.CocktailId == cocktailId)
+                    .AnyAsync(bc => bc.UnlistedOn == null);
+
+            return isAvailable;
+        }
         public async Task<CocktailDTO> UpdateCocktail(Guid id, string cName,  string cDescription)
         {
             var cocktail = await _cmContext.Cocktails

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CocktailsMagician.Areas.Cocktails.Models
 {
-    public class CocktailViewModel
+    public class CocktailViewModel_Original
     {
         public Guid Id { get; set; }
 
@@ -28,7 +28,6 @@ namespace CocktailsMagician.Areas.Cocktails.Models
         [DisplayName("Average rating")]
         public double AvgRating { get; set; }
 
-        public bool IsAvailableInBar { get; set; }
         public ICollection<CocktailReview> CocktailReviews { get; set; }
     }
 }

@@ -64,6 +64,9 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<div>
+    <a asp-action="AddRmvCocktailsFromBar" asp-route-id="@Model.Id">Add/remove cocktail</a>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

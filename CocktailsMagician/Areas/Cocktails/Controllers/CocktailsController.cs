@@ -45,7 +45,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             ViewBag.CurrentFilter = searchString;
 
 
-            var cocktails = await cocktailService.GetAllCocktails(sortOrder, currentFilter, searchString, page);
+            var cocktails = await cocktailService.GetAllCocktails(sortOrder, searchString);
 
             var cocktailsVM = cocktails
                 .Select(c => c.CocktailDTOMapToVM())

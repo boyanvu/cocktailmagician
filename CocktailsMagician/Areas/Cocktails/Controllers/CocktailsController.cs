@@ -12,6 +12,7 @@ using CocktailsMagician.Mappers;
 using CocktailsMagician.Areas.Cocktails.Models;
 using CocktailsMagician.Services.DTO_s;
 using X.PagedList;
+using CocktailsMagician.Areas.Ingredients.Models;
 
 namespace CocktailsMagician.Areas.Cocktails.Controllers
 {
@@ -20,11 +21,13 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
     {
         private readonly CMContext _context;
         private readonly ICocktailService cocktailService;
+        private readonly IIngredientService ingredientService;
 
-        public CocktailsController(CMContext context, ICocktailService cocktailService)
+        public CocktailsController(CMContext context, ICocktailService cocktailService, IIngredientService ingredientService)
         {
             _context = context;
             this.cocktailService = cocktailService;
+            this.ingredientService = ingredientService;
         }
 
         // GET: Cocktails/Cocktails
@@ -51,6 +54,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 .Select(c => c.CocktailDTOMapToVM())
                 .ToList();
 
+
             int pageSize = 3;
             int pageNumber = (page ?? 1);
 
@@ -72,13 +76,21 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 return NotFound();
             }
 
+         
+
             return View(cocktail.CocktailDTOMapToVM());
         }
 
         // GET: Cocktails/Cocktails/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(CocktailViewModel cocktail)
         {
-            return View();
+            var ingredients = await ingredientService.GetAllIngredients();
+            var ingredientsVM = ingredients
+                .Select(i => i.IngredientDTOMapToVM());
+            cocktail.Ingredients = ingredientsVM.ToList();
+           // var allIngredients = await ingredientsVM.ToListAsync();
+
+            return View(cocktail);
         }
 
         // POST: Cocktails/Cocktails/Create
@@ -86,7 +98,8 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] CocktailViewModel cocktail)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description")] CocktailViewModel cocktail,
+           List<IngredientViewModel> allIngredients)
         {
             if (ModelState.IsValid)
             {
@@ -99,10 +112,22 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                     Description = cocktail.Description
                 };
 
-                var newCocktail = await cocktailService.CreateCocktail(cocktailDTO);
+                var newCocktail = await cocktailService.CreateCocktail(cocktailDTO);                   
 
+                foreach (var ingredient in allIngredients)
+                {
+                    if (ingredient.isSelected)
+                    {
+                        var cocktailIngredientDTO = new CocktailIngredientsDTO
+                        {
+                            CocktailId = cocktail.Id,
+                            IngredientId = ingredient.Id
+                        };
+                        await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
+                    }
+                }
                 return RedirectToAction(nameof(Index));
-            }
+            }        
             return View(cocktail);
         }
 

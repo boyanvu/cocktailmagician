@@ -30,5 +30,7 @@ namespace CocktailsMagician.Areas.Ingredients.Models
 
         [DisplayName("Ingredient type name")]
         public String TypeName { get; set; }
+        public bool isSelected { get; set; }
+
     }
 }

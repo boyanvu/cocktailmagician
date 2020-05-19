@@ -20,6 +20,22 @@ namespace CocktailsMagician.Services
             this._cmContext = context;
         }
 
+        public async Task<CocktailIngredientsDTO> AddIngredientToCocktail(CocktailIngredientsDTO cocktailIngredientDTO)
+        {
+
+            if (cocktailIngredientDTO == null)
+            {
+                throw new ArgumentNullException("CocktailIngredient doesn't exist!");
+            }
+
+            var cocktailIngredient = cocktailIngredientDTO.CocktailIngredientDTOMapToModel();
+
+            await _cmContext.CocktailIngredients.AddAsync(cocktailIngredient);
+            await _cmContext.SaveChangesAsync();
+
+            return cocktailIngredientDTO;
+        }
+
         public async Task<CocktailDTO> CreateCocktail(CocktailDTO cocktailDTO)
         {
             if (cocktailDTO == null)

@@ -14,5 +14,9 @@ namespace CocktailsMagician.Services.Contracts
         Task<CocktailDTO> CreateCocktail(CocktailDTO cocktailtDTO);
         Task<CocktailDTO> UpdateCocktail(Guid id, string cName, string cDescription);
         Task<bool> DeleteCocktail(Guid id);
+        Task<CocktailIngredientsDTO> AddIngredientToCocktail(CocktailIngredientsDTO cocktailIngredientDTO);
+
+    
+
     }
 }

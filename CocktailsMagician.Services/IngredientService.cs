@@ -87,6 +87,16 @@ namespace CocktailsMagician.Services
 
         }
 
+        public async Task<IEnumerable<IngredientDTO>> GetAllIngredients()
+        {
+            return await _cmContext.Ingredients
+             .Include(i => i.Type)
+             .Where(c => c.UnlistedOn == null)
+             .Select(c => c.IngredientMapToDTO())
+             .ToListAsync();
+        }
+
+
         public async Task<IngredientDTO> GetIngredient(Guid id)
         {
             var ingredient = await _cmContext.Ingredients

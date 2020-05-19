@@ -1,4 +1,5 @@
-﻿using CocktailsMagician.Data.Entities;
+﻿using CocktailsMagician.Areas.Ingredients.Models;
+using CocktailsMagician.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,6 +28,8 @@ namespace CocktailsMagician.Areas.Cocktails.Models
 
         [DisplayName("Average rating")]
         public double AvgRating { get; set; }
+
+        public List<IngredientViewModel> Ingredients { get; set; }
 
         public ICollection<CocktailReview> CocktailReviews { get; set; }
     }

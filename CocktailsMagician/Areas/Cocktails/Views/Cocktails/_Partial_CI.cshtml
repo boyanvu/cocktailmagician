@@ -1,0 +1,23 @@
+﻿@model IList<CocktailsMagician.Areas.Ingredients.Models.IngredientViewModel>
+
+
+<p> Choose cocktail ingredients: </p>
+
+@for (var i = 0; i < Model.Count; i++)
+{
+
+    <td>
+        <input type="hidden" asp-for="@Model[i].Id" readonly />
+
+    </td>
+    <td>
+        <input asp-for="@Model[i].Name" readonly />
+    </td>
+    <td>
+        <input asp-for="@Model[i].isSelected" class="form-check-input" />
+    </td>
+    <br />
+}
+
+
+

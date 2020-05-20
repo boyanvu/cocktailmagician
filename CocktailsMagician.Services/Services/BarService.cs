@@ -161,22 +161,31 @@ namespace CocktailsMagician.Services.Services
             {
                 throw new ArgumentNullException();
             }
-            if (!await _cmContext.BarCocktails.AnyAsync(bc => bc.BarId == barId && bc.CocktailId == cocktailId && bc.UnlistedOn == null))
+            var barCocktail = await _cmContext.BarCocktails
+                .Where(bc => bc.BarId == barId && bc.CocktailId == cocktailId)
+                .FirstOrDefaultAsync();
+
+            if (barCocktail == null)
             {
-                var barCocktail = new BarCocktail()
+                var barCocktailNew = new BarCocktail()
                 {
                     BarId = barId,
                     CocktailId = cocktailId
                 };
-                _cmContext.BarCocktails.Add(barCocktail);
-                try
-                {
-                    await _cmContext.SaveChangesAsync();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                _cmContext.BarCocktails.Add(barCocktailNew);
+            }
+            else if(barCocktail.UnlistedOn != null)
+            {
+                barCocktail.UnlistedOn = null;
+            }
+
+            try
+            {
+                await _cmContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
             }
             return true;
         }

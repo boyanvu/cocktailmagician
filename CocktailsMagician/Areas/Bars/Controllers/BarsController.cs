@@ -245,7 +245,9 @@ namespace CocktailsMagician.Areas.Bars.Controllers
                     await barService.RemoveCocktailFromBarAsync(Id, cocktail.Id);
                 }
             }
-            return View();
+            //return RedirectToActionResult("AddRmvCocktailsFromBar", new { Id = Id, sortOrder = null, currentFilter = null, searchString = null, page = null });
+            //sortOrder, string currentFilter, string searchString, int? page
+            return RedirectToAction("AddRmvCocktailsFromBar");
         }
     }
 }

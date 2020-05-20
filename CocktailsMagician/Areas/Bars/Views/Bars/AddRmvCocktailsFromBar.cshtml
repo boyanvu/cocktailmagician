@@ -32,13 +32,13 @@
         <thead>
             <tr>
                 <th>
-                    @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                    @Html.ActionLink("Name", "AddRmvCocktailsFromBar", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
                 </th>
                 @*<th>
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().UnlistedOn)
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().AvgRating)
                     </th>*@
                 <th>
-                    @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
+                    @Html.ActionLink("Rating", "AddRmvCocktailsFromBar", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.FirstOrDefault().IsAvailableInBar)
@@ -47,36 +47,23 @@
             </tr>
         </thead>
         <tbody>
-            @*@foreach (var item in Model)
-                {*@
             @for (int i = 0; i < Model.Count; i++)
             {
-            <tr>
-                <td>
-                    <input type="hidden" asp-for="@Model[i].Id" readonly />
-
-                </td>
-                <td>
-                    @*@Html.DisplayFor(modelItem => Model[i].Name)*@
-                    <input asp-for="@Model[i].Name" readonly />
-
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => Model[i].UnlistedOn)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => Model[i].AvgRating)
-                </td>
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.IsAvailableInBar)*@
-                    <input asp-for="@Model[i].IsAvailableInBar" class="form-check-input" />
-                </td>
-                @*<td>
-            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-        </td>*@
-            </tr>
+                <input type="hidden" asp-for="@Model[i].Id" readonly />
+                <tr>
+                    <td>
+                        <input asp-for="@Model[i].Name" readonly />
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => Model[i].UnlistedOn)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => Model[i].AvgRating)
+                    </td>
+                    <td>
+                        <input asp-for="@Model[i].IsAvailableInBar" class="form-check-input" />
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -90,8 +77,8 @@
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
     @Html.PagedListPager(Model, page => Url.Action("AddRmvCocktailsFromBar",
-        new {Id = @ViewData["barId"], page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
-    @*string sortOrder, string currentFilter, string searchString, int? page*@
+        new { Id = @ViewData["barId"], page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter/*, searchString = ViewBag.SearchString*/ }))
 </center>
 
-
+@*@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))*@

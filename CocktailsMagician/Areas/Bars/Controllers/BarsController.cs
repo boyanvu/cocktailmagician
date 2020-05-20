@@ -11,6 +11,7 @@ using CocktailsMagician.Services.Contracts;
 using CocktailsMagician.Mappers;
 using CocktailsMagician.Areas.Bars.Models;
 using X.PagedList;
+using CocktailsMagician.Areas.Cocktails.Models;
 
 namespace CocktailsMagician.Areas.Bars.Controllers
 {
@@ -19,11 +20,13 @@ namespace CocktailsMagician.Areas.Bars.Controllers
     {
         private readonly CMContext _context;
         private readonly IBarService barService;
+        private readonly ICocktailService cocktailService;
 
-        public BarsController(CMContext context, IBarService barService)
+        public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService)
         {
             _context = context;
             this.barService = barService;
+            this.cocktailService = cocktailService;
         }
 
         // GET: Bars/Bars
@@ -176,6 +179,75 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         private bool BarExists(Guid id)
         {
             return _context.Bars.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> AddRmvCocktailsFromBar(Guid Id, string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            var bar = await barService.GetBarAsync(Id);
+            //var barVM = bar.BarDTOtoVM();
+            if (bar == null)
+            {
+                throw new ArgumentNullException();
+            }
+            ViewData["barId"] = bar.Id;
+            ViewData["barName"] = bar.Name;
+
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.RatingSortParm = sortOrder == "rating" ? "rating_desc" : "rating";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+
+
+            var cocktails = await cocktailService.GetAllCocktails(sortOrder, searchString);
+
+            var cocktailsVM = cocktails
+                .Select(c => c.CocktailDTOMapToVM())
+                .ToList();
+
+            //var cocktailsDTO = await cocktailService.GetAllCocktails();
+            //var cocktailsVM = cocktailsDTO.Select(c => c.CocktailDTOMapToVM()).ToList();
+
+            foreach (var cocktail in cocktailsVM)
+            {
+                cocktail.IsAvailableInBar = await cocktailService.IsCocktailAvailableInBar(Id, cocktail.Id);
+            }
+
+            //var cocktailsVM = cocktailsVM.Select(c => c.IsAvailableInBar = cocktailService.)
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(cocktailsVM.ToPagedList(pageNumber, pageSize));
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddRmvCocktailsFromBar(Guid Id, List<CocktailViewModel> cocktails)
+        {
+            foreach (var cocktail in cocktails)
+            {
+                if (cocktail.IsAvailableInBar)
+                {
+                    await barService.AddCocktailToBarAsync(Id, cocktail.Id);
+                }
+                else
+                {
+                    await barService.RemoveCocktailFromBarAsync(Id, cocktail.Id);
+                }
+            }
+            //return RedirectToActionResult("AddRmvCocktailsFromBar", new { Id = Id, sortOrder = null, currentFilter = null, searchString = null, page = null });
+            //sortOrder, string currentFilter, string searchString, int? page
+            return RedirectToAction("AddRmvCocktailsFromBar");
         }
     }
 }

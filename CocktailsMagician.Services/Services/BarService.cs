@@ -149,5 +149,69 @@ namespace CocktailsMagician.Services.Services
             await _cmContext.SaveChangesAsync();
             return true;
         }
+
+
+        public async Task<bool> AddCocktailToBarAsync(Guid barId, Guid cocktailId)
+        {
+            if (!await _cmContext.Cocktails.AnyAsync(c => c.UnlistedOn == null && c.Id == cocktailId))
+            {
+                throw new ArgumentNullException();
+            }
+            if (!await _cmContext.Bars.AnyAsync(b => b.UnlistedOn == null && b.Id == barId))
+            {
+                throw new ArgumentNullException();
+            }
+            var barCocktail = await _cmContext.BarCocktails
+                .Where(bc => bc.BarId == barId && bc.CocktailId == cocktailId)
+                .FirstOrDefaultAsync();
+
+            if (barCocktail == null)
+            {
+                var barCocktailNew = new BarCocktail()
+                {
+                    BarId = barId,
+                    CocktailId = cocktailId
+                };
+                _cmContext.BarCocktails.Add(barCocktailNew);
+            }
+            else if(barCocktail.UnlistedOn != null)
+            {
+                barCocktail.UnlistedOn = null;
+            }
+
+            try
+            {
+                await _cmContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return true;
+        }
+
+        public async Task<bool> RemoveCocktailFromBarAsync(Guid barId, Guid cocktailId)
+        {
+            var barCocktail = await _cmContext.BarCocktails
+                .Where(bc => bc.BarId == barId && bc.CocktailId == cocktailId)
+                .FirstOrDefaultAsync(bc => bc.UnlistedOn == null);
+
+            if (barCocktail != null)
+            {
+                barCocktail.UnlistedOn = DateTime.UtcNow;
+            }
+
+            try
+            {
+                await _cmContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return true;
+        }
     }
 }

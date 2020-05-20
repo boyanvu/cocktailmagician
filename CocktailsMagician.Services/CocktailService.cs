@@ -52,8 +52,16 @@ namespace CocktailsMagician.Services
 
             return true;
         }
+        public async Task<List<CocktailDTO>> GetAllCocktails()
+        {
+            var cocktailsDTO = await _cmContext.Cocktails
+                .Where(c => c.UnlistedOn == null)
+                .Select(c => c.CocktailMapToDTO())
+                .ToListAsync();
 
-        public async Task<List<CocktailDTO>> GetAllCocktails(string sortOrder, string currentFilter, string searchString, int? page)
+            return cocktailsDTO;
+        }
+        public async Task<List<CocktailDTO>> GetAllCocktails(string sortOrder, string searchString)
         {
 
             var cocktails = (IQueryable<Cocktail>)_cmContext.Cocktails;

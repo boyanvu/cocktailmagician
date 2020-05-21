@@ -32,6 +32,9 @@ namespace CocktailsMagician.Areas.Cocktails.Models
         public bool IsAvailableInBar { get; set; }
         public List<IngredientViewModel> Ingredients { get; set; }
 
+        [DisplayName("Cocktail ingredients:")]
+        public List<CocktailIngredientsViewModel> CocktailIngredients { get; set; }
+
         public ICollection<CocktailReview> CocktailReviews { get; set; }
     }
 }

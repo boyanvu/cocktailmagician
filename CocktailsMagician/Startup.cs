@@ -14,6 +14,7 @@ using CocktailsMagician.Services.Contracts;
 using CocktailsMagician.Services.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using CocktailsMagician.Helpers;
+using CocktailsMagician.Middlewares;
 
 namespace CocktailsMagician
 {
@@ -29,6 +30,9 @@ namespace CocktailsMagician
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
+            services.AddRazorPages();
+
             services.AddDbContext<CMContext>(options =>
             options.UseSqlServer(
                Configuration.GetConnectionString("DefaultConnection")));
@@ -54,8 +58,7 @@ namespace CocktailsMagician
 
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +78,8 @@ namespace CocktailsMagician
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<NotFoundMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

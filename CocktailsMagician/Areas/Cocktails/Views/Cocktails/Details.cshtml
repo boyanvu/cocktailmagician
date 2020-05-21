@@ -35,6 +35,15 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.AvgRating)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CocktailIngredients)
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                await Html.RenderPartialAsync("_ListCI", Model.CocktailIngredients);
+            }
+        </dd>
+
     </dl>
 </div>
 <div>

@@ -24,6 +24,23 @@ namespace CocktailsMagician.Services.Mappers
 
         }
 
+        public static CocktailIngredientsDTO AllCocktailIngredientMapToDTO(this CocktailIngredients cocktailIngredient)
+        {
+            var cocktailIngredientsDTO = new CocktailIngredientsDTO();
+
+            cocktailIngredientsDTO.CocktailId = cocktailIngredient.CocktailId;
+            cocktailIngredientsDTO.CocktailName = cocktailIngredient.Cocktail.Name;
+            cocktailIngredientsDTO.IngredientId = cocktailIngredient.IngredientId;
+            cocktailIngredientsDTO.IngredientName = cocktailIngredient.Ingredient.Name;
+            cocktailIngredientsDTO.UnlistedOn = cocktailIngredient.UnlistedOn;
+            //cocktailIngredientsDTO.Quantity = cocktailIngredient.Quantity;
+            //cocktailIngredientsDTO.Uom = cocktailIngredient.Uom;
+
+            return cocktailIngredientsDTO;
+
+        }
+
+
         public static CocktailIngredients CocktailIngredientDTOMapToModel(this CocktailIngredientsDTO cocktailIngredientDTO)
         {
             var cocktailIngredients = new CocktailIngredients();

@@ -183,7 +183,7 @@ namespace CocktailsMagician.Services
             var cocktailIngredient = await _cmContext.CocktailIngredients
                     .FirstOrDefaultAsync(ci => ci.CocktailId == cocktailId && ci.IngredientId == ingredientId);
 
-           if(cocktailIngredient == null)
+            if(cocktailIngredient == null)
             {
                 return false;
             }

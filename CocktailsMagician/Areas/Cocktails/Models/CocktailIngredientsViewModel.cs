@@ -8,7 +8,9 @@ namespace CocktailsMagician.Areas.Cocktails.Models
 {
     public class CocktailIngredientsViewModel
     {
-        public IngredientViewModel IngredientName { get; set; }
-        public bool IsSelected { get; set; }
+        public Guid CocktailId { get; set; }
+        public String CocktailName { get; set; }
+        public Guid IngredientId { get; set; }
+        public String IngredientName { get; set; }
     }
 }

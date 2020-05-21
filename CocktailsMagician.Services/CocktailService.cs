@@ -215,6 +215,23 @@ namespace CocktailsMagician.Services
             return ci.CocktailIngredientMapToDTO();
         }
 
+        public async Task<List<CocktailIngredientsDTO>> ShowCocktailIngredients(Guid cocktailId)
+        {
+            var cocktail = await _cmContext.Cocktails
+                   .FirstOrDefaultAsync(c => c.Id == cocktailId);
 
+            if(cocktail == null)
+            {
+                throw new ArgumentNullException("Cocktail does not exist!");
+            }
+
+            var ci =   _cmContext.CocktailIngredients
+                   .Include(ci => ci.Ingredient)
+                   .Include(ci => ci.Cocktail)
+                   .Where(ci => ci.CocktailId == cocktailId)
+                   .Select(ci => ci.AllCocktailIngredientMapToDTO());
+
+            return ci.ToList();
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace CocktailsMagician.Services.Contracts
         Task<bool> DoesCocktailHaveIngredient(Guid cocktailId, Guid ingredientId);
         Task<bool> IngredientIsUnlisted(Guid cocktailId, Guid ingredientId);
         Task<CocktailIngredientsDTO> GetCocktailIngredient(Guid cocktailId, Guid ingredientId);
+        Task<List<CocktailIngredientsDTO>> ShowCocktailIngredients(Guid cocktailId);
 
 
 

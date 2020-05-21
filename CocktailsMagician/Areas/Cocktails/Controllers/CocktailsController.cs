@@ -70,15 +70,19 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             }
 
             var cocktail = await cocktailService.GetCocktail(id);
-
+            var cocktailIngredients = await cocktailService.ShowCocktailIngredients(id);
+            var cocktailIngredientsVM = cocktailIngredients
+                .Select(ci => ci.CocktailIngredientDTOMapToVM());
+           
             if (cocktail == null)
             {
                 return NotFound();
             }
+            var cocktailVM = cocktail.CocktailDTOMapToVM();
+            cocktailVM.CocktailIngredients = cocktailIngredientsVM.ToList();
 
 
-
-            return View(cocktail.CocktailDTOMapToVM());
+            return View(cocktailVM);
         }
 
         // GET: Cocktails/Cocktails/Create

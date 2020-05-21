@@ -241,5 +241,14 @@ namespace CocktailsMagician.Services
 
             return ci.ToList();
         }
+
+        public async Task<bool> IsCocktailAvailableInBar(Guid barId, Guid cocktailId)
+        {
+            var isAvailable = await _cmContext.BarCocktails
+                    .Where(bc => bc.BarId == barId && bc.CocktailId == cocktailId)
+                    .AnyAsync(bc => bc.UnlistedOn == null);
+
+            return isAvailable;
+        }
     }
 }

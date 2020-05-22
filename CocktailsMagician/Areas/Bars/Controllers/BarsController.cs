@@ -47,7 +47,7 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             ViewBag.CurrentFilter = searchString;
 
 
-            var barDTOs = await barService.GetAllBars(sortOrder, searchString);
+            var barDTOs = await barService.GetBarsFiltered(sortOrder, searchString);
 
 
             var barsVMs = barDTOs.Select(b => b.BarDTOtoVM());    

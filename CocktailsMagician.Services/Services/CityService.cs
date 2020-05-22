@@ -23,7 +23,7 @@ namespace CocktailsMagician.Services.Services
             var city = await _cmContext.Cities.FindAsync(id);
             if (city==null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("City does not exist.");
             }
             var cityDTO = city.CityMapToDTO();
             return cityDTO;
@@ -49,7 +49,7 @@ namespace CocktailsMagician.Services.Services
                 var city = await _cmContext.Cities.FindAsync(id);
                 if (city == null)
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("The city does niot exist.");
                 }
                 city.Name = name;
                 await _cmContext.SaveChangesAsync();

@@ -26,7 +26,7 @@ namespace CocktailsMagician.Services.Services
                 .FirstOrDefaultAsync(b => b.Id == id);
             if (bar == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("Bar does not exist.");
             }
             var barDto = bar.MapBarToDTO();
             return barDto;
@@ -41,7 +41,7 @@ namespace CocktailsMagician.Services.Services
             return barsDto;
         }
 
-        public async Task<List<BarDTO>> GetAllBars(string sortOrder, string searchString)
+        public async Task<List<BarDTO>> GetBarsFiltered(string sortOrder, string searchString)
         {
 
             var bars = (IQueryable<Bar>)_cmContext.Bars
@@ -82,7 +82,7 @@ namespace CocktailsMagician.Services.Services
             try
             {
                 var bar = barDTO.BarDTOMapToModel();
-                _cmContext.Bars.Add(bar);
+                await _cmContext.Bars.AddAsync(bar);
                 await _cmContext.SaveChangesAsync();
                 return barDTO;
             }
@@ -92,7 +92,7 @@ namespace CocktailsMagician.Services.Services
             }
         }
 
-        public async Task<BarDTO> UpdateBarAsync(/*Guid id, string name, string phone, string website, string description, Guid cityId, string address*/BarDTO barDTO)
+        public async Task<BarDTO> UpdateBarAsync(BarDTO barDTO)
         {
             var bar = await _cmContext.Bars
                 .Where(b=>b.Id == barDTO.Id)
@@ -100,7 +100,7 @@ namespace CocktailsMagician.Services.Services
 
             if (bar == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("Bar does not exist.");
             }
 
             if (barDTO.Name != null)
@@ -155,11 +155,11 @@ namespace CocktailsMagician.Services.Services
         {
             if (!await _cmContext.Cocktails.AnyAsync(c => c.UnlistedOn == null && c.Id == cocktailId))
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("Cocktail is not available.");
             }
             if (!await _cmContext.Bars.AnyAsync(b => b.UnlistedOn == null && b.Id == barId))
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("Bar is not available.");
             }
             var barCocktail = await _cmContext.BarCocktails
                 .Where(bc => bc.BarId == barId && bc.CocktailId == cocktailId)
@@ -178,14 +178,16 @@ namespace CocktailsMagician.Services.Services
             {
                 barCocktail.UnlistedOn = null;
             }
-
-            try
+            if (_cmContext.ChangeTracker.HasChanges())
             {
-                await _cmContext.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                throw;
+                try
+                {
+                    await _cmContext.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
             return true;
         }
@@ -196,22 +198,23 @@ namespace CocktailsMagician.Services.Services
                 .Where(bc => bc.BarId == barId && bc.CocktailId == cocktailId)
                 .FirstOrDefaultAsync(bc => bc.UnlistedOn == null);
 
-            if (barCocktail != null)
+            if (barCocktail == null)
+            {
+                throw new ArgumentNullException("The specific bar-cocktail combination is unlisted or does not exist.");
+            }
+            else
             {
                 barCocktail.UnlistedOn = DateTime.UtcNow;
+                try
+                {
+                    await _cmContext.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                return true;
             }
-
-            try
-            {
-                await _cmContext.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-            return true;
         }
     }
 }

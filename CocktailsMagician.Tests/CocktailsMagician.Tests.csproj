@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CocktailsMagician.Data\CocktailsMagician.Data.csproj" />
     <ProjectReference Include="..\CocktailsMagician.Services\CocktailsMagician.Services.csproj" />
+    <ProjectReference Include="..\CocktailsMagician\CocktailsMagician.csproj" />
   </ItemGroup>
 
 </Project>

@@ -39,7 +39,6 @@ namespace CocktailsMagician.Tests.ServiceTests.BarTests
             {
                 BarId = barId,
                 CocktailId = cocktailId,
-                UnlistedOn = dateUnlistedOn
             };
             using (var arrangeContext = new CMContext(options))
             {
@@ -55,7 +54,7 @@ namespace CocktailsMagician.Tests.ServiceTests.BarTests
                 var result1 = await sut.RemoveCocktailFromBarAsync(barId, cocktailId);
                 var result2 = assertContext.BarCocktails.Where(bc => bc.BarId == barId && bc.CocktailId == cocktailId).FirstOrDefault();
                 Assert.IsTrue(result1);
-                Assert.AreEqual(dateUnlistedOn,result2.UnlistedOn);
+                Assert.IsNotNull(result2.UnlistedOn);
             }
         }
     

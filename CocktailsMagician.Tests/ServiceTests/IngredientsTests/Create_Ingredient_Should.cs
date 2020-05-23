@@ -43,5 +43,19 @@ namespace CocktailsMagician.Tests.ServiceTests.IngredientsTests
                  Assert.AreEqual("Gin", assertContext.Ingredients.First().Name);
             }
         }
+
+
+        [TestMethod]
+        public async Task Throw_Exception_When_Ingredient_IsNull()
+        {
+            var options = Utils.GetOptions(nameof(Throw_Exception_When_Ingredient_IsNull));
+
+            using (var assertContext = new CMContext(options))
+            {
+                var sut = new IngredientService(assertContext);
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>
+                    (async () => await sut.CreateIngredient(null));
+            }
+        }
     }
 }

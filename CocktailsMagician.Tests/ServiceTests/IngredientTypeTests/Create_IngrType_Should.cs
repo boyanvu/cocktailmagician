@@ -36,5 +36,18 @@ namespace CocktailsMagician.Tests.ServiceTests.IngredientTypeTests
             }
 
         }
+
+        [TestMethod]
+        public async Task Throw_Exception_When_IngredientType_IsNull()
+        {
+            var options = Utils.GetOptions(nameof(Throw_Exception_When_IngredientType_IsNull));
+
+            using (var assertContext = new CMContext(options))
+            {
+                var sut = new IngredientTypeService(assertContext);
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>
+                    (async () => await sut.CreateIngredientType(null));
+            }
+        }
     }
 }

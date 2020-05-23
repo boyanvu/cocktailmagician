@@ -37,7 +37,20 @@ namespace CocktailsMagician.Tests.ServiceTests.CocktailTests
             {
                 Assert.AreEqual("Margarita", assertContext.Cocktails.First().Name);
             }
+        }
 
+        [TestMethod]
+        public async Task Throw_Exception_When_Cocktail_IsNull()
+        {
+            var options = Utils.GetOptions(nameof(Throw_Exception_When_Cocktail_IsNull));
+
+            using (var assertContext = new CMContext(options))
+            {
+                var sut = new CocktailService(assertContext);
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>
+                    (async () => await sut.CreateCocktail(null));
+            }
         }
     }
 }
+

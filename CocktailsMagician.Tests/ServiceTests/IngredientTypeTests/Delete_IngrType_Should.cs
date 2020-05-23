@@ -40,9 +40,9 @@ namespace CocktailsMagician.Tests.ServiceTests.IngredientTypeTests
         }
 
         [TestMethod]
-        public async Task Throw_When_IngredientTypeNotFound()
+        public async Task Throw_When_DIngredientTypeNotFound()
         {
-            var options = Utils.GetOptions(nameof(Throw_When_IngredientTypeNotFound));
+            var options = Utils.GetOptions(nameof(Throw_When_DIngredientTypeNotFound));
 
             using (var assertContext = new CMContext(options))
             {

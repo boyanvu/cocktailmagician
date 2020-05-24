@@ -1,18 +1,24 @@
 ﻿@model X.PagedList.IPagedList<CocktailsMagician.Areas.Cocktails.Models.CocktailViewModel>
 @using X.PagedList.Mvc.Core
-@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Add / remove cocktail</h1>
+<head>
+    <style>
+        input[readonly] {
+            border: none;
+            background: none;
+        }
+    </style>
+</head>
+<h1> Add / remove cocktail</h1>
 <div>
     <input asp-for="@ViewData["barName"]" class="form-control" readonly />
 </div>
 <br />
-
 @using (Html.BeginForm())
 {
     <p>
@@ -20,9 +26,6 @@
         <input type="submit" value="Search" />
     </p>
 }
-
-@*ViewData["barId"] = bar.Id;
-    ViewData["barName"] = bar.Name;*@
 <form asp-action="AddRmvCocktailsFromBar" method="post">
     <div>
         <input type="hidden" id="barId" asp-for="@ViewData["barId"]" class="form-control" readonly />
@@ -34,31 +37,27 @@
                 <th>
                     @Html.ActionLink("Name", "AddRmvCocktailsFromBar", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
                 </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().AvgRating)
-                    </th>*@
                 <th>
                     @Html.ActionLink("Rating", "AddRmvCocktailsFromBar", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.FirstOrDefault().IsAvailableInBar)
                 </th>
-                <th></th>
+                <th> </th>
             </tr>
         </thead>
         <tbody>
             @for (int i = 0; i < Model.Count; i++)
             {
-                <input type="hidden" asp-for="@Model[i].Id" readonly />
                 <tr>
+                    <td style="display:none;">
+                        <input type="hidden" asp-for="@Model[i].Id" readonly />
+                    </td>
                     <td>
                         <input asp-for="@Model[i].Name" readonly />
                     </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => Model[i].UnlistedOn)
-                        </td>*@
                     <td>
-                        @Html.DisplayFor(modelItem => Model[i].AvgRating)
+                        <input asp-for="@Model[i].AvgRating" type="text" readonly />
                     </td>
                     <td>
                         <input asp-for="@Model[i].IsAvailableInBar" class="form-check-input" />
@@ -67,18 +66,31 @@
             }
         </tbody>
     </table>
-    <br />
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-    </div>
 </form>
 
 <center>
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-
     @Html.PagedListPager(Model, page => Url.Action("AddRmvCocktailsFromBar",
-        new { Id = @ViewData["barId"], page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter/*, searchString = ViewBag.SearchString*/ }))
+        new { Id = @ViewData["barId"], page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, searchString = ViewBag.SearchString }))
 </center>
 
-@*@Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))*@
+@section Scripts
+{
+    <script>
+        var input = $(":checkbox")
+        input.change(function () {
+            var barId = $("#barId").val();
+            var isAvailableInBar = $(this).is(':checked');
+            var cocktailId = $(this).closest('tr').children().eq(0).children().eq(0).val();
+            var cocktailName = $(this).closest('tr').children().eq(1).children().eq(0).val();
+            var successMsg = cocktailName + (isAvailableInBar == true ? ' has been successfully added!' : ' has been successfully removed!');
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddRmvCocktailsFromBarSingle","Bars",new { area = "Bars" })",
+                data: {barId:barId, cocktailId:cocktailId, isAvailable:isAvailableInBar},
+                dataType: "json",
+                success: alert(successMsg),
+            });
+        });
+    </script>
+}

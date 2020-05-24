@@ -13,6 +13,9 @@ using CocktailsMagician.Areas.Cocktails.Models;
 using CocktailsMagician.Services.DTO_s;
 using X.PagedList;
 using CocktailsMagician.Areas.Ingredients.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using NToastNotify;
 
 namespace CocktailsMagician.Areas.Cocktails.Controllers
 {
@@ -22,12 +25,19 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         private readonly CMContext _context;
         private readonly ICocktailService cocktailService;
         private readonly IIngredientService ingredientService;
+        private readonly UserManager<User> _userManager;
+        private readonly ICocktailReviewService cocktailReviewService;
+        private readonly IToastNotification _toastNotification;
 
-        public CocktailsController(CMContext context, ICocktailService cocktailService, IIngredientService ingredientService)
+        public CocktailsController(CMContext context, ICocktailService cocktailService, IIngredientService ingredientService,
+            ICocktailReviewService cocktailReviewService, UserManager<User> userManager, IToastNotification toastNotification)
         {
             _context = context;
             this.cocktailService = cocktailService;
             this.ingredientService = ingredientService;
+            this.cocktailReviewService = cocktailReviewService;
+            this._userManager = userManager;
+            this._toastNotification = toastNotification;
         }
 
         // GET: Cocktails/Cocktails
@@ -78,12 +88,36 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.CocktailId = cocktail.Id;
+
+            var cocktailReviews = await cocktailReviewService.GetAllSpecificCocktailReviews(id);
+            var cocktailReviewsVM = cocktailReviews.Select
+                (cr => cr.CocktailReviewsDTOMapToVM());
+
+            ViewBag.Reviews = cocktailReviewsVM;
+
+            var ratings = cocktailReviewsVM;
+            if (ratings.Count() > 0)
+            {
+                var ratingSum = ratings.Sum(d => d.Rating);
+                ViewBag.RatingSum = ratingSum;
+                var ratingCount = ratings.Count();
+                ViewBag.RatingCount = ratingCount;
+            }
+            else
+            {
+                ViewBag.RatingSum = 0;
+                ViewBag.RatingCount = 0;
+            }
             var cocktailVM = cocktail.CocktailDTOMapToVM();
             cocktailVM.CocktailIngredients = cocktailIngredientsVM.ToList();
 
-
             return View(cocktailVM);
         }
+
+       
+
 
         // GET: Cocktails/Cocktails/Create
         public async Task<IActionResult> Create(CocktailViewModel cocktail)
@@ -129,6 +163,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                         };
 
                         await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
+                        _toastNotification.AddSuccessToastMessage("Cocktail created successfully!");
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -233,6 +268,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                         throw;
                     }
                 }
+                _toastNotification.AddSuccessToastMessage("Cocktail edited successfully!");
                 return RedirectToAction(nameof(Index));
             }
             return View(cocktail);
@@ -265,6 +301,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await cocktailService.DeleteCocktail(id);
+            _toastNotification.AddSuccessToastMessage("Cocktail unlisted successfully!");
 
             return RedirectToAction(nameof(Index));
         }

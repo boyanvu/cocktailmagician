@@ -1,4 +1,3 @@
-
 using CocktailsMagician.Data;
 using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Services;
@@ -10,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CocktailsMagician.Services.Contracts;
 using CocktailsMagician.Services.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using CocktailsMagician.Helpers;
@@ -57,8 +55,9 @@ namespace CocktailsMagician
             services.AddScoped<IBarReviewService, BarReviewService>();
 
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddMvc().AddNToastNotifyToastr();
 
-         
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +77,8 @@ namespace CocktailsMagician
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseNToastNotify();
 
             app.UseMiddleware<NotFoundMiddleware>();
 

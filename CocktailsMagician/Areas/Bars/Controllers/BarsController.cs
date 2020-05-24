@@ -249,5 +249,20 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             //sortOrder, string currentFilter, string searchString, int? page
             return RedirectToAction("AddRmvCocktailsFromBar");
         }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken] //TODO
+        public async Task<IActionResult> AddRmvCocktailsFromBarSingle(Guid barId, Guid cocktailId,bool isAvailable)
+        {
+                if (isAvailable)
+                {
+                    await barService.AddCocktailToBarAsync(barId, cocktailId);
+                }
+                else
+                {
+                    await barService.RemoveCocktailFromBarAsync(barId, cocktailId);
+                }
+            return RedirectToAction("AddRmvCocktailsFromBar");
+        }
     }
 }

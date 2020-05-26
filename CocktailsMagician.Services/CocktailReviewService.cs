@@ -78,5 +78,8 @@ namespace CocktailsMagician.Services
                 .Select(cr => cr.CocktailMapReviewDTO())
                 .ToListAsync();
         }
+
+ 
+ 
     }
 }

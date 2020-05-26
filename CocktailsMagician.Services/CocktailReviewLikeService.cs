@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using CocktailsMagician.Services.Mappers;
+using System.Linq;
 
 namespace CocktailsMagician.Services
 {
@@ -58,6 +59,14 @@ namespace CocktailsMagician.Services
             var cocktailReviewLikeDTO = cocktailReviewLike.CocktailReviewLikeMapToDTO();
 
             return cocktailReviewLikeDTO;
+        }
+
+        public async Task<IEnumerable<CocktailReviewLikeDTO>> GetAllCocktailReviewLikes()
+        {
+            return await _cmContext.CocktailReviewLikes
+                .Include(cr => cr.User)
+                .Select(cr => cr.CocktailReviewLikeMapToDTO())
+                .ToListAsync();
         }
     }
 }

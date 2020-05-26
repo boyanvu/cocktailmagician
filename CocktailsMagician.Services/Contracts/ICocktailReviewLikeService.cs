@@ -9,5 +9,6 @@ namespace CocktailsMagician.Services.Contracts
     public interface ICocktailReviewLikeService
     {
         Task<CocktailReviewLikeDTO> AddCocktailReviewLike(Guid cocktailReviewId, string username);
+        Task<IEnumerable<CocktailReviewLikeDTO>> GetAllCocktailReviewLikes();
     }
 }

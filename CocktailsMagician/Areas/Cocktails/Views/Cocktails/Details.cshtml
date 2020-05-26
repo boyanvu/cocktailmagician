@@ -6,6 +6,7 @@
     var reviews = (IEnumerable<CocktailsMagician.Areas.Cocktails.Models.CocktailReviewViewModel>)ViewBag.Reviews;
     var ratingSum = ViewBag.RatingSum;
     var ratingCount = ViewBag.RatingCount;
+    var cocktailId = ViewBag.CocktailId;
 
     decimal rating = 0;
     if (ratingCount > 0)
@@ -97,8 +98,13 @@
         </div>
         <div class="col-md-9">
             @Html.Raw(c.Comment.Replace("\n", "<br />"))
-
-
+        </div>
+        <div>
+            <p>
+                <button id="thumbsUpButton" type="button" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-thumbs-up"></span> Like
+                </button>
+            </p>
         </div>
     </div>
 }
@@ -115,6 +121,22 @@
     }
     $(function(){
         SCRate();
+    });
+
+    $(function () {
+         var cocktailId = $("#cocktailId").val();
+         var successMsg = 'Like added!';
+        $('#thumbsUpButton').on('click', function () {
+            $('#thumbsUpButton').css({ color: 'green' });
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("LikeReview","CocktailReviews",new { area = "Cocktails" })",
+                data: { cocktailId: cocktailId, isLiked: isLiked},
+                dataType: "json",
+                success: alert(successMsg),
+            });
+        });
+
     });
 </script>
 

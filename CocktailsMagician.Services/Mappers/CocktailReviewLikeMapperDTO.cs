@@ -12,13 +12,11 @@ namespace CocktailsMagician.Services.Mappers
         {
             var cocktailReviewLikeDTO = new CocktailReviewLikeDTO();
             cocktailReviewLikeDTO.CocktailReviewId = cocktailReviewLike.CocktailReviewId;
-            cocktailReviewLikeDTO.CocktailReview = cocktailReviewLike.CocktailReview;
+            //cocktailReviewLikeDTO.CocktailReview = cocktailReviewLike.CocktailReview;
             cocktailReviewLikeDTO.UserId = cocktailReviewLike.UserId;
-            cocktailReviewLikeDTO.User = cocktailReviewLike.User;
+            //cocktailReviewLikeDTO.User = cocktailReviewLike.User;
             cocktailReviewLikeDTO.IsLiked = cocktailReviewLike.IsLiked;
-            cocktailReviewLikeDTO.IsInappropriate = cocktailReviewLike.IsInappropriate;
-
-
+            //cocktailReviewLikeDTO.IsInappropriate = cocktailReviewLike.IsInappropriate;
             return cocktailReviewLikeDTO;
 
         }

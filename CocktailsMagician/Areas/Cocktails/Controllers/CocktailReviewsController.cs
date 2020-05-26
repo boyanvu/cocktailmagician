@@ -16,19 +16,22 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
     public class CocktailReviewsController : Controller
     {
         private readonly ICocktailService cocktailService;
-        private readonly IIngredientService ingredientService;
-        private readonly UserManager<User> _userManager;
+        private readonly IIngredientService ingredientService;   
         private readonly ICocktailReviewService cocktailReviewService;
+        private readonly ICocktailReviewLikeService cocktailReviewLikeService;
+        private readonly UserManager<User> _userManager;
         private readonly IToastNotification _toastNotification;
 
         public CocktailReviewsController(ICocktailService cocktailService, IIngredientService ingredientService,
-            ICocktailReviewService cocktailReviewService, UserManager<User> userManager, IToastNotification toastNotification)
+            ICocktailReviewService cocktailReviewService, UserManager<User> userManager, IToastNotification toastNotification,
+            ICocktailReviewLikeService cocktailReviewLikeService)
         {
             this.cocktailService = cocktailService;
             this.ingredientService = ingredientService;
             this.cocktailReviewService = cocktailReviewService;
+            this.cocktailReviewLikeService = cocktailReviewLikeService;
             this._userManager = userManager;
-            this._toastNotification = toastNotification;
+            this._toastNotification = toastNotification;     
         }
 
 
@@ -46,6 +49,26 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
 
             await cocktailReviewService.CreateCocktailReview(cocktail.Name, user.UserName, rating, review);
             _toastNotification.AddSuccessToastMessage("Review made successfully!");
+
+            return RedirectToAction("Details", "Cocktails", new { id = cocktailId });
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LikeReview(Guid cocktailReviewId, bool isLiked)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var allCocktailReviewLikes = await cocktailReviewLikeService.GetAllCocktailReviewLikes();
+            var cocktailReviewLike = allCocktailReviewLikes
+                .FirstOrDefault(cr => cr.CocktailReviewId == cocktailReviewId);
+            var cocktailId = cocktailReviewLike.CocktailReview.CocktailId;
+              
+            if (isLiked)
+            {
+                await cocktailReviewLikeService.AddCocktailReviewLike(cocktailReviewId, user.UserName);
+            }
 
             return RedirectToAction("Details", "Cocktails", new { id = cocktailId });
         }

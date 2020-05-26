@@ -126,18 +126,19 @@
     var input = $(":button")
     input.click(function () {
         var successMsg = 'Like added!';
-        $(this).on('click', function () {
+        //$(this).on('click', function () {
             $(this).css({ color: 'green' });
             var isLiked = $(this).is('#thumbsUpButton');
-            var cReviewId = $(this).closest($(".row")).children().eq(0).val();
+        var cReviewId = $(this).closest($(".row")).children().eq(0).children().eq(0).val();
+        debugger
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("LikeReview","CocktailReviews",new { area = "Cocktails" })",
-                data: { cReviewId: cReviewId, isLiked: isLiked },
+                data: { cocktailReviewId: cReviewId, isLiked: isLiked },
                 dataType: "json",
                 success: alert(successMsg),
             });
-        });
+        //});
 
     });
 </script>

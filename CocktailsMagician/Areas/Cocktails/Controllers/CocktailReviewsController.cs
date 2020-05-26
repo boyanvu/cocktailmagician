@@ -55,7 +55,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> LikeReview(Guid cocktailReviewId, bool isLiked)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);

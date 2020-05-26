@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="jquery.datatables" Version="1.10.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
@@ -24,10 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CocktailsMagician.Data\CocktailsMagician.Data.csproj" />
     <ProjectReference Include="..\CocktailsMagician.Services\CocktailsMagician.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\BarReviews\Models\" />
   </ItemGroup>
 
 

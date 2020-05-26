@@ -40,7 +40,11 @@ namespace CocktailsMagician.Services.Services
                 .ToListAsync();
             return barsDto;
         }
-
+        public async Task<int> BarsCount()
+        {
+            var barsCount = await _cmContext.Bars.CountAsync();
+            return barsCount;
+        }
         public async Task<List<BarDTO>> GetBarsFiltered(string sortOrder, string searchString)
         {
 
@@ -215,6 +219,45 @@ namespace CocktailsMagician.Services.Services
                 }
                 return true;
             }
+        }
+
+        public async Task<List<BarDTO>> ListAllBarsAsync(int skip, int pageSize, string searchValue) 
+        {
+
+            var bars = (IQueryable<Bar>)_cmContext.Bars
+                .Include(b => b.City);
+
+
+            if (!String.IsNullOrEmpty(searchValue))
+            {
+                bars = bars
+                    .Where(b => b.Name.Contains(searchValue))
+                    .Skip(skip)
+                    .Take(pageSize);
+            }
+
+            //switch (sortOrder)
+            //{
+            //    case "name_desc":
+            //        bars = bars.OrderByDescending(b => b.Name);
+            //        break;
+            //    case "rating":
+            //        bars = bars.OrderBy(b => b.AvgRating);
+            //        break;
+            //    case "rating_desc":
+            //        bars = bars.OrderByDescending(b => b.AvgRating);
+            //        break;
+            //    default:
+            //        bars = bars.OrderBy(b => b.Name);
+            //        break;
+            //}
+
+            var barDTOs = await bars
+                //.Where(b => b.UnlistedOn == null)
+                .Select(b => b.MapBarToDTO())
+                .ToListAsync();
+
+            return barDTOs;
         }
     }
 }

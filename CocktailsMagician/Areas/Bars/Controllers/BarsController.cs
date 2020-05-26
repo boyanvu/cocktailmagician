@@ -252,17 +252,43 @@ namespace CocktailsMagician.Areas.Bars.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken] //TODO
-        public async Task<IActionResult> AddRmvCocktailsFromBarSingle(Guid barId, Guid cocktailId,bool isAvailable)
+        public async Task<IActionResult> AddRmvCocktailsFromBarSingle(Guid barId, Guid cocktailId, bool isAvailable)
         {
-                if (isAvailable)
-                {
-                    await barService.AddCocktailToBarAsync(barId, cocktailId);
-                }
-                else
-                {
-                    await barService.RemoveCocktailFromBarAsync(barId, cocktailId);
-                }
+            if (isAvailable)
+            {
+                await barService.AddCocktailToBarAsync(barId, cocktailId);
+            }
+            else
+            {
+                await barService.RemoveCocktailFromBarAsync(barId, cocktailId);
+            }
             return RedirectToAction("AddRmvCocktailsFromBar");
         }
+
+        public IActionResult DataTable()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ListAllBars()
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+
+            //int totalRecord = this.emailService.GetEmailsCount();
+            int totalRecord = await barService.BarsCount();
+            //var emails = await this.emailService.ListAllEmails(skip, pageSize, searchValue);
+            var bars = await barService.ListAllBarsAsync(skip, pageSize, searchValue);
+            //var model = emails.Select(x => this.emailMapper.MapFrom(x)).ToList();
+            var model = bars.Select(b => b.BarDTOtoVM()).ToList();
+
+            return Json(new { draw = draw, recordsFiltered = totalRecord, recordsTotal = totalRecord, data = model });
+        }
     }
-}
+    }
+

@@ -43,7 +43,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.FirstOrDefault().IsAvailableInBar)
                 </th>
-                <th> </th>
             </tr>
         </thead>
         <tbody>
@@ -84,10 +83,15 @@
             var cocktailId = $(this).closest('tr').children().eq(0).children().eq(0).val();
             var cocktailName = $(this).closest('tr').children().eq(1).children().eq(0).val();
             var successMsg = cocktailName + (isAvailableInBar == true ? ' has been successfully added!' : ' has been successfully removed!');
+            //var form = $('#__AjaxAntiForgeryForm');
+            //var token = $('input[name="__RequestVerificationToken"]', form).val();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("AddRmvCocktailsFromBarSingle","Bars",new { area = "Bars" })",
-                data: {barId:barId, cocktailId:cocktailId, isAvailable:isAvailableInBar},
+                data: {
+                    //__RequestVerificationToken: token,
+                    barId: barId, cocktailId: cocktailId, isAvailable: isAvailableInBar
+                },
                 dataType: "json",
                 success: alert(successMsg),
             });

@@ -18,6 +18,6 @@ namespace CocktailsMagician.Services.Contracts
         Task<bool> AddCocktailToBarAsync(Guid barId, Guid cocktailId);
         Task<bool> RemoveCocktailFromBarAsync(Guid barId, Guid cocktailId);
         Task<int> BarsCount();
-        Task<List<BarDTO>> ListAllBarsAsync(int skip, int pageSize, string searchValue);
+        Task<List<BarDTO>> ListAllBarsAsync(int skip, int pageSize, string searchValue, string orderBy, string orderDirection);
     }
 }

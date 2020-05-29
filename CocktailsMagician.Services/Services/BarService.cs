@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Text;
 using System.Threading.Tasks;
 using CocktailsMagician.Data;
@@ -9,6 +10,7 @@ using CocktailsMagician.Services.DTO_s;
 using Microsoft.EntityFrameworkCore;
 using CocktailsMagician.Services.Mappers;
 using CocktailsMagician.Data.Entities;
+using CocktailsMagician.Services.Helpers;
 
 namespace CocktailsMagician.Services.Services
 {
@@ -221,7 +223,7 @@ namespace CocktailsMagician.Services.Services
             }
         }
 
-        public async Task<List<BarDTO>> ListAllBarsAsync(int skip, int pageSize, string searchValue) 
+        public async Task<List<BarDTO>> ListAllBarsAsync(int skip, int pageSize, string searchValue, string orderBy, string orderDirection) 
         {
 
             var bars = (IQueryable<Bar>)_cmContext.Bars
@@ -231,26 +233,23 @@ namespace CocktailsMagician.Services.Services
             if (!String.IsNullOrEmpty(searchValue))
             {
                 bars = bars
-                    .Where(b => b.Name.Contains(searchValue))
-                    .Skip(skip)
-                    .Take(pageSize);
+                    .Where(b => b.Name.Contains(searchValue));
+            }
+            if (!String.IsNullOrEmpty(orderBy))
+            {
+                if (String.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
+                {
+                    bars = bars.OrderBy(orderBy);
+                }
+                else
+                {
+                    bars = bars.OrderByDescending(orderBy);
+                }
             }
 
-            //switch (sortOrder)
-            //{
-            //    case "name_desc":
-            //        bars = bars.OrderByDescending(b => b.Name);
-            //        break;
-            //    case "rating":
-            //        bars = bars.OrderBy(b => b.AvgRating);
-            //        break;
-            //    case "rating_desc":
-            //        bars = bars.OrderByDescending(b => b.AvgRating);
-            //        break;
-            //    default:
-            //        bars = bars.OrderBy(b => b.Name);
-            //        break;
-            //}
+            bars = bars
+                .Skip(skip)
+                .Take(pageSize);
 
             var barDTOs = await bars
                 //.Where(b => b.UnlistedOn == null)

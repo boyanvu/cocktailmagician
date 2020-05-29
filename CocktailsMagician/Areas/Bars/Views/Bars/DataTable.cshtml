@@ -6,35 +6,40 @@
 }
 
 
+
 <h1>View</h1>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal3">
+    Launch demo modal
+</button>
+<br />
+<br />
 
 <table id="BarTable" class="table">
     <thead>
         <tr>
             <th>
+                Id
+            </th>
+            <th>
                 Name
             </th>
-            @*<th>
+            <th>
                 Phone
             </th>
             <th>
                 Website
             </th>
             <th>
-                Description
-            </th>
-            <th>
-                UnlistedOn
-            </th>
-            <th>
-                Address
-            </th>
-            <th>
                 City
             </th>
             <th>
-                AvgRating
-            </th>*@
+                Rating
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -43,33 +48,78 @@
 
 @section Scripts
 {
-    <link href="~/DataTables/datatables.css" rel="stylesheet" />
-    <script src="~/DataTables/datatables.js"></script>
-    <script type="text/javascript" class="init"></script>
+    <link href="~/DataTables/datatables.css" rel="stylesheet" type="text/css" />
+    <link href="~/DataTables/Buttons-1.6.2/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/DataTables/datatables.js" type="text/javascript" charset="utf8"></script>
+
     <script>
         $(document).ready(function () {
             $('#BarTable').DataTable({
-                "ordering": false,
+                "ordering": true,
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-            "url": "@Url.Action("ListAllBars", "Bars",new { area = "Bars" })",
-                    //"url": "Bars/Bars/ListAllBars",
+                    "url": "@Url.Action("ListAllBars", "Bars",new { area = "Bars" })",
                     "type": "POST",
+                    @*"data": "function (data) {data.someKey = "@Model.Model.id"}",*@
                     "dataType": "json",
                 },
-
+                  "columnDefs": [ {
+                    "targets": 3,
+                    "data": "Site",
+                    "render": function ( data, type, row, meta ) {
+                      return '<a href="'+data+'">site</a>';
+                    }
+                  }],
                 "columns": [
+                    { "data": "id", "name": "Id", "visible": false/*, "orderable": false */ },
                     { "data": "name", "name": "Name", "autoWidth": true },
-                    //{ "data": "Phone" },
-                    //{ "data": "Website" },
-                    //{ "data": "Description" },
-                    //{ "data": "UnlistedOn" },
-                    //{ "data": "Address" },
-                    //{ "data": "City" },
-                    //{ "data": "AvgRating"},
-                ]              
+                    { "data": "phone", "name": "Phone", "autoWidth": true, "orderable": false },
+                    { "data": "website", "name": "Site", "autoWidth": true, "orderable": false },
+                    { "data": "city", "name": "City", "autoWidth": true, "orderable": false },
+                    { "data": "avgRating", "name": "AvgRating", "autoWidth": true },
+                    {
+                        "data": null, "orderable": false, "autoWidth": true,"width":"10%",
+                        "render": function (data, type, row) {
+                            return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Details/' + row.id + '">Details</a>';
+                        }
+                    },
+                    {
+                        "data": null, "orderable": false, "autoWidth": true,"width":"10%",
+                        "render": function (data, type, row) {
+                                return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Edit/' + row.id + '">Edit</a>';
+                        }
+                    },
+                     {
+                        "data": null,"orderable": false,"autoWidth": true,"width":"10%",
+                        "render": function (data, type, row) {
+                            return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Delete/' + row.id + '">Delete</a>';
+                        }
+                    }
+                ]
             });
         });
     </script>
 }
+
+<!-- Modal -->
+<div class="modal fade modal-xl" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal3Label">Review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form-container">
+                @Html.Partial("_CommentRating")
+                @*<partial name="_CommentRating" model="product" />*@
+            </div>
+            @*<div class="modal-footer">*@
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>*@
+            @*</div>*@
+        </div>
+    </div>
+</div>

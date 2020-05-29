@@ -21,12 +21,14 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         private readonly CMContext _context;
         private readonly IBarService barService;
         private readonly ICocktailService cocktailService;
+        private readonly IBarReviewService barReviewService;
 
-        public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService)
+        public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService, IBarReviewService barReviewService)
         {
             _context = context;
             this.barService = barService;
             this.cocktailService = cocktailService;
+            this.barReviewService = barReviewService;
         }
 
         // GET: Bars/Bars
@@ -279,14 +281,30 @@ namespace CocktailsMagician.Areas.Bars.Controllers
 
             int pageSize = length != null ? Convert.ToInt32(length) : 0;
             int skip = start != null ? Convert.ToInt32(start) : 0;
-
-            //int totalRecord = this.emailService.GetEmailsCount();
-            int totalRecord = await barService.BarsCount();
-            //var emails = await this.emailService.ListAllEmails(skip, pageSize, searchValue);
-            var bars = await barService.ListAllBarsAsync(skip, pageSize, searchValue);
-            //var model = emails.Select(x => this.emailMapper.MapFrom(x)).ToList();
+            int totalRecord = await barService.BarsCount(); 
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var bars = await barService.ListAllBarsAsync(skip, pageSize, searchValue, sortColumn, sortColumnDirection);
             var model = bars.Select(b => b.BarDTOtoVM()).ToList();
+            return Json(new { draw = draw, recordsFiltered = totalRecord, recordsTotal = totalRecord, data = model });
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> ListAllBarReviews()
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var barId = Guid.Parse(Request.Form["barId"].FirstOrDefault());
+
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+            int totalRecord = await barService.BarsCount();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var barReviewDTOs = await barReviewService.ListAllReviewsPerBarAsync(skip, pageSize, searchValue, sortColumn, sortColumnDirection, barId);
+            var model = barReviewDTOs.Select(br => br.BarReviewDTOtoVM()).ToList();
             return Json(new { draw = draw, recordsFiltered = totalRecord, recordsTotal = totalRecord, data = model });
         }
     }

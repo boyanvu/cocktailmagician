@@ -11,52 +11,52 @@
     <h4>Bar</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Phone)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Phone)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Website)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Website)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UnlistedOn)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UnlistedOn)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Address)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Address)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.City)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.City)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.AvgRating)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.AvgRating)
         </dd>
     </dl>
@@ -64,4 +64,82 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts
+{
+    <link href="~/DataTables/datatables.css" rel="stylesheet" type="text/css" />
+    <link href="~/DataTables/Buttons-1.6.2/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/DataTables/datatables.js" type="text/javascript" charset="utf8"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#BarTable').DataTable({
+                "ordering": true,
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("ListAllBarReviews", "Bars",new { area = "Bars" })",
+                    "type": "POST",
+                    "data": "function (data) {data.barId = "@Model.Id"}",
+                    "dataType": "json",
+                },
+                  "columnDefs": [ {
+                    "targets": 3,
+                    "data": "Site",
+                    "render": function ( data, type, row, meta ) {
+                      return '<a href="'+data+'">site</a>';
+                    }
+                  }],
+                "columns": [
+                    { "data": "id", "name": "Id", "visible": false/*, "orderable": false */ },
+                    { "data": "name", "name": "Name", "autoWidth": true },
+                    { "data": "phone", "name": "Phone", "autoWidth": true, "orderable": false },
+                    { "data": "website", "name": "Site", "autoWidth": true, "orderable": false },
+                    { "data": "city", "name": "City", "autoWidth": true, "orderable": false },
+                    { "data": "avgRating", "name": "AvgRating", "autoWidth": true },
+                    {
+                        "data": null, "orderable": false, "autoWidth": true,"width":"10%",
+                        "render": function (data, type, row) {
+                            return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Details/' + row.id + '">Details</a>';
+                        }
+                    },
+                    {
+                        "data": null, "orderable": false, "autoWidth": true,"width":"10%",
+                        "render": function (data, type, row) {
+                                return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Edit/' + row.id + '">Edit</a>';
+                        }
+                    },
+                     {
+                        "data": null,"orderable": false,"autoWidth": true,"width":"10%",
+                        "render": function (data, type, row) {
+                            return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Delete/' + row.id + '">Delete</a>';
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}
+
+<!-- Modal -->
+<div class="modal fade modal-xl" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal3Label">Review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form-container">
+                @Html.Partial("_CommentRating")
+                @*<partial name="_CommentRating" model="product" />*@
+            </div>
+            @*<div class="modal-footer">*@
+            @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>*@
+            @*</div>*@
+        </div>
+    </div>
 </div>

@@ -8,6 +8,7 @@ using CocktailsMagician.Services.DTO_s;
 using Microsoft.EntityFrameworkCore;
 using CocktailsMagician.Services.Mappers;
 using CocktailsMagician.Data.Entities;
+using CocktailsMagician.Services.Helpers;
 
 namespace CocktailsMagician.Services.Services
 {
@@ -128,5 +129,44 @@ namespace CocktailsMagician.Services.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<BarReviewDTO>> ListAllReviewsPerBarAsync(int skip, int pageSize, string searchValue, 
+            string orderBy, string orderDirection, Guid barId)
+        {
+
+            var barReviews = (IQueryable<BarReview>)_cmContext.BarReviews
+                .Include(br => br.BarReviewLikes)
+                .Include(br=>br.User)
+                .Where(br=>br.BarId == barId);
+
+            if (!String.IsNullOrEmpty(searchValue))
+            {
+                barReviews = barReviews
+                    .Where(br => br.User.UserName.Contains(searchValue));
+            }
+            if (!String.IsNullOrEmpty(orderBy))
+            {
+                if (String.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
+                {
+                    barReviews = barReviews.OrderBy(orderBy);
+                }
+                else
+                {
+                    barReviews = barReviews.OrderByDescending(orderBy);
+                }
+            }
+
+            barReviews = barReviews
+                .Skip(skip)
+                .Take(pageSize);
+
+            var barReviewDTOs = await barReviews
+                .Select(br => br.BarMapReviewDTO())
+                .ToListAsync();
+
+            return barReviewDTOs;
+        }
+
+
     }
 }

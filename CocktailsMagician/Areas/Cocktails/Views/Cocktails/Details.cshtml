@@ -15,7 +15,11 @@
     var totalRating = decimal.Parse(rating.ToString());
 }
 
-
+<style>
+    .greenColor {
+        color: green;
+    }
+</style>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -102,9 +106,17 @@
             @Html.Raw(c.Comment.Replace("\n", "<br />"))
         </div>
         <div>
-            <button id="thumbsUpButton" type="button" class="btn btn-default btn-sm">
-                <span class="glyphicon glyphicon-thumbs-up"></span> Like
+            <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.isLiked" type="button" class="btn btn-default btn-sm">
+                @if (c.isLiked)
+                {
+                    <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-thumbs-up"> Like </span>
+                }
             </button>
+            @*<input  id="thumbsUpButton" type="button" class="btn btn-default btn-sm" asp-for="@c.isLiked" />*@
         </div>
     </div>
 }
@@ -124,17 +136,42 @@
     });
 
     var input = $(":button")
-    input.click(function () {
-        var successMsg = 'Like added!';
-            $(this).css({ color: 'green' });
-            var isLiked = $(this).is('#thumbsUpButton');
-        var cReviewId = $(this).closest($(".row")).children().eq(0).children().eq(0).val();
+    input.click(function () {  
+
+            var $button = $(this);
+            var buttonId = $button.data('id');
+
+            var likedAttr = $(this).attr("data-liked");
+            var likedSpan = 'greenColor glyphicon glyphicon-thumbs-up';
+            var defaultSpan = 'glyphicon glyphicon-thumbs-up';
+            var isLiked = likedAttr === "true";
+            var span = $button.children().first();
+            var cReviewId = $button.closest($(".row")).children().eq(0).children().eq(0).val();
+             console.log(span);
+              debugger;
+            
+            if (span.attr('id')) {
+                debugger;
+                isLiked = false;
+                $button.attr("data-liked", "false");
+                span.attr('class', defaultSpan);
+                span.text(' Like');
+                span.removeAttr('id');     
+            }
+            else {
+                debugger;
+                isLiked = true;
+                $button.attr("data-liked", "true");
+                span.attr('class', likedSpan);
+                span.text(' Liked');
+                span.attr('id', buttonId);
+            }
+     
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("LikeReview","CocktailReviews",new { area = "Cocktails" })",
                 data: { cocktailReviewId: cReviewId, isLiked: isLiked },
-                dataType: "json",
-                success: alert(successMsg),
+                dataType: "json",               
             });
     });
 </script>

@@ -27,7 +27,7 @@ namespace CocktailsMagician.Services
 
             if(cReview == null)
             {
-                throw new InvalidOperationException("Cocktail review not found!");
+                throw new ArgumentNullException("Cocktail review not found!");
             }
 
             var user = await _cmContext.Users
@@ -35,27 +35,40 @@ namespace CocktailsMagician.Services
 
             if (user == null)
             {
-                throw new InvalidOperationException("User not found!");
+                throw new ArgumentNullException("User not found!");
             }
 
+            var cocktailReviewLike = await _cmContext.CocktailReviewLikes
+             .FirstOrDefaultAsync(cr => cr.CocktailReviewId == cocktailReviewId && cr.UserId == user.Id);
 
-            var cocktailReviewLike = new CocktailReviewLike
+            if(cocktailReviewLike == null)
             {
-                CocktailReviewId = cReview.Id,
-                UserId = user.Id,
-                IsLiked = true
-            };
+                var cocktailReviewLikeNew = new CocktailReviewLike
+                {
+                    CocktailReviewId = cReview.Id,
+                    UserId = user.Id,
+                    IsLiked = true
+                };
 
-            try
+                try
+                {
+                    await _cmContext.CocktailReviewLikes.AddAsync(cocktailReviewLikeNew);
+                    await _cmContext.SaveChangesAsync();
+
+                    var cocktailReviewLikeNewDTO = cocktailReviewLikeNew.CocktailReviewLikeMapToDTO();
+                    return cocktailReviewLikeNewDTO;
+                }
+                catch (Exception)
+                {
+                    throw new InvalidOperationException("Cannot add into database!");
+                }
+            }
+            else
             {
-                await _cmContext.CocktailReviewLikes.AddAsync(cocktailReviewLike);
+                cocktailReviewLike.IsLiked = true;
                 await _cmContext.SaveChangesAsync();
             }
-            catch (Exception)
-            {
-                throw new InvalidOperationException("Cannot add into database!");
-            }
-
+          
             var cocktailReviewLikeDTO = cocktailReviewLike.CocktailReviewLikeMapToDTO();
 
             return cocktailReviewLikeDTO;
@@ -67,6 +80,48 @@ namespace CocktailsMagician.Services
                 .Include(cr => cr.User)
                 .Select(cr => cr.CocktailReviewLikeMapToDTO())
                 .ToListAsync();
+        }
+
+        public async Task<CocktailReviewLikeDTO> RemoveCocktailReviewLike(Guid cocktailReviewId, string userName)
+        {
+            var cReview = await _cmContext.CocktailReviews
+               .FirstOrDefaultAsync(cr => cr.Id == cocktailReviewId);
+
+            if (cReview == null)
+            {
+                throw new ArgumentNullException("Cocktail review not found!");
+            }
+
+            var user = await _cmContext.Users
+            .FirstOrDefaultAsync(u => u.UserName == userName);
+
+            if (user == null)
+            {
+                throw new ArgumentNullException("User not found!");
+            }
+
+
+            var cocktailReviewLike = await _cmContext.CocktailReviewLikes
+               .FirstOrDefaultAsync(cr => cr.CocktailReviewId == cocktailReviewId && cr.UserId == user.Id);
+
+            if(cocktailReviewLike == null)
+            {
+                throw new ArgumentNullException("Cocktail Review like not found!");
+            }
+            cocktailReviewLike.IsLiked = false;
+
+            try
+            {              
+                await _cmContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException("Cannot add into database!");
+            }
+
+            var cocktailReviewLikeDTO = cocktailReviewLike.CocktailReviewLikeMapToDTO();
+
+            return cocktailReviewLikeDTO;
         }
     }
 }

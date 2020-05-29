@@ -60,17 +60,21 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var allCocktailReviewLikes = await cocktailReviewLikeService.GetAllCocktailReviewLikes();
-            var cocktailReviewLike = allCocktailReviewLikes
-                .FirstOrDefault(cr => cr.CocktailReviewId == cocktailReviewId);
-            var cocktailId = cocktailReviewLike.CocktailReview.CocktailId;
+            //var allCocktailReviewLikes = await cocktailReviewLikeService.GetAllCocktailReviewLikes();
+            //var cocktailReviewLike = allCocktailReviewLikes
+            //    .FirstOrDefault(cr => cr.CocktailReviewId == cocktailReviewId);
+            ////var cocktailId = cocktailReviewLike.CocktailReview.CocktailId;
               
             if (isLiked)
             {
                 await cocktailReviewLikeService.AddCocktailReviewLike(cocktailReviewId, user.UserName);
             }
+            else 
+            {
+                await cocktailReviewLikeService.RemoveCocktailReviewLike(cocktailReviewId, user.UserName);
+            }
 
-            return RedirectToAction("Details", "Cocktails", new { id = cocktailId });
+            return RedirectToAction("Index", "Cocktails"/*, new { id = cocktailId }*/);
         }
     }
 }

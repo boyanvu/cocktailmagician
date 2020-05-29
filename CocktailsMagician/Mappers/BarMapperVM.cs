@@ -22,7 +22,10 @@ namespace CocktailsMagician.Mappers
             barVM.CityId = barDTO.CityId;
             barVM.City = barDTO.City;
             barVM.AvgRating = barDTO.AvgRating;
-            //barVM.BarReviews = barDTO.BarReviews.Select(br=>br.)
+            if (barDTO.BarReviews !=null )
+            {
+                barVM.BarReviews = barDTO.BarReviews.Select(br => br.BarReviewsDTOMapToVM()).ToList();
+            }
             return barVM;
         }
 

@@ -23,6 +23,8 @@ namespace CocktailsMagician.Services.Services
         {
             var bar = await _cmContext.Bars
                 .Include(b=>b.City)
+                .Include(b=>b.BarReviews)
+                    .ThenInclude(br=>br.User)
                 .FirstOrDefaultAsync(b => b.Id == id);
             if (bar == null)
             {
@@ -45,7 +47,9 @@ namespace CocktailsMagician.Services.Services
         {
 
             var bars = (IQueryable<Bar>)_cmContext.Bars
-                .Include(b=>b.City);
+                .Include(b => b.City)
+                .Include(b => b.BarReviews)
+                    .ThenInclude(br => br.User);
 
 
             if (!String.IsNullOrEmpty(searchString))

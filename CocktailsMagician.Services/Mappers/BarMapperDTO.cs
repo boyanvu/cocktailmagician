@@ -2,7 +2,9 @@
 using CocktailsMagician.Services.DTO_s;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CocktailsMagician.Services.Mappers
 {
@@ -20,7 +22,13 @@ namespace CocktailsMagician.Services.Mappers
             barDTO.CityId = bar.CityId;
             barDTO.AvgRating = bar.AvgRating;
             barDTO.UnlistedOn = bar.UnlistedOn;
-            barDTO.BarReviews = bar.BarReviews;
+            //if (bar.BarReviews.Count>0)
+            if(bar.BarReviews != null)
+            {
+                barDTO.BarReviews = bar.BarReviews
+                            .Select(br=>br.BarMapReviewDTO())
+                            .ToList();
+            }
             barDTO.Address = bar.Address;
 
             return barDTO;

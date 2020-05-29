@@ -53,24 +53,23 @@ namespace CocktailsMagician.Services.Services
         }
         public async Task<BarReviewDTO> CreateBarReviewAsync(Guid barId, Guid userId, int rating, string comment)
         {
-            var barReviewIfExists = await this.GetBarReviewsAsync(barId, userId).Where(br => br.DeletedOn == null).FirstOrDefaultAsync();
-            if (barReviewIfExists != null)
+            var barReviewExists = await _cmContext.BarReviews.AnyAsync(br=> br.UserId == userId && br.BarId == barId && br.DeletedOn == null);
+
+            if (barReviewExists)
             {
                 throw new ArgumentException("This bar has already been reviewed by the user");
             }
 
-            var bar = await _cmContext.Bars
-                .Where(b => b.UnlistedOn == null)
-                .FirstOrDefaultAsync(b => b.Id == barId);
+            var bar = await _cmContext.Bars.Where(b => b.Id == barId && b.UnlistedOn == null).FirstOrDefaultAsync();
 
             if (bar == null)
             {
                 throw new ArgumentNullException("Bar is not available.");
             }
-            var user = await _cmContext.Users
-                .Where(u => u.Id == userId)
-                .FirstOrDefaultAsync(u => u.Id == userId);
-            if (user == null)
+
+            var userExists = await _cmContext.Users.AnyAsync(u => u.Id == userId && u.DeletedOn == null);
+
+            if (!userExists)
             {
                 throw new ArgumentNullException("User is not available");
             }
@@ -86,6 +85,7 @@ namespace CocktailsMagician.Services.Services
             barReview.ReviewedOn = DateTime.UtcNow;
             try
             {
+                bar.AvgRating = await this.CalculateAvgRating(rating, barId);
                 _cmContext.BarReviews.Add(barReview);
                 await _cmContext.SaveChangesAsync();
             }
@@ -96,6 +96,22 @@ namespace CocktailsMagician.Services.Services
             var barReviewDTO = barReview.BarMapReviewDTO();
 
             return barReviewDTO;
+        }
+
+        private async Task<double> CalculateAvgRating(int ratingToAdd, Guid barId)
+        {
+            var barReviews = await _cmContext.BarReviews.Where(br => br.BarId == barId && br.DeletedOn == null).ToListAsync();
+            var nrOfReviews = barReviews.Count();
+            var sumOfRratings = barReviews.Sum(br=>br.Rating);
+            if (nrOfReviews==0)
+            {
+                return Convert.ToDouble(ratingToAdd);
+            }
+            else
+            {
+                var avgRating = (sumOfRratings + ratingToAdd) / (nrOfReviews + (ratingToAdd != 0 ? 1 : 0));
+                return Convert.ToDouble(avgRating);
+            }
         }
         public async Task<BarReviewDTO> UpdateBarReviewAsync(Guid reviewId, int? rating, string comment)
         {

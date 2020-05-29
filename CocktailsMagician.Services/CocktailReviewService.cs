@@ -79,7 +79,6 @@ namespace CocktailsMagician.Services
                 .ToListAsync();
         }
 
- 
- 
+
     }
 }

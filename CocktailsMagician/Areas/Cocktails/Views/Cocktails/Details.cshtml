@@ -6,6 +6,7 @@
     var reviews = (IEnumerable<CocktailsMagician.Areas.Cocktails.Models.CocktailReviewViewModel>)ViewBag.Reviews;
     var ratingSum = ViewBag.RatingSum;
     var ratingCount = ViewBag.RatingCount;
+    var reviewLikes = ViewBag.UserReviewLikes;
 
     decimal rating = 0;
     if (ratingCount > 0)
@@ -136,7 +137,7 @@
     });
 
     var input = $(":button")
-    input.click(function () {  
+    input.click(function () {
 
             var $button = $(this);
             var buttonId = $button.data('id');
@@ -147,18 +148,17 @@
             var isLiked = likedAttr === "true";
             var span = $button.children().first();
             var cReviewId = $button.closest($(".row")).children().eq(0).children().eq(0).val();
-             console.log(span);
-              debugger;
-            
-            if (span.attr('id')) {
+
+
+                if (span.attr('id')) {
                 debugger;
                 isLiked = false;
                 $button.attr("data-liked", "false");
                 span.attr('class', defaultSpan);
                 span.text(' Like');
-                span.removeAttr('id');     
+                span.removeAttr('id');
             }
-            else {
+                else {
                 debugger;
                 isLiked = true;
                 $button.attr("data-liked", "true");
@@ -166,12 +166,12 @@
                 span.text(' Liked');
                 span.attr('id', buttonId);
             }
-     
+
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("LikeReview","CocktailReviews",new { area = "Cocktails" })",
                 data: { cocktailReviewId: cReviewId, isLiked: isLiked },
-                dataType: "json",               
+                dataType: "json",
             });
     });
 </script>

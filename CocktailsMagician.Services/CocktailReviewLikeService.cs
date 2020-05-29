@@ -123,5 +123,36 @@ namespace CocktailsMagician.Services
 
             return cocktailReviewLikeDTO;
         }
+
+
+        public async Task<IEnumerable<CocktailReviewLikeDTO>> GetAllSpecificCocktailReviewLikes(Guid cocktailId)
+        {
+            var cocktailReviews =  await _cmContext.CocktailReviews
+                .Where(cr => cr.CocktailId == cocktailId)
+                .Include(cr => cr.User)
+                .Include(cr => cr.Cocktail)
+                .Select(cr => cr.CocktailMapReviewDTO())
+                .ToListAsync();
+
+            var allCocktailReviewLikes =  await _cmContext.CocktailReviewLikes
+               .Include(cr => cr.User)
+               .Select(cr => cr.CocktailReviewLikeMapToDTO())
+               .ToListAsync();
+
+            List<CocktailReviewLikeDTO> specificCocktailRL = new List<CocktailReviewLikeDTO>();
+
+            foreach (var reviewLike in allCocktailReviewLikes)
+            {
+                foreach (var review in cocktailReviews)
+                {
+                    if (reviewLike.CocktailReviewId == review.Id)
+                    {
+                        specificCocktailRL.Add(reviewLike);
+                    }
+                }         
+            }
+
+            return specificCocktailRL;
+        }
     }
 }

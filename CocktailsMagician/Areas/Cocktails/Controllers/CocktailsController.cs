@@ -28,9 +28,11 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         private readonly UserManager<User> _userManager;
         private readonly ICocktailReviewService cocktailReviewService;
         private readonly IToastNotification _toastNotification;
+        private readonly ICocktailReviewLikeService cocktailReviewLikeService;
 
         public CocktailsController(CMContext context, ICocktailService cocktailService, IIngredientService ingredientService,
-            ICocktailReviewService cocktailReviewService, UserManager<User> userManager, IToastNotification toastNotification)
+            ICocktailReviewService cocktailReviewService, UserManager<User> userManager, IToastNotification toastNotification,
+            ICocktailReviewLikeService cocktailReviewLikeService)
         {
             _context = context;
             this.cocktailService = cocktailService;
@@ -38,6 +40,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             this.cocktailReviewService = cocktailReviewService;
             this._userManager = userManager;
             this._toastNotification = toastNotification;
+            this.cocktailReviewLikeService = cocktailReviewLikeService;
         }
 
         // GET: Cocktails/Cocktails
@@ -89,14 +92,34 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 return NotFound();
             }
 
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
             ViewBag.CocktailId = cocktail.Id;
 
             var cocktailReviews = await cocktailReviewService.GetAllSpecificCocktailReviews(id);
             var cocktailReviewsVM = cocktailReviews.Select
-                (cr => cr.CocktailReviewsDTOMapToVM());
+                (cr => cr.CocktailReviewsDTOMapToVM())
+                .ToList();
+
+            var cocktailReviewLikes = await this.cocktailReviewLikeService.GetAllSpecificCocktailReviewLikes(id);
+            var userCRL = cocktailReviewLikes
+                .Where(crl => crl.UserId == user.Id)
+                .ToList();
+
+            foreach (var userCRLike in userCRL)
+            {
+                foreach (var cReview in cocktailReviewsVM)
+                {
+                    if(userCRLike.UserId == user.Id && userCRLike.CocktailReviewId == cReview.Id)
+                    {
+                        cReview.isLiked = userCRLike.IsLiked;
+                    }
+                }
+            }
 
             ViewBag.Reviews = cocktailReviewsVM;
-
+          
             var ratings = cocktailReviewsVM;
             if (ratings.Count() > 0)
             {

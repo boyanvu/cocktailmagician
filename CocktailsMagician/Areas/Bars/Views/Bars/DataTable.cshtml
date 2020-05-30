@@ -16,7 +16,7 @@
 <br />
 <br />
 
-<table id="BarTable" class="table">
+<table id="BarTable" class="table table-hover dt-responsive nowrap" width="100%" cellspacing="0">
     <thead>
         <tr>
             <th>
@@ -58,6 +58,7 @@
                 "ordering": true,
                 "processing": true,
                 "serverSide": true,
+                "lengthMenu": [[2,10, 25, 50, -1], [2,10, 25, 50, "All"]],
                 "ajax": {
                     "url": "@Url.Action("ListAllBars", "Bars",new { area = "Bars" })",
                     "type": "POST",
@@ -73,7 +74,7 @@
                   }],
                 "columns": [
                     { "data": "id", "name": "Id", "visible": false/*, "orderable": false */ },
-                    { "data": "name", "name": "Name", "autoWidth": true },
+                    { "data": "name", "name": "Name", "autoWidth": true, "orderable": true },
                     { "data": "phone", "name": "Phone", "autoWidth": true, "orderable": false },
                     { "data": "website", "name": "Site", "autoWidth": true, "orderable": false },
                     { "data": "city", "name": "City", "autoWidth": true, "orderable": false },

@@ -53,6 +53,7 @@ namespace CocktailsMagician
             services.AddScoped<ICocktailReviewLikeService, CocktailReviewLikeService>();
             services.AddScoped<IBarService, BarService>();
             services.AddScoped<IBarReviewService, BarReviewService>();
+            services.AddScoped<IBarReviewLikeService, BarReviewLikeService>();
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddMvc().AddNToastNotifyToastr();

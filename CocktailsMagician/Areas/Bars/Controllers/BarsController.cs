@@ -12,6 +12,7 @@ using CocktailsMagician.Mappers;
 using CocktailsMagician.Areas.Bars.Models;
 using X.PagedList;
 using CocktailsMagician.Areas.Cocktails.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CocktailsMagician.Areas.Bars.Controllers
 {
@@ -21,12 +22,14 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         private readonly CMContext _context;
         private readonly IBarService barService;
         private readonly ICocktailService cocktailService;
+        private readonly UserManager<User> userManager;
 
-        public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService)
+        public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService, UserManager<User> userManager)
         {
             _context = context;
             this.barService = barService;
             this.cocktailService = cocktailService;
+            this.userManager = userManager;
         }
 
         // GET: Bars/Bars
@@ -50,7 +53,7 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             var barDTOs = await barService.GetBarsFiltered(sortOrder, searchString);
 
 
-            var barsVMs = barDTOs.Select(b => b.BarDTOtoVM());    
+            var barsVMs = barDTOs.Select(b => b.BarDTOtoVM());
 
             int pageSize = 3;
             int pageNumber = (page ?? 1);
@@ -72,6 +75,25 @@ namespace CocktailsMagician.Areas.Bars.Controllers
                 return NotFound();
             }
             var barVM = barDTO.BarDTOtoVM();
+
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            ViewData["User"] = user;
+
+            foreach (var br in barVM.BarReviews)
+            {
+                if (br.BarReviewLikes.Count > 0)
+                {
+                    var likesCount = br.BarReviewLikes.Where(brl => brl.IsLiked == true).Count();
+                    br.LikesCount = likesCount;
+                    if (user != null)
+                    {
+                        var isLiked = br.BarReviewLikes
+                        .Any(brl => brl.UserId == user.Id && brl.IsLiked == true);
+                        br.isLiked = isLiked;
+                    }
+                }
+            }
+
             return View(barVM);
         }
 
@@ -101,7 +123,7 @@ namespace CocktailsMagician.Areas.Bars.Controllers
                 catch (Exception)
                 {
                     throw;
-                }    
+                }
             }
             return View(barVM);
         }
@@ -136,7 +158,7 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             //{
             //    return NotFound();
             //}
-            
+
             if (ModelState.IsValid)
             {
                 await barService.UpdateBarAsync(barVM.BarVMtoDTO());
@@ -252,16 +274,16 @@ namespace CocktailsMagician.Areas.Bars.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken] //TODO
-        public async Task<IActionResult> AddRmvCocktailsFromBarSingle(Guid barId, Guid cocktailId,bool isAvailable)
+        public async Task<IActionResult> AddRmvCocktailsFromBarSingle(Guid barId, Guid cocktailId, bool isAvailable)
         {
-                if (isAvailable)
-                {
-                    await barService.AddCocktailToBarAsync(barId, cocktailId);
-                }
-                else
-                {
-                    await barService.RemoveCocktailFromBarAsync(barId, cocktailId);
-                }
+            if (isAvailable)
+            {
+                await barService.AddCocktailToBarAsync(barId, cocktailId);
+            }
+            else
+            {
+                await barService.RemoveCocktailFromBarAsync(barId, cocktailId);
+            }
             return RedirectToAction("AddRmvCocktailsFromBar");
         }
     }

@@ -8,15 +8,19 @@ using CocktailsMagician.Services.DTO_s;
 using Microsoft.EntityFrameworkCore;
 using CocktailsMagician.Services.Mappers;
 using CocktailsMagician.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace CocktailsMagician.Services.Services
 {
     public class BarReviewService : IBarReviewService
     {
         private readonly CMContext _cmContext;
-        public BarReviewService(CMContext cmContext)
+        private readonly UserManager<User> userManager;
+        public BarReviewService(CMContext cmContext, UserManager<User> userManager)
         {
             this._cmContext = cmContext;
+            this.userManager = userManager;
         }
         public async Task<BarReviewDTO> GetBarReviewByIdAsync(Guid barReviewId)
         {

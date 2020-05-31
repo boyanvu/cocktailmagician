@@ -12,6 +12,7 @@ namespace CocktailsMagician.Areas.Bars.Models
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Website { get; set; }
+        public bool HasWebsite { get; set; }
         public string Description { get; set; }
         public DateTime? UnlistedOn { get; set; }
         public string Address { get; set; }

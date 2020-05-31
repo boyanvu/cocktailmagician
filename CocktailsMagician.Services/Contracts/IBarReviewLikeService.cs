@@ -8,7 +8,8 @@ namespace CocktailsMagician.Services.Contracts
 {
     public interface IBarReviewLikeService
     {
-        Task<BarReviewLike> AddBarReviewLike(Guid reviewId, Guid userId);
+        Task<bool> AddBarReviewLikeAsync(Guid reviewId, Guid userId);
+        Task<bool> RemoveBarReviewLikeAsync(Guid reviewId, Guid userId);    
         Task<BarReviewLike> MarkInapproprBarReviewLike(Guid reviewId, Guid userId);
     }
 }

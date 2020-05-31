@@ -16,6 +16,7 @@ namespace CocktailsMagician.Mappers
             barVM.Name = barDTO.Name;
             barVM.Phone = barDTO.Phone;
             barVM.Website = barDTO.Website;
+            barVM.HasWebsite = Uri.IsWellFormedUriString(barDTO.Website, UriKind.Absolute);
             barVM.Description = barDTO.Description;
             barVM.UnlistedOn = barDTO.UnlistedOn;
             barVM.Address = barDTO.Address;

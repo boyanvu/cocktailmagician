@@ -15,6 +15,7 @@ namespace CocktailsMagician.Services.DTO_s
         public DateTime? UnlistedOn { get; set; }
         public Guid CityId { get; set; }
         public string City { get; set; }
+        public bool isLiked { get; set; }
         public double AvgRating { get; set; }
         public string Address { get; set; }
         public IList<BarReviewDTO> BarReviews { get; set; }

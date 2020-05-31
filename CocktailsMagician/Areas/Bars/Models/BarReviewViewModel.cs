@@ -13,6 +13,8 @@ namespace CocktailsMagician.Areas.Bars.Models
         public String UserName { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; }
+        public bool isLiked { get; set; }
+        public int LikesCount { get; set; }
         public DateTime? DeletedOn { get; set; }
         public DateTime ReviewedOn { get; set; }
         public ICollection<BarReviewLike> BarReviewLikes { get; set; }

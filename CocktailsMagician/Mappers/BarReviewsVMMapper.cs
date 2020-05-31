@@ -12,6 +12,7 @@ namespace CocktailsMagician.Mappers
         public static BarReviewViewModel BarReviewsDTOMapToVM(this BarReviewDTO barReviewDTO)
         {
             var barReviewVM = new BarReviewViewModel();
+            barReviewVM.Id = barReviewDTO.Id;
             barReviewVM.BarId = barReviewDTO.BarId;
             barReviewVM.UserId = barReviewDTO.UserId;
             barReviewVM.Rating = barReviewDTO.Rating;

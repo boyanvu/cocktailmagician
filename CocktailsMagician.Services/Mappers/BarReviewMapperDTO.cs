@@ -11,6 +11,7 @@ namespace CocktailsMagician.Services.Mappers
         public static BarReviewDTO BarMapReviewDTO(this BarReview barReview)
         {
             var barReviewDTO = new BarReviewDTO();
+            barReviewDTO.Id = barReview.Id;
             barReviewDTO.BarId = barReview.BarId;
             barReviewDTO.UserId = barReview.UserId;
             barReviewDTO.Rating = barReview.Rating;

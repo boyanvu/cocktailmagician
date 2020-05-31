@@ -25,11 +25,15 @@ namespace CocktailsMagician.Services.Services
                 .Include(b=>b.City)
                 .Include(b=>b.BarReviews)
                     .ThenInclude(br=>br.User)
+                .Include(b => b.BarReviews)
+                    .ThenInclude(br => br.BarReviewLikes)
+                    .ThenInclude(brl => brl.User)
                 .FirstOrDefaultAsync(b => b.Id == id);
             if (bar == null)
             {
                 throw new ArgumentNullException("Bar does not exist.");
             }
+
             var barDto = bar.MapBarToDTO();
             return barDto;
         }

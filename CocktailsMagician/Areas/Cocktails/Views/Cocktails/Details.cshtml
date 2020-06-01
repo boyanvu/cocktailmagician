@@ -107,8 +107,8 @@
             @Html.Raw(c.Comment.Replace("\n", "<br />"))
         </div>
         <div>
-            <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.isLiked" type="button" class="btn btn-default btn-sm">
-                @if (c.isLiked)
+            <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-default btn-sm">
+                @if (c.IsLiked)
                 {
                     <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
                 }
@@ -117,7 +117,9 @@
                     <span class="glyphicon glyphicon-thumbs-up"> Like </span>
                 }
             </button>
-            @*<input  id="thumbsUpButton" type="button" class="btn btn-default btn-sm" asp-for="@c.isLiked" />*@
+            <div id="divLike" data-num="@c.NumberOfLikes">
+                @c.NumberOfLikes
+            </div>
         </div>
     </div>
 }
@@ -142,6 +144,9 @@
             var $button = $(this);
             var buttonId = $button.data('id');
 
+            var divCount = $("#divLike");
+            var likeCount = $("#divLike").attr("data-num");
+            debugger;
             var likedAttr = $(this).attr("data-liked");
             var likedSpan = 'greenColor glyphicon glyphicon-thumbs-up';
             var defaultSpan = 'glyphicon glyphicon-thumbs-up';
@@ -151,26 +156,32 @@
 
 
                 if (span.attr('id')) {
-                debugger;
                 isLiked = false;
+                likeCount--;
                 $button.attr("data-liked", "false");
                 span.attr('class', defaultSpan);
                 span.text(' Like');
                 span.removeAttr('id');
-            }
+                    debugger;
+                divCount.attr("data-num", likeCount);
+                    debugger;
+                }
                 else {
-                debugger;
                 isLiked = true;
+                 likeCount++
                 $button.attr("data-liked", "true");
                 span.attr('class', likedSpan);
                 span.text(' Liked');
                 span.attr('id', buttonId);
-            }
+                             debugger;
+                divCount.attr("data-num", likeCount);
+                               debugger;
+                }
 
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("LikeReview","CocktailReviews",new { area = "Cocktails" })",
-                data: { cocktailReviewId: cReviewId, isLiked: isLiked },
+                data: { cocktailReviewId: cReviewId, IsLiked: isLiked },
                 dataType: "json",
             });
     });

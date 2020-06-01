@@ -17,6 +17,8 @@
     <Compile Remove="Migrations\20200512082643_data_seed.Designer.cs" />
     <Compile Remove="Migrations\20200512101159_seed_data.cs" />
     <Compile Remove="Migrations\20200512101159_seed_data.Designer.cs" />
+    <Compile Remove="Migrations\20200530100720_addedCocktailNumOfLikes.cs" />
+    <Compile Remove="Migrations\20200530100720_addedCocktailNumOfLikes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -113,9 +113,14 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 {
                     if(userCRLike.UserId == user.Id && userCRLike.CocktailReviewId == cReview.Id)
                     {
-                        cReview.isLiked = userCRLike.IsLiked;
+                        cReview.IsLiked = userCRLike.IsLiked;
                     }
                 }
+            }
+
+            foreach (var cReview in cocktailReviewsVM)
+            {
+                cReview.NumberOfLikes = await this.cocktailReviewLikeService.GetCocktailReviewNumberOfLikes(cReview.Id);
             }
 
             ViewBag.Reviews = cocktailReviewsVM;
@@ -139,8 +144,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             return View(cocktailVM);
         }
 
-       
-
+      
 
         // GET: Cocktails/Cocktails/Create
         public async Task<IActionResult> Create(CocktailViewModel cocktail)

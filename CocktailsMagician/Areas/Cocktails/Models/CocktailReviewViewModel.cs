@@ -14,7 +14,8 @@ namespace CocktailsMagician.Areas.Cocktails.Models
         public String UserName { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; }
-        public bool isLiked { get; set; }
+        public bool IsLiked { get; set; }
+        public int NumberOfLikes { get; set; }
         public DateTime? DeletedOn { get; set; }
         public DateTime ReviewedOn { get; set; }
         //public ICollection<CocktailReviewLike> CocktailReviewLikes { get; set; }

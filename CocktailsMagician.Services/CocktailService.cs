@@ -20,8 +20,7 @@ namespace CocktailsMagician.Services
             this._cmContext = context;
         }
 
-       
-
+      
         public async Task<CocktailDTO> CreateCocktail(CocktailDTO cocktailDTO)
         {
             if (cocktailDTO == null)

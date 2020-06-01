@@ -53,7 +53,7 @@ namespace CocktailsMagician.Services
                 Comment = comment,
                 ReviewedOn = DateTime.UtcNow
             };
-
+            
             try
             {
                 await _cmContext.CocktailReviews.AddAsync(cocktailReview);

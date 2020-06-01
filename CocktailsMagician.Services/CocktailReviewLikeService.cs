@@ -49,7 +49,6 @@ namespace CocktailsMagician.Services
                     UserId = user.Id,
                     IsLiked = true
                 };
-
                 try
                 {
                     await _cmContext.CocktailReviewLikes.AddAsync(cocktailReviewLikeNew);
@@ -153,6 +152,27 @@ namespace CocktailsMagician.Services
             }
 
             return specificCocktailRL;
+        }
+
+        public async Task<int> GetCocktailReviewNumberOfLikes(Guid cocktailReviewId)
+        {
+            var cocktailReview= await _cmContext.CocktailReviews
+                .FirstOrDefaultAsync(cr => cr.Id == cocktailReviewId);
+
+            if(cocktailReview == null)
+            {
+                throw new ArgumentNullException("Cocktail review not found!");
+            }
+
+            var cocktailReviewLikes = await _cmContext.CocktailReviewLikes
+                .Where(cr => cr.CocktailReviewId == cocktailReviewId && cr.IsLiked == true)
+                .ToListAsync();
+            var numOfLikes = cocktailReviewLikes.Count();
+
+            await _cmContext.SaveChangesAsync();
+
+
+            return numOfLikes;
         }
     }
 }

@@ -16,14 +16,16 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         private readonly IBarReviewService barReviewService;
         private readonly UserManager<User> userManager;
         private readonly IToastNotification toastNotification;
+        private readonly IBarReviewLikeService barReviewLikeService;
 
-        public BarReviewsController(IBarService barService,
-            IBarReviewService barReviewService, UserManager<User> userManager, IToastNotification toastNotification)
+        public BarReviewsController(IBarService barService,IBarReviewService barReviewService, UserManager<User> userManager,
+            IBarReviewLikeService barReviewLikeService,IToastNotification toastNotification)
         {
             this.barService = barService;
             this.barReviewService = barReviewService;
             this.userManager = userManager;
             this.toastNotification = toastNotification;
+            this.barReviewLikeService = barReviewLikeService;
         }
 
 
@@ -44,6 +46,25 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             toastNotification.AddSuccessToastMessage("Review made successfully!");
 
             return RedirectToAction("Details", "Bars", new { id = barId });
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> LikeReview(Guid barReviewId, bool isLiked)
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+
+            if (isLiked)
+            {
+                await barReviewLikeService.AddBarReviewLikeAsync(barReviewId, user.Id);
+            }
+            else
+            {
+                await barReviewLikeService.RemoveBarReviewLikeAsync(barReviewId, user.Id);
+            }
+
+            return RedirectToAction("Index", "Bars"/*, new { id = cocktailId }*/);
         }
     }
 }

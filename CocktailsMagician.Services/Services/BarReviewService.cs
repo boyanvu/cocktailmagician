@@ -8,15 +8,19 @@ using CocktailsMagician.Services.DTO_s;
 using Microsoft.EntityFrameworkCore;
 using CocktailsMagician.Services.Mappers;
 using CocktailsMagician.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace CocktailsMagician.Services.Services
 {
     public class BarReviewService : IBarReviewService
     {
         private readonly CMContext _cmContext;
-        public BarReviewService(CMContext cmContext)
+        private readonly UserManager<User> userManager;
+        public BarReviewService(CMContext cmContext, UserManager<User> userManager)
         {
             this._cmContext = cmContext;
+            this.userManager = userManager;
         }
         public async Task<BarReviewDTO> GetBarReviewByIdAsync(Guid barReviewId)
         {
@@ -85,7 +89,7 @@ namespace CocktailsMagician.Services.Services
             barReview.ReviewedOn = DateTime.UtcNow;
             try
             {
-                bar.AvgRating = await this.CalculateAvgRating(rating, barId);
+                bar.AvgRating = await this.CalculateAvgRating(barId, rating);
                 _cmContext.BarReviews.Add(barReview);
                 await _cmContext.SaveChangesAsync();
             }
@@ -98,7 +102,7 @@ namespace CocktailsMagician.Services.Services
             return barReviewDTO;
         }
 
-        private async Task<double> CalculateAvgRating(int ratingToAdd, Guid barId)
+        private async Task<double> CalculateAvgRating(Guid barId, int ratingToAdd = 0)
         {
             var barReviews = await _cmContext.BarReviews.Where(br => br.BarId == barId && br.DeletedOn == null).ToListAsync();
             var nrOfReviews = barReviews.Count();

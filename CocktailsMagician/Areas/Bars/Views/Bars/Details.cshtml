@@ -37,12 +37,25 @@
 
 
 <h1>@Model.Name</h1>
+@if (Model.AvgRating > 0)
+{
+    <div>
+        <span class="starFadeN" id="sRate1"></span>
+        <span class="starFadeN" id="sRate2"></span>
+        <span class="starFadeN" id="sRate3"></span>
+        <span class="starFadeN" id="sRate4"></span>
+        <span class="starFadeN" id="sRate5"></span>
+    </div>
+}
+else
+{
+    <div>
+        <input type="text" value="Not rated yet" readonly>
+    </div>
+}
+
 <div>
-    <span class="starFadeN" id="sRate1"></span>
-    <span class="starFadeN" id="sRate2"></span>
-    <span class="starFadeN" id="sRate3"></span>
-    <span class="starFadeN" id="sRate4"></span>
-    <span class="starFadeN" id="sRate5"></span>
+    <input type="hidden" id="barId" name="barId" value="@Model.Id">
 </div>
 <div>
     <hr />
@@ -73,12 +86,6 @@
             }
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UnlistedOn)
         </dt>
         <dd class="col-sm-10">
@@ -97,11 +104,17 @@
             @Html.DisplayFor(model => model.City)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AvgRating)
+            @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AvgRating)
+            @Html.DisplayFor(model => model.Description)
         </dd>
+        @*<dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AvgRating)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AvgRating)
+            </dd>*@
     </dl>
 </div>
 <div>
@@ -110,15 +123,44 @@
 </div>
 
 <br />
-<div>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newReviewModal">
-        AddReview
-    </button>
-</div>
-<script>
+@if (@ViewData["User"] != null)
+{
+    <div>
+        <!-- Button trigger modal -->
+        <button id="openModal" type="button" class="btn btn-primary" @*data-toggle="modal" data-target="#newReviewModal"*@>
+            AddReview
+        </button>
+    </div>
+}
 
+
+
+<script>
+    $(document).ready(function() {
+    $("#openModal").click(function () {
+        var barId = $("#barId").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CheckIfPostedReview","BarReviews",new { area = "Bars" })",
+            data: {barId:barId},
+            dataType: "json",
+            success: function(response){
+                var isReviewed=response;
+
+                if (isReviewed) {
+                    alert("Already reviewed this cocktail");
+                }
+                else {
+                    alert("Lets open it");
+                        $('#newReviewModal').modal('show');
+                }
+                }
+
+            });
+        });
+    });
 </script>
+
 
 
 @*<div id="ReviewInputForm">
@@ -145,8 +187,14 @@
                 <span class="starFadeN"></span>
             }
         </div>
-        <div class="col-md-9">
+        <div class="col-md-5">
             @Html.Raw(br.Comment.Replace("\n", "<br />"))
+        </div>
+        <div class="col-md-2">
+            <input type="text" value=" @br.UserName" readonly>
+        </div>
+        <div class="col-md-2">
+            <input type="text" value=" @br.ReviewedOn" readonly>
         </div>
         <div>
             <button id="thumbsUpButton" data-nrOfTimesLiked="@br.LikesCount" data-id="@br.Id" data-liked="@br.isLiked" type="button" class="btn btn-default btn-sm">
@@ -192,7 +240,7 @@
 
 
         if (span.attr('id')) {
-            debugger;
+            //debugger;
                 isLiked = false;
                 $button.attr("data-liked", "false");
                 span.attr('class', defaultSpan);
@@ -200,7 +248,7 @@
                 span.removeAttr('id');
             }
         else {
-            debugger;
+            //debugger;
                 isLiked = true;
                 $button.attr("data-liked", "true");
                 span.attr('class', likedSpan);
@@ -237,8 +285,9 @@
     </div>
 </div>
 
-<script>//TODO
+<script>
+    //TODO
     $('#newReviewModal').on('hidden.bs.modal', function () {
-        $(this).removeData('bs.modal');
+        $(this).removeData();
     });
 </script>

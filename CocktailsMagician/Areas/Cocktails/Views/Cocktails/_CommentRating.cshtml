@@ -1,9 +1,9 @@
 ﻿<dl class="dl-horizontal">
-    <dt>
+    @*<dt>
         Review
-    </dt>
+    </dt>*@
 
-    <dd>
+    @*<dd>*@
         <div class="commentBox">
             @using (Html.BeginForm("AddReview", "CocktailReviews", FormMethod.Post, new { onsubmit = "return SubmitComment()" }))
             {
@@ -13,7 +13,7 @@
                         <label class="col-md-4 control-label">
                             Your rating <span style="font-weight:normal;"></span>
                         </label>
-                        <div class="col-md-7">
+                        <div id ="stars" class="col-md-7">
                             <div onmouseout="CRateSelected()">
                                 <span class="starFade" id="Rate1" onclick="CRate(1)" onmouseover="CRateOver(1)"
                                       onmouseout="CRateOut(1)"></span><span class="starFade" id="Rate2" onclick="CRate(2)"
@@ -39,7 +39,7 @@
                 </div>
             }
         </div>
-    </dd>
+    @*</dd>*@
 
 </dl>
 <script>

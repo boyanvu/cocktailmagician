@@ -102,21 +102,25 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 (cr => cr.CocktailReviewsDTOMapToVM())
                 .ToList();
 
-            var cocktailReviewLikes = await this.cocktailReviewLikeService.GetAllSpecificCocktailReviewLikes(id);
-            var userCRL = cocktailReviewLikes
-                .Where(crl => crl.UserId == user.Id)
-                .ToList();
-
-            foreach (var userCRLike in userCRL)
+            if(user != null)
             {
-                foreach (var cReview in cocktailReviewsVM)
+                var cocktailReviewLikes = await this.cocktailReviewLikeService.GetAllSpecificCocktailReviewLikes(id);
+                var userCRL = cocktailReviewLikes
+                    .Where(crl => crl.UserId == user.Id)
+                    .ToList();
+
+                foreach (var userCRLike in userCRL)
                 {
-                    if(userCRLike.UserId == user.Id && userCRLike.CocktailReviewId == cReview.Id)
+                    foreach (var cReview in cocktailReviewsVM)
                     {
-                        cReview.IsLiked = userCRLike.IsLiked;
+                        if (userCRLike.UserId == user.Id && userCRLike.CocktailReviewId == cReview.Id)
+                        {
+                            cReview.IsLiked = userCRLike.IsLiked;
+                        }
                     }
                 }
             }
+          
 
             foreach (var cReview in cocktailReviewsVM)
             {

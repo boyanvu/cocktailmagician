@@ -102,20 +102,29 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 (cr => cr.CocktailReviewsDTOMapToVM())
                 .ToList();
 
-            var cocktailReviewLikes = await this.cocktailReviewLikeService.GetAllSpecificCocktailReviewLikes(id);
-            var userCRL = cocktailReviewLikes
-                .Where(crl => crl.UserId == user.Id)
-                .ToList();
-
-            foreach (var userCRLike in userCRL)
+            if(user != null)
             {
-                foreach (var cReview in cocktailReviewsVM)
+                var cocktailReviewLikes = await this.cocktailReviewLikeService.GetAllSpecificCocktailReviewLikes(id);
+                var userCRL = cocktailReviewLikes
+                    .Where(crl => crl.UserId == user.Id)
+                    .ToList();
+
+                foreach (var userCRLike in userCRL)
                 {
-                    if(userCRLike.UserId == user.Id && userCRLike.CocktailReviewId == cReview.Id)
+                    foreach (var cReview in cocktailReviewsVM)
                     {
-                        cReview.isLiked = userCRLike.IsLiked;
+                        if (userCRLike.UserId == user.Id && userCRLike.CocktailReviewId == cReview.Id)
+                        {
+                            cReview.IsLiked = userCRLike.IsLiked;
+                        }
                     }
                 }
+            }
+          
+
+            foreach (var cReview in cocktailReviewsVM)
+            {
+                cReview.NumberOfLikes = await this.cocktailReviewLikeService.GetCocktailReviewNumberOfLikes(cReview.Id);
             }
 
             ViewBag.Reviews = cocktailReviewsVM;
@@ -139,8 +148,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             return View(cocktailVM);
         }
 
-       
-
+      
 
         // GET: Cocktails/Cocktails/Create
         public async Task<IActionResult> Create(CocktailViewModel cocktail)
@@ -186,9 +194,9 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                         };
 
                         await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
-                        _toastNotification.AddSuccessToastMessage("Cocktail created successfully!");
                     }
                 }
+                _toastNotification.AddSuccessToastMessage("Cocktail created successfully!");
                 return RedirectToAction(nameof(Index));
             }
             return View(cocktail);

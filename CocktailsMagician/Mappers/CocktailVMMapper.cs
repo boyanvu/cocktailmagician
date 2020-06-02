@@ -17,9 +17,10 @@ namespace CocktailsMagician.Mappers
             cocktailVM.Description = cocktailDTO.Description;
             cocktailVM.UnlistedOn = cocktailDTO.UnlistedOn;
             cocktailVM.AvgRating = cocktailDTO.AvgRating;
-            cocktailVM.CocktailReviews = cocktailDTO.CocktailReviews;
-
-
+            if (cocktailDTO.CocktailReviews != null)
+            {
+                cocktailVM.CocktailReviews = cocktailDTO.CocktailReviews.Select(c => c.CocktailReviewsDTOMapToVM()).ToList();
+            }
             return cocktailVM;
         }
     }

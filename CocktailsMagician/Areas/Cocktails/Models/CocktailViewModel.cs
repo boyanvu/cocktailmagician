@@ -35,6 +35,6 @@ namespace CocktailsMagician.Areas.Cocktails.Models
         [DisplayName("Cocktail ingredients:")]
         public List<CocktailIngredientsViewModel> CocktailIngredients { get; set; }
 
-        public ICollection<CocktailReview> CocktailReviews { get; set; }
+        public List<CocktailReviewViewModel> CocktailReviews { get; set; } = new List<CocktailReviewViewModel>();
     }
 }

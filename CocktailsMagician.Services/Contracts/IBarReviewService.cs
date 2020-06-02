@@ -16,5 +16,6 @@ namespace CocktailsMagician.Services.Contracts
         Task<BarReviewDTO> CreateBarReviewAsync(Guid barId, Guid userId, int rating, string comment);
         Task<BarReviewDTO> UpdateBarReviewAsync(Guid reviewId, int? rating, string comment);
         Task<bool> DeleteBarReviewAsync(Guid reviewId);
+        Task<bool> HasAlreadyReviewedAsync(Guid barId, Guid userId);
     }
 }

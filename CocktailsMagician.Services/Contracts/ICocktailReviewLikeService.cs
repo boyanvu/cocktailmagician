@@ -12,5 +12,6 @@ namespace CocktailsMagician.Services.Contracts
         Task<CocktailReviewLikeDTO> RemoveCocktailReviewLike(Guid cocktailReviewId, string username);
         Task<IEnumerable<CocktailReviewLikeDTO>> GetAllCocktailReviewLikes();
         Task<IEnumerable<CocktailReviewLikeDTO>> GetAllSpecificCocktailReviewLikes(Guid cocktailId);
+        Task <int> GetCocktailReviewNumberOfLikes(Guid cocktailReviewId);
     }
 }

@@ -190,9 +190,9 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                         };
 
                         await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
-                        _toastNotification.AddSuccessToastMessage("Cocktail created successfully!");
                     }
                 }
+                _toastNotification.AddSuccessToastMessage("Cocktail created successfully!");
                 return RedirectToAction(nameof(Index));
             }
             return View(cocktail);

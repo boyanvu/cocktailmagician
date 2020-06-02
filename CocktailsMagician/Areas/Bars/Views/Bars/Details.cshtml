@@ -203,9 +203,9 @@ else
     <tbody>
         @foreach (var br in Model.BarReviews)
         {
-        <tr>
+        <tr class="bId">
             <td>
-                <input type="hidden" id="barReviewId" asp-for="@br.Id" class="form-control" readonly />
+                <input type="hidden"  id="barReviewId" asp-for="@br.Id" class="form-control" readonly />
             </td>
             <td>
 
@@ -265,7 +265,7 @@ else
             var defaultSpan = 'glyphicon glyphicon-thumbs-up';
             var isLiked = likedAttr === "true";
             var span = $button.children().first();
-            var bReviewId = $button.closest($(".row")).children().eq(0).children().eq(0).val();
+            var bReviewId = $button.closest($(".bId")).children().eq(0).children().eq(0).val();
 
 
         if (span.attr('id')) {

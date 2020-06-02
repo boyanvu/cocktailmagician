@@ -68,10 +68,12 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             if (isLiked)
             {
                 await cocktailReviewLikeService.AddCocktailReviewLike(cocktailReviewId, user.UserName);
+                _toastNotification.AddSuccessToastMessage("Review liked!");
             }
             else 
             {
                 await cocktailReviewLikeService.RemoveCocktailReviewLike(cocktailReviewId, user.UserName);
+                _toastNotification.AddSuccessToastMessage("Review disliked!");
             }
 
             return RedirectToAction("Index", "Cocktails"/*, new { id = cocktailId }*/);

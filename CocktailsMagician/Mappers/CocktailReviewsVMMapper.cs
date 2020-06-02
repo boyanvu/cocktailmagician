@@ -18,6 +18,8 @@ namespace CocktailsMagician.Mappers
             cocktailReview.Comment = cocktailReviewDTO.Comment;
             cocktailReview.CocktailId = cocktailReviewDTO.CocktailId;
             cocktailReview.UserId = cocktailReviewDTO.UserId;
+            cocktailReview.UserName = cocktailReviewDTO.UserName;
+            cocktailReview.ReviewedOn = cocktailReviewDTO.ReviewedOn;
 
             return cocktailReview;
         }

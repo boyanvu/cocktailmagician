@@ -12,6 +12,6 @@ namespace CocktailsMagician.Services.DTO_s
         public string Description { get; set; }
         public DateTime? UnlistedOn { get; set; }
         public double AvgRating { get; set; }
-        public ICollection<CocktailReview> CocktailReviews { get; set; }
+        public ICollection<CocktailReviewDTO> CocktailReviews { get; set; }
     }
 }

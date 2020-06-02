@@ -111,46 +111,69 @@
 </div>
 
 
-@foreach (var c in reviews)
-{
-    <hr />
-    <div class="row">
-        <div>
-            <input type="hidden" id="cocktailReviewId" asp-for="@c.Id" class="form-control" readonly />
-        </div>
-        <div class="col-md-3">
-            <br />
-            @for (var i = 1; i <= c.Rating; i++)
-            {
-                <span class="starGlowN"></span>
-            }
-            @for (var i = (c.Rating + 1); i <= 5; i++)
-            {
-                <span class="starFadeN"></span>
-            }
-        </div>
-        <div class="col-md-9">
-            @Html.Raw(c.Comment.Replace("\n", "<br />"))
-        </div>
-        <div>
-            <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-default btn-sm">
-                @if (c.IsLiked)
-                {
-                    <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
-                }
-                else
-                {
-                    <span class="glyphicon glyphicon-thumbs-up"> Like </span>
-                }
-            </button>
-            <div id="divLike" data-num="@c.NumberOfLikes">
-                @c.NumberOfLikes
-            </div>
-        </div>
-    </div>
-}
-<hr />
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+                Rating
+            </th>
+            <th>
+                Review
+            </th>
+            <th>
+                Username
+            </th>
+            <th>
+                Reviewed On
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in reviews)
+        {
+            <tr class="crId">
+                <td>
+                    <input type="hidden" id="cocktailReviewId" asp-for="@c.Id" class="form-control" readonly />
+                </td>
+                <td>
+                    @for (var i = 1; i <= c.Rating; i++)
+                    {
+                        <span class="starGlowN"></span>
+                    }
+                    @for (var i = (c.Rating + 1); i <= 5; i++)
+                    {
+                        <span class="starFadeN"></span>
+                    }
+                    <br />
+                    <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-default btn-sm">
+                        @if (c.IsLiked)
+                        {
+                            <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-thumbs-up"> Like </span>
+                        }
+                    </button>
+                    <input id="divLike" data-num="@c.NumberOfLikes" value="@c.NumberOfLikes" readonly>
+                </td>
+                <td>
+                    @Html.Raw(c.Comment.Replace("\n", "<br />"))
+                </td>
+                <td>
+                    <input type="text" value=" @c.UserName" readonly>
+                </td>
+                <td>
+                    <input type="text" value=" @c.ReviewedOn" readonly>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
 
 <script>
     function SCRate() {
@@ -176,8 +199,8 @@
             var defaultSpan = 'glyphicon glyphicon-thumbs-up';
             var isLiked = likedAttr === "true";
             var span = $button.children().first();
-            var cReviewId = $button.closest($(".row")).children().eq(0).children().eq(0).val();
-
+            //var cReviewId = $button.closest('td').attr("id");
+            var cReviewId = $button.closest($(".crId")).children().eq(0).children().eq(0).val();
 
                 if (span.attr('id')) {
                 isLiked = false;

@@ -2,6 +2,7 @@
 using CocktailsMagician.Services.DTO_s;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CocktailsMagician.Services.Mappers
@@ -16,7 +17,10 @@ namespace CocktailsMagician.Services.Mappers
             cocktailDTO.Description = cocktail.Description;
             cocktailDTO.UnlistedOn = cocktail.UnlistedOn;
             cocktailDTO.AvgRating = cocktail.AvgRating;
-            cocktailDTO.CocktailReviews = cocktail.CocktailReviews;
+            if (cocktail.CocktailReviews != null)
+            {
+                cocktailDTO.CocktailReviews = cocktail.CocktailReviews.Select(c => c.CocktailMapReviewDTO()).ToList();
+            }
 
             return cocktailDTO;
         }
@@ -29,8 +33,6 @@ namespace CocktailsMagician.Services.Mappers
             cocktail.Description = cocktailDTO.Description;
             cocktail.UnlistedOn = cocktailDTO.UnlistedOn;
             cocktail.AvgRating = cocktailDTO.AvgRating;
-            cocktail.CocktailReviews = cocktailDTO.CocktailReviews;
-
 
             return cocktail;
         }

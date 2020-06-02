@@ -99,7 +99,12 @@ namespace CocktailsMagician.Services
         public async Task<CocktailDTO> GetCocktail(Guid id)
         {
             var cocktail = await _cmContext.Cocktails
-                .FirstOrDefaultAsync(i => i.Id == id);
+                .Include(c => c.CocktailReviews)
+                    .ThenInclude(c =>c.User)
+                .Include(c => c.CocktailReviews)
+                    .ThenInclude(c => c.CocktailReviewLikes)
+                    .ThenInclude(c => c.User)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (cocktail == null)
             {

@@ -73,7 +73,7 @@ namespace CocktailsMagician.Data.Seeder
                     Id = Guid.Parse("1f573fa6-3cc0-48ad-8850-ee7675cc3096"),
                     Name = "Konyushnite",
                     Phone = "0899516116",
-                    Website = "-",
+                    Website = "https://www.facebook.com/barkonushnite/",
                     Description = "Live music",
                     CityId = Guid.Parse("e3e92ad8-b117-42a8-b263-ec351d9234fc"), //Plovdiv
                     Address = "40 Saborna Str."

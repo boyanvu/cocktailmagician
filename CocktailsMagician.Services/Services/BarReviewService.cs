@@ -144,6 +144,14 @@ namespace CocktailsMagician.Services.Services
             }
             return barReview.BarMapReviewDTO();
         }
+
+        public async Task<bool> HasAlreadyReviewedAsync(Guid barId, Guid userId)
+        {
+            var hasReviewed = await _cmContext.BarReviews.AnyAsync(br => br.BarId == barId 
+                                                                      && br.UserId == userId 
+                                                                      && br.DeletedOn == null);
+            return hasReviewed;
+        }
         public Task<bool> DeleteBarReviewAsync(Guid reviewId)
         {
             throw new NotImplementedException();

@@ -10,19 +10,19 @@
                 @Html.AntiForgeryToken()
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-md-4 control-label">
-                            Your rating <span style="font-weight:normal;">(1 start is bad, 5 star is good)</span>
-                        </label>
-                        <div id ="stars" class="col-md-7">
+                        <div id="stars" class="col-md-12">
                             <div onmouseout="CRateSelected()">
-                                <span class="starFade" id="Rate1" onclick="CRate(1)" onmouseover="CRateOver(1)" 
-                                      onmouseout="CRateOut(1)"></span><span class="starFade" id="Rate2" onclick="CRate(2)" 
-                                      onmouseover="CRateOver(2)" onmouseout="CRateOut(2)">
-                                      </span><span class="starFade" id="Rate3" onclick="CRate(3)" 
-                                      onmouseover="CRateOver(3)" onmouseout="CRateOut(3)"></span>
-                                   <span class="starFade" id="Rate4" onclick="CRate(4)" onmouseover="CRateOver(4)" onmouseout="CRateOut(4)"></span><span class="starFade" id="Rate5" onclick="CRate(5)" onmouseover="CRateOver(5)" onmouseout="CRateOut(5)"></span>
+                                <span class="starFade" id="Rate1" onclick="CRate(1)" onmouseover="CRateOver(1)"
+                                      onmouseout="CRateOut(1)"></span><span class="starFade" id="Rate2" onclick="CRate(2)"
+                                                                            onmouseover="CRateOver(2)" onmouseout="CRateOut(2)">
+                                </span><span class="starFade" id="Rate3" onclick="CRate(3)"
+                                             onmouseover="CRateOver(3)" onmouseout="CRateOut(3)"></span>
+                                <span class="starFade" id="Rate4" onclick="CRate(4)" onmouseover="CRateOver(4)" onmouseout="CRateOut(4)"></span><span class="starFade" id="Rate5" onclick="CRate(5)" onmouseover="CRateOver(5)" onmouseout="CRateOut(5)"></span>
                             </div>
                         </div>
+                        <label class="col-md-12 control-label">
+                            <span style="font-weight:lighter;color:grey;text-align:left">Your rating (1 start is bad, 5 star is good)</span>
+                        </label>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">

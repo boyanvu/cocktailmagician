@@ -13,6 +13,7 @@ using CocktailsMagician.Areas.Bars.Models;
 using X.PagedList;
 using CocktailsMagician.Areas.Cocktails.Models;
 using Microsoft.AspNetCore.Identity;
+using CocktailsMagician.Helpers;
 
 namespace CocktailsMagician.Areas.Bars.Controllers
 {
@@ -78,6 +79,8 @@ namespace CocktailsMagician.Areas.Bars.Controllers
 
             var user = await userManager.GetUserAsync(HttpContext.User);
             ViewData["User"] = user;
+            ViewData["imgPath"] = ImagesPath.ImgsPath;
+            ViewData["barDefaultImgPath"] = @"\Images\barPlaceholder.png";
 
             foreach (var br in barVM.BarReviews)
             {

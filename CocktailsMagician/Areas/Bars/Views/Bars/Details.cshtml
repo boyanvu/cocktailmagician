@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-
+@*<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
 <head>
     <style>
         input[readonly] {
@@ -118,7 +118,7 @@ else
             </div>
         </dl>
         <dl class="col-sm-4">
-            <img src="@Url.Content($"{0}{1}.png"),@ViewData["imgPath"],@Model.Id)" alt="Girl in a jacket" width:auto; height="180">
+            <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.png")" alt="Image not found" onerror="this.src=@ViewData["barDefaultImgPath"];" width:auto; height="180">
         </dl>
     </div>
     <dl class="row">
@@ -164,7 +164,6 @@ else
                     alert("Already reviewed this cocktail");
                 }
                 else {
-                    alert("Lets open it");
                         $('#newReviewModal').modal('show');
                 }
                 }
@@ -277,6 +276,7 @@ else
                 span.removeAttr('id');
             }
         else {
+            alert(likeCounter);
             //debugger;
                 isLiked = true;
                 $button.attr("data-liked", "true");
@@ -296,7 +296,7 @@ else
 
 
     <!-- Modal -->
-    <div class="modal fade modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
+    <div class="modal modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -317,6 +317,8 @@ else
     <script>
         //TODO
         $('#newReviewModal').on('hidden.bs.modal', function () {
-            $(this).removeData();
+          $(this).find("input,textarea,select")
+           .val('')
+           .end()
         });
     </script>

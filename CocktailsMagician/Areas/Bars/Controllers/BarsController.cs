@@ -289,5 +289,26 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             }
             return RedirectToAction("AddRmvCocktailsFromBar");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ListCocktailsInBars()
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var barId = Guid.Parse(Request.Form["barId"].FirstOrDefault());
+
+            return Ok();
+            //int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            //int skip = start != null ? Convert.ToInt32(start) : 0;
+            //int totalCocktailsPerBar = await barService.CountCock;
+            //var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            //var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            //var cocktailsDTOs = await barService.ListAllCocktailsPerBarAsync(skip, pageSize, searchValue, sortColumn, sortColumnDirection, barId);
+            //var model = cocktailsDTOs.Select(br => br.BarReviewDTOtoVM()).ToList();
+            //return Json(new { draw = draw, recordsFiltered = totalRecord, recordsTotal = totalRecord, data = model });
+        }
+
     }
 }

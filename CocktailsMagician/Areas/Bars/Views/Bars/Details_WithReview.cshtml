@@ -1,0 +1,324 @@
+﻿@model CocktailsMagician.Areas.Bars.Models.BarViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+@*<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+<head>
+    <style>
+        input[readonly] {
+            border: none;
+            background: none;
+            color: darkgrey;
+        }
+    </style>
+    <style>
+        .greenColor {
+            color: green;
+        }
+    </style>
+    <style>
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+
+
+<h1>@Model.Name</h1>
+@if (Model.AvgRating > 0)
+{
+    <div>
+        <span class="starFadeN" id="sRate1"></span>
+        <span class="starFadeN" id="sRate2"></span>
+        <span class="starFadeN" id="sRate3"></span>
+        <span class="starFadeN" id="sRate4"></span>
+        <span class="starFadeN" id="sRate5"></span>
+    </div>
+}
+else
+{
+    <div>
+        <input type="text" value="Not rated yet" readonly>
+    </div>
+}
+
+<div>
+    <input type="hidden" id="barId" name="barId" value="@Model.Id">
+</div>
+<div>
+    <hr />
+    <div class="row">
+        <dl class="col-sm-8">
+            <div class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Phone)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Phone)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Website)
+                </dt>
+                <dd class="col-sm-9">
+                    @if (Model.HasWebsite)
+                    {
+                        <a href="@Model.Website" target="_blank">Website</a>
+                    }
+                    else
+                    {
+                        <input type="text" value="-" readonly>
+                    }
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.UnlistedOn)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.UnlistedOn)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.City)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.City)
+                </dd>
+            </div>
+        </dl>
+        <dl class="col-sm-4">
+            <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.png")" alt="Image not found" onerror="this.src=@ViewData["barDefaultImgPath"];" width:auto; height="180">
+        </dl>
+    </div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<br />
+@if (@ViewData["User"] != null)
+{
+    <div>
+        <!-- Button trigger modal -->
+        <button id="openModal" type="button" class="btn btn-primary" @*data-toggle="modal" data-target="#newReviewModal"*@>
+            AddReview
+        </button>
+    </div>
+}
+
+
+
+<script>
+    $(document).ready(function() {
+    $("#openModal").click(function () {
+        var barId = $("#barId").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CheckIfPostedReview","BarReviews",new { area = "Bars" })",
+            data: {barId:barId},
+            dataType: "json",
+            success: function(response){
+                var isReviewed=response;
+
+                if (isReviewed) {
+                    alert("Already reviewed this cocktail");
+                }
+                else {
+                        $('#newReviewModal').modal('show');
+                }
+                }
+
+            });
+        });
+    });
+</script>
+
+
+
+@*<div id="ReviewInputForm">
+        @{
+            await Html.RenderPartialAsync("_CommentRating");
+        }
+    </div>*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+                Rating
+            </th>
+            <th>
+                Review
+            </th>
+            <th>
+                Username
+            </th>
+            <th>
+                Reviewed On
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var br in Model.BarReviews)
+        {
+        <tr class="bId">
+            <td>
+                <input type="hidden"  id="barReviewId" asp-for="@br.Id" class="form-control" readonly />
+            </td>
+            <td>
+
+                @for (var i = 1; i <= br.Rating; i++)
+                {
+                    <span class="starGlowN"></span>
+                }
+                @for (var i = (br.Rating + 1); i <= 5; i++)
+                {
+                    <span class="starFadeN"></span>
+                }
+                <br />
+                <button id="thumbsUpButton" data-nrOfTimesLiked="@br.LikesCount" data-id="@br.Id" data-liked="@br.isLiked" type="button" class="btn btn-default btn-sm">
+                    @if (br.isLiked)
+                    {
+                        <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-thumbs-up"> Like </span>
+                    }
+                </button>
+                <input type="text" value=" @br.LikesCount" readonly>
+            </td>
+            <td>
+                @Html.Raw(br.Comment.Replace("\n", "<br />"))
+            </td>
+            <td>
+                <input type="text" value=" @br.UserName" readonly>
+            </td>
+            <td>
+                <input type="text" value=" @br.ReviewedOn" readonly>
+            </td>
+        </tr>
+        }
+    </tbody>
+    </table>
+
+    <script>
+        function SCRate() {
+            for (var i = 1; i <= @Model.AvgRating; i++) {
+                $("#sRate" + i).attr('class', 'starGlowN');
+            }
+        }
+        $(function(){
+            SCRate();
+        });
+
+        var input = $(":button")
+    input.click(function () {
+
+            var $button = $(this);
+            var buttonId = $button.data('id');
+
+            var likedAttr = $(this).attr("data-liked");
+            var likedSpan = 'greenColor glyphicon glyphicon-thumbs-up';
+            var defaultSpan = 'glyphicon glyphicon-thumbs-up';
+            var isLiked = likedAttr === "true";
+            var span = $button.children().first();
+            var bReviewId = $button.closest($(".bId")).children().eq(0).children().eq(0).val();
+
+
+        if (span.attr('id')) {
+            //debugger;
+                isLiked = false;
+                $button.attr("data-liked", "false");
+                span.attr('class', defaultSpan);
+                span.text(' Like');
+                span.removeAttr('id');
+            }
+        else {
+            alert(likeCounter);
+            //debugger;
+                isLiked = true;
+                $button.attr("data-liked", "true");
+                span.attr('class', likedSpan);
+                span.text(' Liked');
+                span.attr('id', buttonId);
+            }
+
+        $.ajax({
+                type: "POST",
+                url: "@Url.Action("LikeReview","BarReviews",new { area = "Bars" })",
+                data: { barReviewId: bReviewId, isLiked: isLiked },
+                dataType: "json",
+            });
+    });
+    </script>
+
+
+    <!-- Modal -->
+    <div class="modal modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModal3Label">Review</h5>
+                    <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="form-container">
+                    @{
+                        await Html.RenderPartialAsync("_CommentRating");
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //TODO
+        $('#newReviewModal').on('hidden.bs.modal', function () {
+          $(this).find("input,textarea,select")
+           .val('')
+           .end()
+        });
+    </script>

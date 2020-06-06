@@ -10,7 +10,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 @*<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>*@
 <head>
     <style>
         input[readonly] {
@@ -34,24 +34,26 @@
     </style>
 </head>
 
-
+<div>
+    <input id="barId" value="@Model.Id" class="form-control" readonly />
+</div>
 
 <h1>@Model.Name</h1>
 @if (Model.AvgRating > 0)
 {
-    <div>
-        <span class="starFadeN" id="sRate1"></span>
-        <span class="starFadeN" id="sRate2"></span>
-        <span class="starFadeN" id="sRate3"></span>
-        <span class="starFadeN" id="sRate4"></span>
-        <span class="starFadeN" id="sRate5"></span>
-    </div>
+<div>
+    <span class="starFadeN" id="sRate1"></span>
+    <span class="starFadeN" id="sRate2"></span>
+    <span class="starFadeN" id="sRate3"></span>
+    <span class="starFadeN" id="sRate4"></span>
+    <span class="starFadeN" id="sRate5"></span>
+</div>
 }
 else
 {
-    <div>
-        <input type="text" value="Not rated yet" readonly>
-    </div>
+<div>
+    <input type="text" value="Not rated yet" readonly>
+</div>
 }
 
 <div>
@@ -84,11 +86,11 @@ else
                 <dd class="col-sm-9">
                     @if (Model.HasWebsite)
                     {
-                        <a href="@Model.Website" target="_blank">Website</a>
+                    <a href="@Model.Website" target="_blank">Website</a>
                     }
                     else
                     {
-                        <input type="text" value="-" readonly>
+                    <input type="text" value="-" readonly>
                     }
                 </dd>
             </div>
@@ -138,12 +140,12 @@ else
 <br />
 @if (@ViewData["User"] != null)
 {
-    <div>
-        <!-- Button trigger modal -->
-        <button id="openModal" type="button" class="btn btn-primary" @*data-toggle="modal" data-target="#newReviewModal"*@>
-            AddReview
-        </button>
-    </div>
+<div>
+    <!-- Button trigger modal -->
+    <button id="openModal" type="button" class="btn btn-primary" @*data-toggle="modal" data-target="#newReviewModal"*@>
+        AddReview
+    </button>
+</div>
 }
 
 
@@ -177,148 +179,67 @@ else
 
 @*<div id="ReviewInputForm">
         @{
-            await Html.RenderPartialAsync("_CommentRating");
+                await Html.RenderPartialAsync("_Cocktails");
         }
-    </div>*@
-<table class="table">
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            alert("ready");
+            );
+    </script>*@
+
+<table id="CocktailTable" class="table table-hover dt-responsive nowrap" width="100%" cellspacing="0">
     <thead>
         <tr>
-            <th>
-            </th>
-            <th>
-                Rating
-            </th>
-            <th>
-                Review
-            </th>
-            <th>
-                Username
-            </th>
-            <th>
-                Reviewed On
-            </th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Rating</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var br in Model.BarReviews)
-        {
-        <tr class="bId">
-            <td>
-                <input type="hidden"  id="barReviewId" asp-for="@br.Id" class="form-control" readonly />
-            </td>
-            <td>
-
-                @for (var i = 1; i <= br.Rating; i++)
-                {
-                    <span class="starGlowN"></span>
-                }
-                @for (var i = (br.Rating + 1); i <= 5; i++)
-                {
-                    <span class="starFadeN"></span>
-                }
-                <br />
-                <button id="thumbsUpButton" data-nrOfTimesLiked="@br.LikesCount" data-id="@br.Id" data-liked="@br.isLiked" type="button" class="btn btn-default btn-sm">
-                    @if (br.isLiked)
-                    {
-                        <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
-                    }
-                    else
-                    {
-                        <span class="glyphicon glyphicon-thumbs-up"> Like </span>
-                    }
-                </button>
-                <input type="text" value=" @br.LikesCount" readonly>
-            </td>
-            <td>
-                @Html.Raw(br.Comment.Replace("\n", "<br />"))
-            </td>
-            <td>
-                <input type="text" value=" @br.UserName" readonly>
-            </td>
-            <td>
-                <input type="text" value=" @br.ReviewedOn" readonly>
-            </td>
-        </tr>
-        }
     </tbody>
-    </table>
+</table>
+
+@section Scripts
+{
+    <link href="~/DataTables/datatables.css" rel="stylesheet" type="text/css" />
+    <link href="~/DataTables/Buttons-1.6.2/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/DataTables/datatables.js" type="text/javascript" charset="utf8"></script>
+
 
     <script>
-        function SCRate() {
-            for (var i = 1; i <= @Model.AvgRating; i++) {
-                $("#sRate" + i).attr('class', 'starGlowN');
-            }
-        }
-        $(function(){
-            SCRate();
-        });
-
-        var input = $(":button")
-    input.click(function () {
-
-            var $button = $(this);
-            var buttonId = $button.data('id');
-
-            var likedAttr = $(this).attr("data-liked");
-            var likedSpan = 'greenColor glyphicon glyphicon-thumbs-up';
-            var defaultSpan = 'glyphicon glyphicon-thumbs-up';
-            var isLiked = likedAttr === "true";
-            var span = $button.children().first();
-            var bReviewId = $button.closest($(".bId")).children().eq(0).children().eq(0).val();
-
-
-        if (span.attr('id')) {
-            //debugger;
-                isLiked = false;
-                $button.attr("data-liked", "false");
-                span.attr('class', defaultSpan);
-                span.text(' Like');
-                span.removeAttr('id');
-            }
-        else {
-            alert(likeCounter);
-            //debugger;
-                isLiked = true;
-                $button.attr("data-liked", "true");
-                span.attr('class', likedSpan);
-                span.text(' Liked');
-                span.attr('id', buttonId);
-            }
-
-        $.ajax({
-                type: "POST",
-                url: "@Url.Action("LikeReview","BarReviews",new { area = "Bars" })",
-                data: { barReviewId: bReviewId, isLiked: isLiked },
-                dataType: "json",
-            });
-    });
-    </script>
-
-
-    <!-- Modal -->
-    <div class="modal modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModal3Label">Review</h5>
-                    <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-container">
-                    @{
-                        await Html.RenderPartialAsync("_CommentRating");
+        $(document).ready(function ()
+        {
+            alert("ready");
+            var barId = $("#barId").val();
+            alert(barId);
+            @*var isAdmin = @User.IsInRole("Admin");*@
+            $('#CocktailTable').DataTable({
+                "ordering": true,
+                "processing": true,
+                "serverSide": true,
+                "lengthMenu": [[2,10, 25, 50, -1], [2,10, 25, 50, "All"]],
+                "ajax": {
+                    "url": "@Url.Action("ListCocktailsInBars", "Bars",new { area = "Bars" })",
+                    //"data": { barId: barId },
+                    "type": "POST",
+                    "dataType": "json",
+                },
+                  "columnDefs": [ {
+                    "targets": 3,
+                    "data": "Site",
+                    "render": function ( data, type, row, meta ) {
+                      return '<a href="'+data+'">site</a>';
                     }
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        //TODO
-        $('#newReviewModal').on('hidden.bs.modal', function () {
-          $(this).find("input,textarea,select")
-           .val('')
-           .end()
+                  }],
+                "columns": [
+                    { "data": "id", "name": "Id", "visible": false},
+                    { "data": "name", "name": "Name", "autoWidth": true, "orderable": true },
+                    { "data": "avgRating", "name": "AvgRating", "autoWidth": true }
+                ]
+            });
         });
     </script>
+}

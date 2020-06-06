@@ -1,0 +1,79 @@
+﻿@*@model IEnumerable<CocktailsMagician.Areas.Cocktails.Models.CocktailViewModel>*@
+@*@{
+        ViewData["Title"] = "View";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+
+@*<h1>View</h1>*@
+
+<table id="CocktailTable" class="table table-hover dt-responsive nowrap" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts
+{
+    <link href="~/DataTables/datatables.css" rel="stylesheet" type="text/css" />
+    <link href="~/DataTables/Buttons-1.6.2/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/DataTables/datatables.js" type="text/javascript" charset="utf8"></script>
+
+
+    <script>
+        $(document).ready(function ()
+        {
+            alert("ready");
+            //var barId = $("#barId").val();
+            //alert(barId);
+            @*var isAdmin = @User.IsInRole("Admin");*@
+            $('#CocktailTable').DataTable({
+                "ordering": true,
+                "processing": true,
+                "serverSide": true,
+                "lengthMenu": [[2,10, 25, 50, -1], [2,10, 25, 50, "All"]],
+                "ajax": {
+                    "url": "@Url.Action("ListCocktailsInBars", "Bars",new { area = "Bars" })",
+                    //"data": { barId: barId },
+                    "type": "POST",
+                    "dataType": "json",
+                },
+                  "columnDefs": [ {
+                    "targets": 3,
+                    "data": "Site",
+                    "render": function ( data, type, row, meta ) {
+                      return '<a href="'+data+'">site</a>';
+                    }
+                  }],
+                "columns": [
+                    { "data": "id", "name": "Id", "visible": false},
+                    { "data": "name", "name": "Name", "autoWidth": true, "orderable": true },
+                    { "data": "avgRating", "name": "AvgRating", "autoWidth": true },
+                    {
+                        "data": null, "orderable": false, "autoWidth": true,"width":"10%",
+                        "render": function (data, type, row) {
+                            return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Details/' + row.id + '">Details</a>';
+                        }
+                    },
+                    {
+                        "data": null, "orderable": false, "autoWidth": true,"width":"10%", "visible": isAdmin,
+                        "render": function (data, type, row) {
+                                return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Edit/' + row.id + '">Edit</a>';
+                        }
+                    },
+                     {
+                        "data": null,"orderable": false,"autoWidth": true,"width":"10%", "visible": isAdmin,
+                        "render": function (data, type, row) {
+                            return '<a type="button" class="btn btn-light btn-xs" href="/Bars/Bars/Delete/' + row.id + '">Delete</a>';
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}

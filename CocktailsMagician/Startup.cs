@@ -45,6 +45,9 @@ namespace CocktailsMagician
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<CMContext>();
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
+
 
             services.AddScoped<ICocktailService, CocktailService>();
             services.AddScoped<IIngredientService, IngredientService>();
@@ -54,7 +57,7 @@ namespace CocktailsMagician
             services.AddScoped<IBarService, BarService>();
             services.AddScoped<IBarReviewService, BarReviewService>();
             services.AddScoped<IBarReviewLikeService, BarReviewLikeService>();
-
+       
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddMvc().AddNToastNotifyToastr();
 

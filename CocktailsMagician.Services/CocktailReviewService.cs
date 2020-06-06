@@ -56,6 +56,7 @@ namespace CocktailsMagician.Services
             
             try
             {
+                cocktail.AvgRating = await this.CalculateAvgRating(cocktail.Id, rating);
                 await _cmContext.CocktailReviews.AddAsync(cocktailReview);
                 await _cmContext.SaveChangesAsync();
             }
@@ -79,6 +80,20 @@ namespace CocktailsMagician.Services
                 .ToListAsync();
         }
 
-
+        private async Task<double> CalculateAvgRating(Guid cocktailId, int ratingToAdd = 0)
+        {
+            var cocktailReviews = await _cmContext.CocktailReviews.Where(cr => cr.CocktailId == cocktailId && cr.DeletedOn == null).ToListAsync();
+            var nrOfReviews = cocktailReviews.Count();
+            var sumOfRratings = cocktailReviews.Sum(br => br.Rating);
+            if (nrOfReviews == 0)
+            {
+                return Convert.ToDouble(ratingToAdd);
+            }
+            else
+            {
+                var avgRating = (sumOfRratings + ratingToAdd) / (nrOfReviews + (ratingToAdd != 0 ? 1 : 0));
+                return Convert.ToDouble(avgRating);
+            }
+        }
     }
 }

@@ -47,8 +47,8 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.RatingSortParm = sortOrder == "rating" ? "rating_desc" : "rating";
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
             if (searchString != null)
             {
@@ -59,14 +59,21 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 searchString = currentFilter;
             }
             ViewBag.CurrentFilter = searchString;
-
-
+        
             var cocktails = await cocktailService.GetAllCocktails(sortOrder, searchString);
+
+            //var cocktailIngredientsDTO = await cocktailService.GetAllCocktailIngredients();
+            //var cocktailIngredientsVM = cocktailIngredientsDTO
+            //   .Select(ci => ci.CocktailIngredientDTOMapToVM());
 
             var cocktailsVM = cocktails
                 .Select(c => c.CocktailDTOMapToVM())
                 .ToList();
 
+            //foreach (var cocktail in cocktailsVM)
+            //{
+            //    cocktail.CocktailIngredients = cocktailIngredientsVM.Where(ci => ci.CocktailId == cocktail.Id).ToList();
+            //}
 
             int pageSize = 3;
             int pageNumber = (page ?? 1);

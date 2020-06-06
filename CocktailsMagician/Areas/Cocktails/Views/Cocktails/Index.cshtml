@@ -8,6 +8,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .fa-star {
+            color: gainsboro
+        }
+
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+
+
 <h1>Cocktails</h1>
 
 <p>
@@ -27,16 +41,13 @@
     <thead>
         <tr>
             <th>
+                @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
                 @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().UnlistedOn)
-            </th>
-            <th>
-                @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th></th>
         </tr>
@@ -46,16 +57,27 @@
         {
             <tr>
                 <td>
+                    @if (item.AvgRating == 0)
+                    {
+                        <p class="text-secondary">Not rated</p>
+                    }
+                    else
+                    {
+                        @for (int i = 0; i < (int)item.AvgRating; i++)
+                        {
+                            <span class="fa fa-star checked"></span>
+                        }
+                        @for (int i = (int)item.AvgRating; i < 5; i++)
+                        {
+                            <span class="fa fa-star"></span>
+                        }
+                    }
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UnlistedOn)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AvgRating)
                 </td>
                 <td>
                     @if (User.IsInRole("Admin"))

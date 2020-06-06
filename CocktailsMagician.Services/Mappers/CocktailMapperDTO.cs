@@ -22,6 +22,7 @@ namespace CocktailsMagician.Services.Mappers
                 cocktailDTO.CocktailReviews = cocktail.CocktailReviews.Select(c => c.CocktailMapReviewDTO()).ToList();
             }
 
+
             return cocktailDTO;
         }
 

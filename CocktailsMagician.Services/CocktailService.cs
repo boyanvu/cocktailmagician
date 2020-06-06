@@ -69,7 +69,8 @@ namespace CocktailsMagician.Services
             if (!String.IsNullOrEmpty(searchString))
             {
                 cocktails = cocktails
-                    .Where(s => s.Name.Contains(searchString));                                      
+                    .Where(s => s.Name.Contains(searchString)
+                    || s.AvgRating.ToString().Equals(searchString));
             }
 
             switch (sortOrder)
@@ -87,11 +88,16 @@ namespace CocktailsMagician.Services
                     cocktails = cocktails.OrderBy(c => c.Name);
                     break;
             }
+            var cocktailIngredientsDTO = await GetAllCocktailIngredients();
 
             var cocktailsDTO = cocktails
                 .Where(c => c.UnlistedOn == null)
                 .Select(c => c.CocktailMapToDTO());
 
+            //foreach (var cocktail in cocktailsDTO)
+            //{
+            //    cocktail.CocktailIngredients = cocktailIngredientsDTO.FindAll(cr => cr.CocktailId == cocktail.Id).ToList();
+            //}
 
             return await cocktailsDTO.ToListAsync();
         }
@@ -244,6 +250,17 @@ namespace CocktailsMagician.Services
                    .Select(ci => ci.AllCocktailIngredientMapToDTO());
 
             return ci.ToList();
+        }
+
+
+        public async Task<List<CocktailIngredientsDTO>> GetAllCocktailIngredients()
+        {
+            var cocktailIngredientsDTO = await _cmContext.CocktailIngredients
+                 .Where(c => c.UnlistedOn == null)
+                 .Select(c => c.CocktailIngredientMapToDTO())
+                 .ToListAsync();
+
+            return cocktailIngredientsDTO;
         }
 
         public async Task<bool> IsCocktailAvailableInBar(Guid barId, Guid cocktailId)

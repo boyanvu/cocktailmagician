@@ -76,7 +76,8 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 _toastNotification.AddSuccessToastMessage("Review disliked!");
             }
 
-            return RedirectToAction("Index", "Cocktails"/*, new { id = cocktailId }*/);
+            return Json(new { data = true });
+            //return RedirectToAction("Index", "Cocktails"/*, new { id = cocktailId }*/);
         }
     }
 }

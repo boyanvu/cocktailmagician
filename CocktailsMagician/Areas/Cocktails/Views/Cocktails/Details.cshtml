@@ -68,25 +68,15 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
+        @if (User.IsInRole("Admin"))
+        {
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UnlistedOn)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UnlistedOn)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AvgRating)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.AvgRating == 0)
-            {
-                <text>Not rated yet</text>
-            }
-            else
-            {
-                @Html.DisplayFor(model => model.AvgRating)
-            }
-        </dd>
+        }
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CocktailIngredients)
         </dt>
@@ -99,81 +89,97 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    }
     <a asp-action="Index">Back to List</a>
 </div>
 <br />
-<div>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newReviewModal">
-        Add Review
-    </button>
-</div>
+
+@if (User.IsInRole("Admin") || User.IsInRole("User"))
+{
+    <div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newReviewModal">
+            Add Review
+        </button>
+    </div>
+}
 
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-            </th>
-            <th>
-                Rating
-            </th>
-            <th>
-                Review
-            </th>
-            <th>
-                Username
-            </th>
-            <th>
-                Reviewed On
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var c in reviews)
-        {
-            <tr class="crId">
-                <td>
-                    <input type="hidden" id="cocktailReviewId" asp-for="@c.Id" class="form-control" readonly />
-                </td>
-                <td>
-                    @for (var i = 1; i <= c.Rating; i++)
-                    {
-                        <span class="starGlowN"></span>
-                    }
-                    @for (var i = (c.Rating + 1); i <= 5; i++)
-                    {
-                        <span class="starFadeN"></span>
-                    }
-                    <br />
-                    <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-default btn-sm">
-                        @if (c.IsLiked)
-                        {
-                            <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
-                        }
-                        else
-                        {
-                            <span class="glyphicon glyphicon-thumbs-up"> Like </span>
-                        }
-                    </button>
-                    <input id="divLike" data-num="@c.NumberOfLikes" value="@c.NumberOfLikes" readonly>
-                </td>
-                <td>
-                    @Html.Raw(c.Comment.Replace("\n", "<br />"))
-                </td>
-                <td>
-                    <input type="text" value=" @c.UserName" readonly>
-                </td>
-                <td>
-                    <input type="text" value=" @c.ReviewedOn" readonly>
-                </td>
+@if (reviews.Count() != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    Rating
+                </th>
+                <th>
+                    Review
+                </th>
+                <th>
+                    Username
+                </th>
+                <th>
+                    Reviewed On
+                </th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in reviews)
+            {
+                <tr class="crId">
+                    <td>
+                        <input type="hidden" id="cocktailReviewId" asp-for="@c.Id" class="form-control" readonly />
+                    </td>
+                    <td>
+                        @for (var i = 1; i <= c.Rating; i++)
+                        {
+                            <span class="starGlowN"></span>
+                        }
+                        @for (var i = (c.Rating + 1); i <= 5; i++)
+                        {
+                            <span class="starFadeN"></span>
+                        }
+                        <br />
+                        <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-default btn-sm">
+                            @if (c.IsLiked)
+                            {
+                                <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
+                            }
+                            else
+                            {
+                                <span class="glyphicon glyphicon-thumbs-up"> Like </span>
+                            }
+                        </button>
+                        <span id="likes-@c.Id" data-num="@c.NumberOfLikes" value="@c.NumberOfLikes" readonly> @c.NumberOfLikes </span>
+                    </td>
+                    <td>
+                        @Html.Raw(c.Comment.Replace("\n", "<br />"))
+                    </td>
+                    <td>
+                        <input type="text" value=" @c.UserName" readonly>
+                    </td>
+                    <td>
+                        <input type="text" value=" @c.ReviewedOn" readonly>
+                    </td>
+                </tr>
 
-        }
-    </tbody>
-</table>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+
+    <center> <h5> No Reviews for this cocktail! </h5> </center>
+
+}
 
 <script>
     function SCRate() {
@@ -187,42 +193,44 @@
 
     var input = $(":button")
     input.click(function () {
-
-            var $button = $(this);
+            
+        var $button = $(this);
+                   console.log($button);
             var buttonId = $button.data('id');
-
-            var divCount = $("#divLike");
-            var likeCount = $("#divLike").attr("data-num");
+            var divCount = $('#likes-' + buttonId);
+            var divText = divCount.text();
+            //console.log(divText);
+            var likeCount = parseInt(divCount.text());
             debugger;
             var likedAttr = $(this).attr("data-liked");
             var likedSpan = 'greenColor glyphicon glyphicon-thumbs-up';
             var defaultSpan = 'glyphicon glyphicon-thumbs-up';
             var isLiked = likedAttr === "true";
-            var span = $button.children().first();
+        var span = $button.children().first();
+      
             //var cReviewId = $button.closest('td').attr("id");
             var cReviewId = $button.closest($(".crId")).children().eq(0).children().eq(0).val();
 
-                if (span.attr('id')) {
-                isLiked = false;
-                likeCount--;
+        if (span.attr('id')) {
+            debugger;
+            likeCount = likeCount - 1;
+            //console.log(likeCount);
+                isLiked = false;             
                 $button.attr("data-liked", "false");
                 span.attr('class', defaultSpan);
                 span.text(' Like');
                 span.removeAttr('id');
-                    debugger;
-                divCount.attr("data-num", likeCount);
-                    debugger;
+                divCount.text(likeCount);
                 }
                 else {
+            likeCount = likeCount + 1;
+             //console.log(likeCount);
                 isLiked = true;
-                 likeCount++
                 $button.attr("data-liked", "true");
                 span.attr('class', likedSpan);
                 span.text(' Liked');
                 span.attr('id', buttonId);
-                             debugger;
-                divCount.attr("data-num", likeCount);
-                               debugger;
+                divCount.text(likeCount);
                 }
 
             $.ajax({

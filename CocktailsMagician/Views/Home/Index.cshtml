@@ -8,31 +8,4 @@
 </div>
 
 
-<style>
-    /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-    #map {
-        height: 400px;
-        width: 400px;
-    }
-    /* Optional: Makes the sample page fill the window. */
-</style>
 
-<div class="row">
-    <div id="map"></div>
-    <script>
-        var map;
-        function initMap() {
-             var sofiaPos = {lat: 42.697708, lng: 23.321867};
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: sofiaPos,
-                zoom: 8
-            });
-            var marker = new google.maps.Marker({position: sofiaPos, map: map});
-
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCo2QsDQgEg-ZPz4y2EfxdBc8qoiV049NU&callback=initMap"
-            async defer></script>
-
-</div>

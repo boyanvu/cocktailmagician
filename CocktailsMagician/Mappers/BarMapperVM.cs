@@ -20,6 +20,8 @@ namespace CocktailsMagician.Mappers
             barVM.Description = barDTO.Description;
             barVM.UnlistedOn = barDTO.UnlistedOn;
             barVM.Address = barDTO.Address;
+            barVM.Latitude = barDTO.Latitude;
+            barVM.Longitude = barDTO.Longitude;
             barVM.CityId = barDTO.CityId;
             barVM.City = barDTO.City;
             barVM.AvgRating = barDTO.AvgRating;
@@ -40,6 +42,8 @@ namespace CocktailsMagician.Mappers
             barDTO.Description = barVM.Description;
             barDTO.UnlistedOn = barVM.UnlistedOn;
             barDTO.Address = barVM.Address;
+            barDTO.Latitude = barVM.Latitude;
+            barDTO.Longitude = barVM.Longitude;
             barDTO.CityId = barVM.CityId;
 
             return barDTO;

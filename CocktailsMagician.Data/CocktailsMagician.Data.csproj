@@ -19,6 +19,12 @@
     <Compile Remove="Migrations\20200512101159_seed_data.Designer.cs" />
     <Compile Remove="Migrations\20200530100720_addedCocktailNumOfLikes.cs" />
     <Compile Remove="Migrations\20200530100720_addedCocktailNumOfLikes.Designer.cs" />
+    <Compile Remove="Migrations\20200603192945_addedLocationBar.cs" />
+    <Compile Remove="Migrations\20200603192945_addedLocationBar.Designer.cs" />
+    <Compile Remove="Migrations\20200603201214_addedLocationBar.cs" />
+    <Compile Remove="Migrations\20200603201214_addedLocationBar.Designer.cs" />
+    <Compile Remove="Migrations\20200603201503_addedLocationBar.cs" />
+    <Compile Remove="Migrations\20200603201503_addedLocationBar.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

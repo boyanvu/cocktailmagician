@@ -9,6 +9,9 @@ using CocktailsMagician.Services.DTO_s;
 using Microsoft.EntityFrameworkCore;
 using CocktailsMagician.Services.Mappers;
 using CocktailsMagician.Data.Entities;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CocktailsMagician.Services.Services
 {
@@ -22,9 +25,9 @@ namespace CocktailsMagician.Services.Services
         public async Task<BarDTO> GetBarAsync(Guid id)
         {
             var bar = await _cmContext.Bars
-                .Include(b=>b.City)
-                .Include(b=>b.BarReviews)
-                    .ThenInclude(br=>br.User)
+                .Include(b => b.City)
+                .Include(b => b.BarReviews)
+                    .ThenInclude(br => br.User)
                 .Include(b => b.BarReviews)
                     .ThenInclude(br => br.BarReviewLikes)
                     .ThenInclude(brl => brl.User)
@@ -103,7 +106,7 @@ namespace CocktailsMagician.Services.Services
         public async Task<BarDTO> UpdateBarAsync(BarDTO barDTO)
         {
             var bar = await _cmContext.Bars
-                .Where(b=>b.Id == barDTO.Id)
+                .Where(b => b.Id == barDTO.Id)
                 .FirstOrDefaultAsync(b => b.UnlistedOn == null);
 
             if (bar == null)
@@ -133,12 +136,15 @@ namespace CocktailsMagician.Services.Services
             }
 
             if (barDTO.Address != null)
+            {
                 bar.Address = barDTO.Address;
-
-
-                await _cmContext.SaveChangesAsync();
-
+                bar.Latitude = barDTO.Latitude;
+                bar.Longitude = barDTO.Longitude;
+            }
            
+            await _cmContext.SaveChangesAsync();
+
+
             //var barDto = bar.MapBarToDTO();
             return barDTO;
         }
@@ -182,7 +188,7 @@ namespace CocktailsMagician.Services.Services
                 };
                 _cmContext.BarCocktails.Add(barCocktailNew);
             }
-            else if(barCocktail.UnlistedOn != null)
+            else if (barCocktail.UnlistedOn != null)
             {
                 barCocktail.UnlistedOn = null;
             }
@@ -223,6 +229,58 @@ namespace CocktailsMagician.Services.Services
                 }
                 return true;
             }
+        }
+
+        public async Task<string> CallApiForLocation(string url)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{url}");
+            var response = await client.SendAsync(request);
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<BarDTO> ParseApiLocationResult(BarDTO barDTO)
+        {
+            var bar = await _cmContext.Bars
+               .Include(b => b.City)
+               .Where(b => b.UnlistedOn == null)
+               .FirstOrDefaultAsync(b => b.Id == barDTO.Id);
+
+            if (bar == null)
+            {
+                throw new ArgumentNullException("Bar does not exist.");
+            }
+
+            var barCity = bar.City.Name.ToLower();
+            var barCountry = "bulgaria";
+            var barAdress = bar.Address.Replace(" ","&").TrimEnd('.');
+
+            var url = $"https://nominatim.openstreetmap.org/search?q={barCountry}+{barCity}+{barAdress}&accept-language=en&format=json&addressdetails=1&limit=10&polygon_svg=1&email=lssah@protonmail.com";
+            //https://nominatim.openstreetmap.org/search?q=bulgaria%20sofia%20vitosha%20boulevard%2097&accept-language=en&format=json&addressdetails=1&limit=10&polygon_svg=1&lssah%40protonmail.com
+            var apiResult = await CallApiForLocation(url);
+
+            if (string.IsNullOrEmpty(apiResult) || apiResult == "[]")
+            {
+                barDTO.Latitude = 0;
+                barDTO.Longitude = 0;
+            }
+
+            var apiStringToJArr = JsonConvert.DeserializeObject<JArray>(apiResult);
+            var firstResultJObj = apiStringToJArr.First().ToObject<JObject>();
+
+            foreach (JProperty item in firstResultJObj.Children())
+            {
+                if (item.Name == "lat")
+                {
+                    barDTO.Latitude = Convert.ToDouble(item.Value);
+                }
+                else if (item.Name == "lon")
+                {
+                    barDTO.Longitude = Convert.ToDouble(item.Value);
+                }
+            }
+
+            return barDTO;
         }
     }
 }

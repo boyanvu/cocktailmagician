@@ -120,6 +120,7 @@ else
         <dl class="col-sm-4">
             <img src="https://cocktails.blob.core.windows.net/bars/pavement.jpg" alt="Girl in a jacket" width:auto; height="180">
         </dl>
+
     </div>
     <dl class="row">
         <dt class="col-sm-2">
@@ -133,6 +134,9 @@ else
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+</div>
+<div>
+    <a asp-action="BarLocation" asp-route-id="@Model.Id"> Location </a>
 </div>
 
 <br />
@@ -175,7 +179,6 @@ else
 </script>
 
 
-
 @*<div id="ReviewInputForm">
         @{
             await Html.RenderPartialAsync("_CommentRating");
@@ -203,48 +206,48 @@ else
     <tbody>
         @foreach (var br in Model.BarReviews)
         {
-        <tr class="bId">
-            <td>
-                <input type="hidden"  id="barReviewId" asp-for="@br.Id" class="form-control" readonly />
-            </td>
-            <td>
+            <tr class="bId">
+                <td>
+                    <input type="hidden" id="barReviewId" asp-for="@br.Id" class="form-control" readonly />
+                </td>
+                <td>
 
-                @for (var i = 1; i <= br.Rating; i++)
-                {
-                    <span class="starGlowN"></span>
-                }
-                @for (var i = (br.Rating + 1); i <= 5; i++)
-                {
-                    <span class="starFadeN"></span>
-                }
-                <br />
-                <button id="thumbsUpButton" data-nrOfTimesLiked="@br.LikesCount" data-id="@br.Id" data-liked="@br.isLiked" type="button" class="btn btn-default btn-sm">
-                    @if (br.isLiked)
+                    @for (var i = 1; i <= br.Rating; i++)
                     {
-                        <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
+                        <span class="starGlowN"></span>
                     }
-                    else
+                    @for (var i = (br.Rating + 1); i <= 5; i++)
                     {
-                        <span class="glyphicon glyphicon-thumbs-up"> Like </span>
+                        <span class="starFadeN"></span>
                     }
-                </button>
-                <input type="text" value=" @br.LikesCount" readonly>
-            </td>
-            <td>
-                @Html.Raw(br.Comment.Replace("\n", "<br />"))
-            </td>
-            <td>
-                <input type="text" value=" @br.UserName" readonly>
-            </td>
-            <td>
-                <input type="text" value=" @br.ReviewedOn" readonly>
-            </td>
-        </tr>
+                    <br />
+                    <button id="thumbsUpButton" data-nrOfTimesLiked="@br.LikesCount" data-id="@br.Id" data-liked="@br.isLiked" type="button" class="btn btn-default btn-sm">
+                        @if (br.isLiked)
+                        {
+                            <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-thumbs-up"> Like </span>
+                        }
+                    </button>
+                    <input type="text" value=" @br.LikesCount" readonly>
+                </td>
+                <td>
+                    @Html.Raw(br.Comment.Replace("\n", "<br />"))
+                </td>
+                <td>
+                    <input type="text" value=" @br.UserName" readonly>
+                </td>
+                <td>
+                    <input type="text" value=" @br.ReviewedOn" readonly>
+                </td>
+            </tr>
         }
     </tbody>
-    </table>
+</table>
 
-    <script>
+<script>
         function SCRate() {
             for (var i = 1; i <= @Model.AvgRating; i++) {
                 $("#sRate" + i).attr('class', 'starGlowN');
@@ -292,31 +295,31 @@ else
                 dataType: "json",
             });
     });
-    </script>
+</script>
 
 
-    <!-- Modal -->
-    <div class="modal fade modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModal3Label">Review</h5>
-                    <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-container">
-                    @{
-                        await Html.RenderPartialAsync("_CommentRating");
-                    }
-                </div>
+<!-- Modal -->
+<div class="modal fade modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal3Label">Review</h5>
+                <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form-container">
+                @{
+                    await Html.RenderPartialAsync("_CommentRating");
+                }
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        //TODO
-        $('#newReviewModal').on('hidden.bs.modal', function () {
-            $(this).removeData();
-        });
-    </script>
+<script>
+    //TODO
+    $('#newReviewModal').on('hidden.bs.modal', function () {
+        $(this).removeData();
+    });
+</script>

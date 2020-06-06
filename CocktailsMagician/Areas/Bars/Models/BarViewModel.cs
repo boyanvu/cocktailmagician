@@ -16,6 +16,8 @@ namespace CocktailsMagician.Areas.Bars.Models
         public string Description { get; set; }
         public DateTime? UnlistedOn { get; set; }
         public string Address { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
         public Guid CityId { get; set; }
         public string? City { get; set; }
         public double AvgRating { get; set; }

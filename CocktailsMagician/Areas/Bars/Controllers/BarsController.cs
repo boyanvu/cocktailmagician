@@ -81,6 +81,9 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
             ViewData["User"] = user;
             ViewData["imgPath"] = ImagesPath.ImgsPath;
+            ViewData["Latitude"] = barVM.Latitude;
+            ViewData["Longitude"] = barVM.Longitude;
+
 
             foreach (var br in barVM.BarReviews)
             {
@@ -100,6 +103,27 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             return View(barVM);
         }
 
+        public async Task<IActionResult> BarLocation(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var barDTO = await barService.GetBarAsync((Guid)id);
+
+            if (barDTO == null)
+            {
+                return NotFound();
+            }
+
+            var barVM = barDTO.BarDTOtoVM();
+
+            ViewData["Latitude"] = barVM.Latitude;
+            ViewData["Longitude"] = barVM.Longitude;
+
+            return View();
+        }
+
         // GET: Bars/Bars/Create
         public IActionResult Create()
         {
@@ -117,9 +141,10 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             if (ModelState.IsValid)
             {
                 var barDTO = barVM.BarVMtoDTO();
+                var barDTOWithLocation = await barService.ParseApiLocationResult(barDTO);
                 try
                 {
-                    var newBarDTO = await barService.CreateBarAsync(barDTO);
+                    var newBarDTO = await barService.CreateBarAsync(barDTOWithLocation);
                     var newBarVM = newBarDTO.BarDTOtoVM();
                     return RedirectToAction(nameof(Index));
                 }
@@ -164,7 +189,9 @@ namespace CocktailsMagician.Areas.Bars.Controllers
 
             if (ModelState.IsValid)
             {
-                await barService.UpdateBarAsync(barVM.BarVMtoDTO());
+                var barDTO = barVM.BarVMtoDTO();
+                var barDTOWithLocation = await barService.ParseApiLocationResult(barDTO);
+                await barService.UpdateBarAsync(barDTOWithLocation);
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", bar.CityId);

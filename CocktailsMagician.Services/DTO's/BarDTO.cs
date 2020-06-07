@@ -15,6 +15,8 @@ namespace CocktailsMagician.Services.DTO_s
         public DateTime? UnlistedOn { get; set; }
         public Guid CityId { get; set; }
         public string City { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
         public bool isLiked { get; set; }
         public double AvgRating { get; set; }
         public string Address { get; set; }

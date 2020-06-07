@@ -17,5 +17,8 @@ namespace CocktailsMagician.Services.Contracts
 
         Task<bool> AddCocktailToBarAsync(Guid barId, Guid cocktailId);
         Task<bool> RemoveCocktailFromBarAsync(Guid barId, Guid cocktailId);
+
+        Task<string> CallApiForLocation(string url);
+        Task<BarDTO> ParseApiLocationResult(BarDTO barDTO);
     }
 }

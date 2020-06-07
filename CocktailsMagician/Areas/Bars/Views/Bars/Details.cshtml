@@ -197,7 +197,7 @@ else
                                 <span class="glyphicon glyphicon-thumbs-up"> Like </span>
                             }
                         </button>
-                        <input type="text" value=" @br.LikesCount" readonly>
+                        <span id="likes-@br.Id" data-num="@br.LikesCount" value="@br.LikesCount" readonly> @br.LikesCount </span>
                     </td>
                     <td>
                         @Html.Raw(br.Comment.Replace("\n", "<br />"))
@@ -223,36 +223,42 @@ else
             SCRate();
         });
 
-        var input = $(":button")
+            var input = $(":button")
     input.click(function () {
 
-            var $button = $(this);
+        var $button = $(this);
             var buttonId = $button.data('id');
-
+            var divCount = $('#likes-' + buttonId);
+            var divText = divCount.text();
+            var likeCount = parseInt(divCount.text());
+            debugger;
             var likedAttr = $(this).attr("data-liked");
             var likedSpan = 'greenColor glyphicon glyphicon-thumbs-up';
             var defaultSpan = 'glyphicon glyphicon-thumbs-up';
             var isLiked = likedAttr === "true";
-            var span = $button.children().first();
-            var bReviewId = $button.closest($(".bId")).children().eq(0).children().eq(0).val();
+        var span = $button.children().first();
 
+            var cReviewId = $button.closest($(".crId")).children().eq(0).children().eq(0).val();
 
         if (span.attr('id')) {
-            //debugger;
+            debugger;
+            likeCount = likeCount - 1;
                 isLiked = false;
                 $button.attr("data-liked", "false");
                 span.attr('class', defaultSpan);
                 span.text(' Like');
                 span.removeAttr('id');
-            }
-        else {
-            //debugger;
+                divCount.text(likeCount);
+                }
+                else {
+            likeCount = likeCount + 1;
                 isLiked = true;
                 $button.attr("data-liked", "true");
                 span.attr('class', likedSpan);
                 span.text(' Liked');
                 span.attr('id', buttonId);
-            }
+                divCount.text(likeCount);
+                }
 
         $.ajax({
                 type: "POST",

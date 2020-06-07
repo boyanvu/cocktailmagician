@@ -12,7 +12,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .fa-star {
-            color: gainsboro
+            color: gainsboro;
+            /*width: 50px;*/
+            /*height: 100px;*/
         }
 
         .checked {
@@ -22,76 +24,126 @@
 </head>
 
 
-<h1>Cocktails</h1>
+<center> <h1>Cocktails</h1> </center>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<center>
+    @using (Html.BeginForm())
+    {
+        <p>
+            @Html.TextBox("SearchString")
+            <input type="submit" class="btn-outline-success" value="Search" />
+        </p>
+    }
+</center>
+<br />
+<br />
 
-@using (Html.BeginForm())
-{
-    <p>
-        Find by name: @Html.TextBox("SearchString")
-        <input type="submit" value="Search" />
-    </p>
-}
 
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>
-                @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th>
-                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@*<table class="table table-striped">
+        <thead>
             <tr>
-                <td>
-                    @if (item.AvgRating == 0)
-                    {
-                        <p class="text-secondary">Not rated</p>
-                    }
-                    else
-                    {
-                        @for (int i = 0; i < (int)item.AvgRating; i++)
+                <th>
+                    @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.AvgRating == 0)
                         {
-                            <span class="fa fa-star checked"></span>
+                            <p class="text-secondary">Not rated</p>
                         }
-                        @for (int i = (int)item.AvgRating; i < 5; i++)
+                        else
                         {
-                            <span class="fa fa-star"></span>
+                            @for (int i = 0; i < (int)item.AvgRating; i++)
+                            {
+                                <span class="fa fa-star checked"></span>
+                            }
+                            @for (int i = (int)item.AvgRating; i < 5; i++)
+                            {
+                                <span class="fa fa-star"></span>
+                            }
                         }
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />*@
+
+
+
+@foreach (var cocktail in Model)
+{
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <img src="~/Images/cocktail.jpg" width="250" height="250" />
+                <center>
+                    <div class="row">
+                        @if (cocktail.AvgRating == 0)
+                        {
+                            <p class="text-secondary">Not rated</p>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < (int)cocktail.AvgRating; i++)
+                            {
+                                <span class="fa fa-star checked"></span>
+                            }
+                            @for (int i = (int)cocktail.AvgRating; i < 5; i++)
+                            {
+                                <span class="fa fa-star"></span>
+                            }
+                        }
+                    </div>
+                </center>
+            </div>
+            <div class="col">
+                <h3> @cocktail.Name </h3>
+                <div class="row"> @cocktail.Description</div>
+                <div class="row">
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@cocktail.Id" class="btn btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@cocktail.Id" class="btn btn-danger">Delete</a>
                     }
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<br />
+                    <a asp-action="Details" asp-route-id="@cocktail.Id" class="btn btn-success">Details</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <br />
+
+}
+
 
 <center>
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
@@ -99,5 +151,3 @@
     @Html.PagedListPager(Model, page => Url.Action("Index",
         new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 </center>
-
-

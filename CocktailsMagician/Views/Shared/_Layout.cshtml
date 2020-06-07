@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CocktailsMagician</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -22,16 +22,46 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Bars" asp-controller="Bars" asp-action="Index">Bars</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">Cocktails</a>
-                        </li>
-                        @if (User.IsInRole("Admin"))
+                        @if (!User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Index">Ingredients</a>
+                                <a class="nav-link text-dark" asp-area="Bars" asp-controller="Bars" asp-action="Index">Bars</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Bars" asp-controller="Bars" asp-action="Index">Bars</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-area="Bars" asp-controller="Bars" asp-action="Index">View All</a>
+                                    <a class="dropdown-item" asp-area="Bars" asp-controller="Bars" asp-action="Create">Create new</a>
+                                </div>
+                            </li>
+                        }
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">Cocktails</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">Cocktails</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">View All</a>
+                                    <a class="dropdown-item" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Create">Create new</a>
+                                </div>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Index">Ingredients</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Index">View All</a>
+                                    <a class="dropdown-item" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Create">Create new</a>
+                                </div>
                             </li>
                         }
                     </ul>

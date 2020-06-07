@@ -15,6 +15,8 @@ namespace CocktailsMagician.Data.Entities
         public string Address { get; set; }
         public Guid CityId { get; set; }
         public City City { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
         public double AvgRating { get; set; }
         public ICollection<BarReview> BarReviews { get; set; }
     }

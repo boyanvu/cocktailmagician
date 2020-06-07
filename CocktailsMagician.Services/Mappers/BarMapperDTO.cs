@@ -22,8 +22,10 @@ namespace CocktailsMagician.Services.Mappers
             barDTO.CityId = bar.CityId;
             barDTO.AvgRating = bar.AvgRating;
             barDTO.UnlistedOn = bar.UnlistedOn;
+            barDTO.Latitude = bar.Latitude;
+            barDTO.Longitude = bar.Longitude;
             //if (bar.BarReviews.Count>0)
-            if(bar.BarReviews != null)
+            if (bar.BarReviews != null)
             {
                 barDTO.BarReviews = bar.BarReviews
                             .Select(br=>br.BarMapReviewDTO())
@@ -42,6 +44,8 @@ namespace CocktailsMagician.Services.Mappers
             bar.Description = barDTO.Description;
             bar.Address = barDTO.Address;
             bar.CityId = barDTO.CityId;
+            bar.Latitude = barDTO.Latitude;
+            bar.Longitude = barDTO.Longitude;
 
             return bar;
         }

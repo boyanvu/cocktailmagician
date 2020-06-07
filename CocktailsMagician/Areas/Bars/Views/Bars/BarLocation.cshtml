@@ -1,0 +1,44 @@
+﻿@model CocktailsMagician.Areas.Bars.Models.BarViewModel
+
+@{
+    ViewData["Title"] = "BarLocation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center> <h1> Bar Location</h1> </center>
+<style>
+    div {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+    #map {
+        height: 600px;
+        width: 800px;
+    }
+    /* Optional: Makes the sample page fill the window. */
+</style>
+<br />
+
+<center>
+    <div class="row">
+        <div id="map"></div>
+        <script>
+        var map;
+        var latitude = parseFloat('@ViewData["Latitude"]');
+        var longitude = parseFloat('@ViewData["Longitude"]');
+        function initMap() {
+            var mapPosition = { lat: latitude, lng: longitude };
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: mapPosition,
+                zoom: 8
+            });
+            var marker = new google.maps.Marker({ position: mapPosition, map: map });
+        }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCo2QsDQgEg-ZPz4y2EfxdBc8qoiV049NU&callback=initMap"
+                async defer></script>
+    </div>
+</center>

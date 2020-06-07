@@ -1,9 +1,5 @@
 ﻿@model IList<CocktailsMagician.Areas.Cocktails.Models.CocktailIngredientsViewModel>
 
+@String.Join(", ", Model.Select(p => p.IngredientName).ToArray())
 
-@foreach (var item in Model)
-{
-    <td>
-        @Html.DisplayFor(modelItem => item.IngredientName),
-    </td>  
-}
+

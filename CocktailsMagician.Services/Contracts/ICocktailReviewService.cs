@@ -10,5 +10,6 @@ namespace CocktailsMagician.Services.Contracts
     {
         Task<CocktailReviewDTO> CreateCocktailReview(string cocktailName, string userName, int rating, string comment);
         Task<IEnumerable<CocktailReviewDTO>> GetAllSpecificCocktailReviews(Guid cocktailId);
+        Task<bool> HasAlreadyReviewedAsync(Guid cocktailId, Guid userId);
     }
 }

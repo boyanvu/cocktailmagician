@@ -59,11 +59,6 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         public async Task<IActionResult> LikeReview(Guid cocktailReviewId, bool isLiked)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-
-            //var allCocktailReviewLikes = await cocktailReviewLikeService.GetAllCocktailReviewLikes();
-            //var cocktailReviewLike = allCocktailReviewLikes
-            //    .FirstOrDefault(cr => cr.CocktailReviewId == cocktailReviewId);
-            ////var cocktailId = cocktailReviewLike.CocktailReview.CocktailId;
               
             if (isLiked)
             {
@@ -78,6 +73,17 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
 
             return Json(new { data = true });
             //return RedirectToAction("Index", "Cocktails"/*, new { id = cocktailId }*/);
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> CheckIfPostedReview(Guid cocktailId)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var hasAlreadyReviewed = await cocktailReviewService.HasAlreadyReviewedAsync(cocktailId, user.Id);
+  
+            return Json(hasAlreadyReviewed);       
         }
     }
 }

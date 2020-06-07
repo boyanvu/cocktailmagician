@@ -138,10 +138,10 @@ else
                 {
                     var isReviewed=response;
                     if (isReviewed) {
-                        alert("Already reviewed this cocktail");
+                        alert("Already reviewed this bar!");
                     }
                     else {
-                            $('#newReviewModal').modal('show');
+                        $('#newReviewModal').modal('show');
                     }
                 }
             })
@@ -286,6 +286,6 @@ else
     <script>
         //TODO
         $('#newReviewModal').on('hidden.bs.modal', function () {
-            $(this).removeData();
+            $(this).removeData('bs.modal');
         });
     </script>

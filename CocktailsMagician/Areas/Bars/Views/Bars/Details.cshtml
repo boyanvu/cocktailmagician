@@ -240,8 +240,8 @@ else
             var isLiked = likedAttr === "true";
         var span = $button.children().first();
 
-            var cReviewId = $button.closest($(".crId")).children().eq(0).children().eq(0).val();
-
+         var bReviewId = $button.closest($(".bId")).children().eq(0).children().eq(0).val();
+        console.log(bReviewId);
         if (span.attr('id')) {
             debugger;
             likeCount = likeCount - 1;

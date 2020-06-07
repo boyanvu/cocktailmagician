@@ -80,6 +80,14 @@ namespace CocktailsMagician.Services
                 .ToListAsync();
         }
 
+        public async Task<bool> HasAlreadyReviewedAsync(Guid cocktailId, Guid userId)
+        {
+            var hasReviewed = await _cmContext.CocktailReviews.AnyAsync(br => br.CocktailId == cocktailId
+                                                                     && br.UserId == userId
+                                                                     && br.DeletedOn == null);
+            return hasReviewed;
+        }
+
         private async Task<double> CalculateAvgRating(Guid cocktailId, int ratingToAdd = 0)
         {
             var cocktailReviews = await _cmContext.CocktailReviews.Where(cr => cr.CocktailId == cocktailId && cr.DeletedOn == null).ToListAsync();

@@ -16,6 +16,7 @@ using CocktailsMagician.Areas.Ingredients.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using NToastNotify;
+using CocktailsMagician.Helpers;
 
 namespace CocktailsMagician.Areas.Cocktails.Controllers
 {
@@ -99,9 +100,9 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 return NotFound();
             }
 
-
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
+            ViewData["imgPath"] = ImagesPath.ImgsPath;
             ViewBag.CocktailId = cocktail.Id;
 
             var cocktailReviews = await cocktailReviewService.GetAllSpecificCocktailReviews(id);
@@ -128,7 +129,6 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 }
             }
           
-
             foreach (var cReview in cocktailReviewsVM)
             {
                 cReview.NumberOfLikes = await this.cocktailReviewLikeService.GetCocktailReviewNumberOfLikes(cReview.Id);
@@ -137,18 +137,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             ViewBag.Reviews = cocktailReviewsVM;
           
             var ratings = cocktailReviewsVM;
-            if (ratings.Count() > 0)
-            {
-                var ratingSum = ratings.Sum(d => d.Rating);
-                ViewBag.RatingSum = ratingSum;
-                var ratingCount = ratings.Count();
-                ViewBag.RatingCount = ratingCount;
-            }
-            else
-            {
-                ViewBag.RatingSum = 0;
-                ViewBag.RatingCount = 0;
-            }
+           
             var cocktailVM = cocktail.CocktailDTOMapToVM();
             cocktailVM.CocktailIngredients = cocktailIngredientsVM.ToList();
 

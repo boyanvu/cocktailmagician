@@ -19,7 +19,7 @@ namespace CocktailsMagician.Areas.Cocktails.Models
         public string Name { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(500)]
         [DisplayName("Cocktail description")]
         public string Description { get; set; }
 

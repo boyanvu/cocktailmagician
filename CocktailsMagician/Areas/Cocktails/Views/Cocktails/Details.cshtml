@@ -87,7 +87,7 @@ else
             <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.jpg")" alt="Image not found" onerror="this.src ='/Images/cocktail.jpg';" width="380" ; height:auto>
         </div>
     </div>
-  
+
     <div>
         @if (User.IsInRole("Admin"))
         {
@@ -270,7 +270,7 @@ else
 
 
     <!-- Modal -->
-    <div class="modal fade modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
+    <div class="modal modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

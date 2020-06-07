@@ -50,6 +50,7 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             }
             ViewBag.CurrentFilter = searchString;
 
+            ViewData["imgPath"] = ImagesPath.ImgsPath;
 
             var barDTOs = await barService.GetBarsFiltered(sortOrder, searchString);
 

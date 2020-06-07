@@ -101,7 +101,7 @@ else
             </dd>
         </dl>
         <div class="col-sm-4">
-            <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.jpg")" alt="Image not found" onerror="this.src=@ViewData["barDefaultImgPath"];" width="380" ; height:auto>
+            <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/barPlaceholder.jpg';" width="380" ; height:auto>
         </div>
     </div>
     <div>

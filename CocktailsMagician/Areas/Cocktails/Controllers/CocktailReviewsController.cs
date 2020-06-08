@@ -70,9 +70,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 await cocktailReviewLikeService.RemoveCocktailReviewLike(cocktailReviewId, user.UserName);
                 _toastNotification.AddSuccessToastMessage("Review disliked!");
             }
-
-            return Json(new { data = true });
-            //return RedirectToAction("Index", "Cocktails"/*, new { id = cocktailId }*/);
+            return Ok();
         }
 
         [HttpPost]

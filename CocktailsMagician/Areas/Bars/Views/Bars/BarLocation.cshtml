@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*<center> <h1> <a asp-action="Details" asp-route-id="@Model.Id">Neshto</a></h1> </center>*@
+<center> <h1> <a asp-action="Details" asp-route-id="@Model.Id">@Model.Name</a></h1> </center>
 <style>
     div {
         display: block;
@@ -33,7 +33,7 @@
             var mapPosition = { lat: latitude, lng: longitude };
             map = new google.maps.Map(document.getElementById('map'), {
                 center: mapPosition,
-                zoom: 8
+                zoom: 18
             });
             var marker = new google.maps.Marker({ position: mapPosition, map: map });
         }

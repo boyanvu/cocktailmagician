@@ -121,7 +121,7 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             ViewData["Latitude"] = barVM.Latitude;
             ViewData["Longitude"] = barVM.Longitude;
 
-            return View();
+            return View(barVM);
         }
 
         // GET: Bars/Bars/Create

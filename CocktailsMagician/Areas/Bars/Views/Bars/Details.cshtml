@@ -99,6 +99,12 @@ else
             <dd class="col-sm-9">
                 @Html.DisplayFor(model => model.Address)
             </dd>
+            <dt class="col-sm-3">
+                Location
+            </dt>
+            <dd class="col-sm-9">
+                <a asp-action="BarLocation" asp-route-id="@Model.Id"> Map </a>
+            </dd>
         </dl>
         <div class="col-sm-4">
             <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/barPlaceholder.jpg';" width="380" ; height:auto>
@@ -108,10 +114,9 @@ else
         @if (User.IsInRole("Admin"))
         {
             <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a><span> | </span>
+            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a><span> | </span>
         }
         <a asp-action="Index">Back to List</a>
-        <span> | </span>
-        <a asp-action="BarLocation" asp-route-id="@Model.Id"> Location </a>
     </div>
 
     <br />

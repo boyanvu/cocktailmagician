@@ -60,7 +60,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 searchString = currentFilter;
             }
             ViewBag.CurrentFilter = searchString;
-        
+
             var cocktails = await cocktailService.GetAllCocktails(sortOrder, searchString);
 
             //var cocktailIngredientsDTO = await cocktailService.GetAllCocktailIngredients();
@@ -78,6 +78,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
 
             int pageSize = 3;
             int pageNumber = (page ?? 1);
+            ViewData["imgPath"] = ImagesPath.ImgsPath;
 
             return View(cocktailsVM.ToPagedList(pageNumber, pageSize));
         }

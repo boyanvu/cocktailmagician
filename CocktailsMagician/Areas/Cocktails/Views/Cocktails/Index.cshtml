@@ -94,18 +94,29 @@
         </tbody>
     </table>
     <br />*@
-
-
-
 @foreach (var cocktail in Model)
 {
 
     <div class="container">
         <div class="row">
-            <div class="col">
-                <img src="~/Images/cocktail.jpg" width="250" height="250" />
-                <center>
-                    <div class="row">
+            <div class="col-sm-4">
+                <img src="@($"{@ViewData["imgPath"]}{cocktail.Id}.jpg")" width="250" ; height:auto onerror="this.src='/Images/cocktail.jpg';" />
+            </div>
+            <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3>
+                            <a asp-action="Details" asp-route-id="@cocktail.Id">@cocktail.Name</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        @cocktail.Description
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
                         @if (cocktail.AvgRating == 0)
                         {
                             <p class="text-secondary">Not rated</p>
@@ -122,27 +133,62 @@
                             }
                         }
                     </div>
-                </center>
-            </div>
-            <div class="col">
-                <h3> @cocktail.Name </h3>
-                <div class="row"> @cocktail.Description</div>
-                <div class="row">
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@cocktail.Id" class="btn btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@cocktail.Id" class="btn btn-danger">Delete</a>
-                    }
-                    <a asp-action="Details" asp-route-id="@cocktail.Id" class="btn btn-success">Details</a>
                 </div>
             </div>
-
         </div>
     </div>
-
     <br />
-
 }
+
+
+
+
+@*@foreach (var cocktail in Model)
+    {
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <img src="~/Images/cocktail.jpg" width="250" height="250" />
+                    <center>
+                        <div class="row">
+                            @if (cocktail.AvgRating == 0)
+                            {
+                                <p class="text-secondary">Not rated</p>
+                            }
+                            else
+                            {
+                                @for (int i = 0; i < (int)cocktail.AvgRating; i++)
+                                {
+                                    <span class="fa fa-star checked"></span>
+                                }
+                                @for (int i = (int)cocktail.AvgRating; i < 5; i++)
+                                {
+                                    <span class="fa fa-star"></span>
+                                }
+                            }
+                        </div>
+                    </center>
+                </div>
+                <div class="col">
+                    <h3> @cocktail.Name </h3>
+                    <div class="row"> @cocktail.Description</div>
+                    <div class="row">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@cocktail.Id" class="btn btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@cocktail.Id" class="btn btn-danger">Delete</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@cocktail.Id" class="btn btn-success">Details</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <br />
+
+    }*@
 
 
 <center>

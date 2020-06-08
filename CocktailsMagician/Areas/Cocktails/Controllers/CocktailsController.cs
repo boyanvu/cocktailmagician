@@ -177,6 +177,14 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                     Description = cocktail.Description
                 };
 
+                //var allCocktails = await cocktailService.GetAllCocktails();
+                //var doesCocktailExist = allCocktails.Where(c => c.Name == cocktailDTO.Name).Any();
+
+                //if (doesCocktailExist == true)
+                //{
+                //    _toastNotification.AddErrorToastMessage("Cocktail already exists!");
+                //    return View();
+                //}
                 var newCocktail = await cocktailService.CreateCocktail(cocktailDTO);
 
                 foreach (var ingredient in allIngredients)
@@ -192,6 +200,8 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                         await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
                     }
                 }
+
+                           
                 _toastNotification.AddSuccessToastMessage("Cocktail created successfully!");
                 return RedirectToAction(nameof(Index));
             }

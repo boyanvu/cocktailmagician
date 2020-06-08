@@ -63,7 +63,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             else
             {
                 await barReviewLikeService.RemoveBarReviewLikeAsync(barReviewId, user.Id);
-                toastNotification.AddSuccessToastMessage("Review liked!");
+                toastNotification.AddSuccessToastMessage("Review disliked!");
             }
 
             return Ok();

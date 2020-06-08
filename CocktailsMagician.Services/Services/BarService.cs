@@ -62,7 +62,8 @@ namespace CocktailsMagician.Services.Services
             if (!String.IsNullOrEmpty(searchString))
             {
                 bars = bars
-                    .Where(b => b.Name.Contains(searchString));
+                    .Where(b => b.Name.Contains(searchString) 
+                            || b.City.Name.Contains(searchString));
             }
 
             switch (sortOrder)

@@ -189,6 +189,8 @@ else
                             <span class="starFadeN"></span>
                         }
                         <br />
+                        @if(User.IsInRole("Admin")|| User.IsInRole("User"))
+                        {
                         <button id="thumbsUpButton" data-nrOfTimesLiked="@br.LikesCount" data-id="@br.Id" data-liked="@br.isLiked" type="button" class="btn btn-default btn-sm">
                             @if (br.isLiked)
                             {
@@ -199,7 +201,13 @@ else
                                 <span class="glyphicon glyphicon-thumbs-up"> Like </span>
                             }
                         </button>
-                        <span id="likes-@br.Id" data-num="@br.LikesCount" value="@br.LikesCount" readonly> @br.LikesCount </span>
+                        }
+                        else
+                        {
+                            <span style="color:darkgray">Likes</span>
+                        }
+
+                        <span id="likes-@br.Id" data-num="@br.LikesCount" style="color:darkgray" value="@br.LikesCount" readonly> @br.LikesCount </span>
                     </td>
                     <td>
                         @Html.Raw(br.Comment.Replace("\n", "<br />"))

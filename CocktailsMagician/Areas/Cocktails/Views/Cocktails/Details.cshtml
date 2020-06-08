@@ -173,17 +173,24 @@ else
                                 <span class="starFadeN"></span>
                             }
                             <br />
-                            <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-default btn-sm">
-                                @if (c.IsLiked)
-                                {
-                                    <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
-                                }
-                                else
-                                {
-                                    <span class="glyphicon glyphicon-thumbs-up"> Like </span>
-                                }
-                            </button>
-                            <span id="likes-@c.Id" data-num="@c.NumberOfLikes" value="@c.NumberOfLikes" readonly> @c.NumberOfLikes </span>
+                            @if (User.IsInRole("Admin") || User.IsInRole("User"))
+                            {
+                                <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-default btn-sm">
+                                    @if (c.IsLiked)
+                                    {
+                                        <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="glyphicon glyphicon-thumbs-up"> Like </span>
+                                    }
+                                </button>
+                            }
+                            else
+                            {
+                                <span style="color:darkgray">Likes</span>
+                            }
+                            <span id="likes-@c.Id" style="color:darkgray" data-num="@c.NumberOfLikes" value="@c.NumberOfLikes" readonly> @c.NumberOfLikes </span>
                         </td>
                         <td>
                             @Html.Raw(c.Comment.Replace("\n", "<br />"))

@@ -1,0 +1,2 @@
+Cocktail Magician
+Web application that holds and manages information about cocktails, their recipes with different ingredients and where they are available at - bars. There are two types of users in the app. The first is the cocktail magician who can manipulate the data - CRUD operations, create the cocktail recipes, set cocktails as available in bars. The second user is the bar crawler who can view the cocktails and bars in details and leave a rating and a comment if desired.

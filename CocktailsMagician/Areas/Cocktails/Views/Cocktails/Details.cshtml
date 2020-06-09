@@ -7,9 +7,9 @@
 }
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">*@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link href="~/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <head>
     <style>
@@ -18,6 +18,7 @@
             background: none;
             color: darkgrey;
         }
+
         .greenColor {
             color: green;
         }
@@ -28,9 +29,10 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
         .img {
-            width:380px; 
-            height:auto
+            width: 380px;
+            height: auto
         }
     </style>
 </head>
@@ -86,10 +88,10 @@ else
     <div>
         @if (User.IsInRole("Admin"))
         {
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a><span> | </span>
-            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a><span> | </span>
+            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
         }
-        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-info" asp-action="Index">Back to List</a>
     </div>
     <br />
 
@@ -128,7 +130,6 @@ else
         });
     });
     </script>
-
 
 
     @if (reviews.Count() != 0)
@@ -171,14 +172,15 @@ else
                             <br />
                             @if (User.IsInRole("Admin") || User.IsInRole("User"))
                             {
-                                <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-default btn-sm">
+                                <button id="thumbsUpButton" data-id="@c.Id" data-liked="@c.IsLiked" type="button" class="btn btn-outline-dark">
                                     @if (c.IsLiked)
                                     {
-                                        <span id="likedSpan" class="greenColor glyphicon glyphicon-thumbs-up"> Liked </span>
+                                        <span id="likedSpan" class="greenColor fa fa-thumbs-o-up"> Liked </span>
+
                                     }
                                     else
                                     {
-                                        <span class="glyphicon glyphicon-thumbs-up"> Like </span>
+                                        <span class="fa fa-thumbs-o-up"> Like </span>
                                     }
                                 </button>
                             }
@@ -228,16 +230,14 @@ else
             var buttonId = $button.data('id');
             var divCount = $('#likes-' + buttonId);
             var divText = divCount.text();
-            //console.log(divText);
             var likeCount = parseInt(divCount.text());
             debugger;
             var likedAttr = $(this).attr("data-liked");
-            var likedSpan = 'greenColor glyphicon glyphicon-thumbs-up';
-            var defaultSpan = 'glyphicon glyphicon-thumbs-up';
+            var likedSpan = 'greenColor fa fa-thumbs-o-up';
+            var defaultSpan = 'fa fa-thumbs-o-up';
             var isLiked = likedAttr === "true";
         var span = $button.children().first();
 
-            //var cReviewId = $button.closest('td').attr("id");
             var cReviewId = $button.closest($(".crId")).children().eq(0).children().eq(0).val();
 
         if (span.attr('id')) {

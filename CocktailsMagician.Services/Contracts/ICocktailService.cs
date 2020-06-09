@@ -12,6 +12,7 @@ namespace CocktailsMagician.Services.Contracts
         Task<CocktailDTO> GetCocktail(Guid id);
         Task<List<CocktailDTO>> GetAllCocktails(string sortOrder, string searchString);
         Task<List<CocktailDTO>> GetAllCocktails();
+        Task<List<CocktailDTO>> GetAllCocktailsForHomePage();
         Task<bool> IsCocktailAvailableInBar(Guid barId, Guid cocktailId);
         Task<CocktailDTO> CreateCocktail(CocktailDTO cocktailtDTO);
         Task<CocktailDTO> UpdateCocktail(Guid id, string cName, string cDescription);

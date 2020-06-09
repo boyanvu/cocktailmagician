@@ -271,5 +271,17 @@ namespace CocktailsMagician.Services
 
             return isAvailable;
         }
+
+        public async Task<List<CocktailDTO>> GetAllCocktailsForHomePage()
+        {
+            var cocktailsDTO = await _cmContext.Cocktails
+               .Where(c => c.UnlistedOn == null)
+               .OrderByDescending(c => c.AvgRating)
+               .Take(3)
+               .Select(c => c.CocktailMapToDTO())
+               .ToListAsync();
+
+            return cocktailsDTO;
+        }
     }
 }

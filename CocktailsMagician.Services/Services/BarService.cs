@@ -281,5 +281,18 @@ namespace CocktailsMagician.Services.Services
 
             return barDTO;
         }
+
+        public async Task<List<BarDTO>> GetAllBarsForHomePage()
+        {
+            var barsDto = await _cmContext.Bars
+              .Include(b => b.City)
+              .Where(b => b.UnlistedOn == null)
+              .OrderByDescending(b => b.AvgRating)
+              .Take(3)
+              .Select(b => b.MapBarToDTO())
+              .ToListAsync();
+
+            return barsDto;
+        }
     }
 }

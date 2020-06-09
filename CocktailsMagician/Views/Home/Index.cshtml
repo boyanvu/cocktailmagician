@@ -1,8 +1,141 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model HomeViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<head>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .fa-star {
+            color: gainsboro;
+            /*width: 50px;*/
+            /*height: 100px;*/
+        }
+
+        .checked {
+            color: orange;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .imgbox {
+            display: grid;
+            height: 100%;
+        }
+
+        .center-fit {
+            max-width: 100%;
+            max-height: 100vh;
+            margin: auto;
+        }
+
+        .text-block {
+            font-style: oblique;
+            font-size: xx-large;
+            position: absolute;
+            top: 7%;
+            left: 25%;
+            right: 25%;
+            text-shadow: 2px 2px 5px red;
+        }
+        /*body {
+                background-image: url("/Images/barbackground.jpg");
+                min-height: 100%;
+                min-width: 100%;
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+                overflow-y: hidden;
+                overflow-x: hidden;
+            }*/
+    </style>
+
+</head>
+
+<center>
+    <div class="imgbox">
+        <img class="center-fit" src="~/Images/coca-cola-logo-1.jpg">
+        <div class="text-block">
+            <h2>Cocktails Magician</h2>
+        </div>
+    </div>
+</center>
+
+
+<br />
+<br />
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <center> <h3> Top rated bars </h3> </center>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var bar in Model.Bars)
+        {
+            <div class="col" style="padding-right: 20px;
+        border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+">
+                <div class="row d-flex justify-content-center">
+                    <img src="@($"{@ViewData["imgPath"]}{bar.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/barPlaceholder.jpg';" width="300" ; height:auto>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <a class="text-dark" asp-area="Bars" asp-controller="Bars" asp-action="Details" asp-route-id="@bar.Id">@bar.Name</a>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <center>
+                        @for (int i = 0; i < (int)bar.AvgRating; i++)
+                        {
+                            <span class="fa fa-star checked"></span>
+                        }
+                        @for (int i = (int)bar.AvgRating; i < 5; i++)
+                        {
+                            <span class="fa fa-star"></span>
+                        }
+                    </center>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <center> <h3> Top rated cocktails </h3> </center>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var cocktail in Model.Cocktails)
+        {
+            <div class="col" style="padding-right:20px; border-right: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">
+                <div class="row d-flex justify-content-center">
+                    <img src="@($"{@ViewData["imgPath"]}{cocktail.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/cocktail.jpg';" width="300" ; height:auto>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <a class="text-dark" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Details" asp-route-id="@cocktail.Id">@cocktail.Name</a>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    @for (int i = 0; i < (int)cocktail.AvgRating; i++)
+                    {
+                        <span class="fa fa-star checked"></span>
+                    }
+                    @for (int i = (int)cocktail.AvgRating; i < 5; i++)
+                    {
+                        <span class="fa fa-star"></span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
 </div>

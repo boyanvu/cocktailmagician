@@ -10,6 +10,7 @@ namespace CocktailsMagician.Services.Contracts
     {
         Task<BarDTO> GetBarAsync(Guid id);
         Task<IEnumerable<BarDTO>> GetAllBarsAsync();
+        Task<List<BarDTO>> GetAllBarsForHomePage();
         Task<List<BarDTO>> GetBarsFiltered(string sortOrder, string searchString);
         Task<BarDTO> CreateBarAsync(BarDTO barDTO);
         Task<bool> DeleteBarAsync(Guid id);

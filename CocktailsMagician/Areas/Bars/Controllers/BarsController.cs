@@ -316,5 +316,11 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             }
             return RedirectToAction("AddRmvCocktailsFromBar");
         }
+
+        [HttpGet]
+        public IActionResult GetTableView(Guid barId)
+        {
+            return PartialView("_CocktailsInBarDataTable", barId); //трябва да създадеш тоя паршъл във вюс папката
+        }
     }
 }

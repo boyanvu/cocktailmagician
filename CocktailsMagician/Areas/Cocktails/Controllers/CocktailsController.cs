@@ -344,6 +344,28 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ListCocktailsForBar(Guid? id)
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+
+            int totalCount = await this.cocktailService.GetCocktailsCount();
+
+            int filteredCocktails = await this.cocktailService.GetCocktailsCount(id, searchValue);
+
+            var cocktailDTOs = await this.cocktailService.GetCocktailsInBar(id.Value, skip, pageSize, searchValue, sortColumn, sortColumnDirection);
+
+            return Json(new { draw = draw, recordsFiltered = filteredCocktails, recordsTotal = totalCount, data = cocktailDTOs.Select(cocktail => cocktail.CocktailDTOMapToVM()) });
+        }
+
         private bool CocktailExists(Guid id)
         {
             return _context.Cocktails.Any(e => e.Id == id);

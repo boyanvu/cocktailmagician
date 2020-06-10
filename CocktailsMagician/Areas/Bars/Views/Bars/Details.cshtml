@@ -30,10 +30,38 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-        dd{
+
+        dd {
             font-family: 'Open Sans', sans-serif;
-            color:#4F5D75;
+            color: #4F5D75;
         }
+    </style>
+    <style>
+        #bar-info-tab-buttons {
+            margin: 0 auto;
+            justify-content: center;
+            border-bottom: 2px solid red;
+        }
+
+        .tab-button {
+            font-size: 17px;
+            padding: 1em;
+            color: red;
+            cursor: default;
+        }
+
+            .tab-button:hover {
+                background-color: palegoldenrod;
+                border-radius: 5px 5px 0 0;
+            }
+
+            .tab-button.active {
+                background-color: red;
+                color: white;
+                padding: 1em;
+                cursor: not-allowed;
+                border-radius: 5px 5px 0 0;
+            }
     </style>
 </head>
 
@@ -60,69 +88,75 @@ else
 <div>
     <input type="hidden" id="barId" name="barId" value="@Model.Id">
 </div>
+@*<div>*@
+<hr />
+<div class="row">
+    <dl class="col-sm-8">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <p>&nbsp;</p>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Website)
+        </dt>
+        <dd class="col-sm-8">
+            @if (Model.HasWebsite)
+            {
+                <a href="@Model.Website" target="_blank">Website</a>
+            }
+            else
+            {
+                <input type="text" value="-" readonly>
+            }
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.City)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class="col-sm-4">
+            Location
+        </dt>
+        <dd class="col-sm-8">
+            <a asp-action="BarLocation" asp-route-id="@Model.Id"> Map </a>
+        </dd>
+    </dl>
+    <div class="col-sm-4">
+        <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/barPlaceholder.jpg';" width="380" ; height:auto>
+    </div>
+</div>
 <div>
-    <hr />
-    <div class="row">
-        <dl class="col-sm-8">
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-            <p>&nbsp;</p>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Phone)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Phone)
-            </dd>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Website)
-            </dt>
-            <dd class="col-sm-8">
-                @if (Model.HasWebsite)
-                {
-                    <a href="@Model.Website" target="_blank">Website</a>
-                }
-                else
-                {
-                    <input type="text" value="-" readonly>
-                }
-            </dd>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.City)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.City)
-            </dd>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Address)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Address)
-            </dd>
-            <dt class="col-sm-4">
-                Location
-            </dt>
-            <dd class="col-sm-8">
-                <a asp-action="BarLocation" asp-route-id="@Model.Id"> Map </a>
-            </dd>
-        </dl>
-        <div class="col-sm-4">
-            <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/barPlaceholder.jpg';" width="380" ; height:auto>
-        </div>
-    </div>
-    <div>
-        @if (User.IsInRole("Admin"))
-        {
-            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-        }
-        <a class="btn btn-info" asp-action="Index">Back to List</a>
-    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    }
+    <a class="btn btn-info" asp-action="Index">Back to List</a>
+</div>
+<br />
 
-    <br />
+<div class="row" id="bar-info-tab-buttons">
+    <span class="tab-button active" data-tabtarget="reviews-section">Reviews</span>
+    <span class="tab-button" data-tabtarget="cocktails-section">Cocktail List</span>
+</div>
+
+<div class="reviews-section">
     @if (@ViewData["User"] != null)
     {
         <div>
@@ -236,8 +270,50 @@ else
     {
         <center> <h5> No Reviews for this bar! </h5> </center>
     }
+</div>
 
-    <script>
+<div class="cocktails-section">
+
+</div>
+
+<script>
+            $(document).ready(function () {
+            const $reviewsSection = $('.reviews-section');
+            const $cocktailsSection = $('.cocktails-section');
+            const defaultTabClass = 'tab-button';
+            const activeTabClass = 'tab-button active';
+
+            $cocktailsSection.hide();
+
+              $('.' + defaultTabClass).click(function () {
+                    debugger;
+                    var $this = $(this);
+                    var buttonFor = $this.data('tabtarget');
+                    $this.attr('class', activeTabClass);
+
+                    if (buttonFor === 'reviews-section') {
+
+                        $cocktailsSection.hide();
+                        $reviewsSection.show();
+                    }
+                    else {
+                        $reviewsSection.hide();
+
+                        $.ajax({
+                            url: "@Url.Action("GetTableView","Bars",new { area = "Bars", barId = Model.Id })",
+                            type: "GET"
+                        }).then(function (rData) {
+                            debugger;
+                            console.log(rData);
+                            $cocktailsSection.html(rData);
+                        });
+
+                        $cocktailsSection.show();
+                    }
+
+                    $this.siblings().first().attr('class', defaultTabClass);
+                });
+
         function SCRate() {
             for (var i = 1; i <= @Model.AvgRating; i++) {
                 $("#sRate" + i).attr('class', 'starGlowN');
@@ -290,32 +366,33 @@ else
                 data: { barReviewId: bReviewId, isLiked: isLiked },
                 dataType: "json",
             });
+        });
     });
-    </script>
+</script>
 
 
-    <!-- Modal -->
-    <div class="modal modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModal3Label">Review</h5>
-                    <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-container">
-                    @{
-                        await Html.RenderPartialAsync("_CommentRating");
-                    }
-                </div>
+<!-- Modal -->
+<div class="modal modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal3Label">Review</h5>
+                <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form-container">
+                @{
+                    await Html.RenderPartialAsync("_CommentRating");
+                }
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        //TODO
-        $('#newReviewModal').on('hidden.bs.modal', function () {
-            $(this).removeData('bs.modal');
-        });
-    </script>
+<script>
+    //TODO
+    $('#newReviewModal').on('hidden.bs.modal', function () {
+        $(this).removeData('bs.modal');
+    });
+</script>

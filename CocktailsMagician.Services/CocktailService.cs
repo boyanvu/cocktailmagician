@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CocktailsMagician.Services.Mappers;
 using CocktailsMagician.Data.Entities;
+using CocktailsMagician.Services.Utilities.Extensions;
 
 namespace CocktailsMagician.Services
 {
@@ -279,6 +280,64 @@ namespace CocktailsMagician.Services
                .ToListAsync();
 
             return cocktailsDTO;
+        }
+
+        public async Task<List<CocktailDTO>> GetCocktailsInBar(Guid barId, int skip, int take, string searchValue, string sortBy, string orderBy)
+        {
+
+            var cocktailsQuery = (IQueryable<Cocktail>)_cmContext.BarCocktails
+                .Include(bc => bc.Cocktail)
+                .Where(bc => bc.BarId == barId)
+                .Skip(skip)
+                .Take(take)
+                .Select(bc => bc.Cocktail);
+
+            cocktailsQuery = FilterCocktailsBySearchValue(cocktailsQuery, searchValue);
+            cocktailsQuery = FilterCocktailsByColumn(cocktailsQuery, sortBy, orderBy);
+
+            return await cocktailsQuery
+                        .Select(c => c.CocktailMapToDTO())
+                        .ToListAsync();
+
+        }
+
+        private IQueryable<Cocktail> FilterCocktailsBySearchValue(IQueryable<Cocktail> cocktailsQuery, string searchValue)
+        {
+            return cocktailsQuery = string.IsNullOrEmpty(searchValue)
+                   ? cocktailsQuery
+                   : cocktailsQuery
+                   .Where(c => c.Name.Contains(searchValue));
+        }
+
+        private IQueryable<Cocktail> FilterCocktailsByColumn(IQueryable<Cocktail> cocktailsQuery, string sortBy, string orderBy)
+        {
+            return string.IsNullOrEmpty(sortBy)
+                   ? cocktailsQuery
+                   : SortCocktails(cocktailsQuery, sortBy, orderBy);
+        }
+        private IQueryable<Cocktail> SortCocktails(IQueryable<Cocktail> cocktailsQuery, string sortBy, string orderBy)
+        {
+            return orderBy == "asc"
+                    ? cocktailsQuery.OrderBy(sortBy)
+                    : cocktailsQuery.OrderByDescending(sortBy);
+        }
+        public async Task<int> GetCocktailsCount(Guid? barId = null, string searchValue = null)
+        {
+
+            var cocktails = barId == null
+              ? _cmContext.Cocktails
+              : _cmContext.BarCocktails
+                  .Include(bc => bc.Cocktail)
+                  .Where(bc => bc.BarId == barId.Value)
+                  .Select(bc => bc.Cocktail);
+
+            var count = string.IsNullOrEmpty(searchValue)
+                ? cocktails.CountAsync()
+                : cocktails
+                    .Where(c => c.Name.Contains(searchValue))
+                    .CountAsync();
+
+            return await count;
         }
     }
 }

@@ -333,5 +333,10 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             }
             return RedirectToAction("AddRmvCocktailsFromBar");
         }
+
+        public IActionResult GetTableView(Guid barId)
+        {
+            return PartialView("_CocktailsInBarDataTable", barId);
+        }
     }
 }

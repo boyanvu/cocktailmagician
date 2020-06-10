@@ -20,19 +20,19 @@ namespace CocktailsMagician.Areas.Bars.Controllers
     [Area("Bars")]
     public class BarsController : Controller
     {
-        private readonly CMContext _context;
+        private readonly ICityService cityService;
         private readonly IBarService barService;
         private readonly ICocktailService cocktailService;
         private readonly UserManager<User> userManager;
         private readonly IToastNotification _toastNotification;
 
         public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService, UserManager<User> userManager,
-            IToastNotification toastNotification)
+            IToastNotification toastNotification, ICityService cityService)
         {
-            _context = context;
             this.barService = barService;
             this.cocktailService = cocktailService;
             this.userManager = userManager;
+            this.cityService = cityService;
             this._toastNotification = toastNotification;
         }
 
@@ -128,9 +128,10 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         }
 
         // GET: Bars/Bars/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
+            var citiesDTO = await cityService.GetAllCitiesAsync();
+            ViewData["CityId"] = new SelectList(citiesDTO, "Id", "Name");
             return View();
         }
 
@@ -176,7 +177,8 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             }
 
             var barVM = barDTO.BarDTOtoVM();
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
+            var citiesDTO = await cityService.GetAllCitiesAsync();
+            ViewData["CityId"] = new SelectList(citiesDTO, "Id", "Name");
             return View(barVM);
         }
 
@@ -238,10 +240,10 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BarExists(Guid id)
-        {
-            return _context.Bars.Any(e => e.Id == id);
-        }
+        //private bool BarExists(Guid id)
+        //{
+        //    return _context.Bars.Any(e => e.Id == id);
+        //}
 
         public async Task<IActionResult> AddRmvCocktailsFromBar(Guid Id, string sortOrder, string currentFilter, string searchString, int? page)
         {

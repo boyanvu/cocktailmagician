@@ -326,12 +326,14 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             if (isAvailable)
             {
                 await barService.AddCocktailToBarAsync(barId, cocktailId);
+                _toastNotification.AddSuccessToastMessage("Cocktail added successfully!");
             }
             else
             {
                 await barService.RemoveCocktailFromBarAsync(barId, cocktailId);
+                _toastNotification.AddSuccessToastMessage("Cocktail removed successfully!");
             }
-            return RedirectToAction("AddRmvCocktailsFromBar");
+            return Ok();
         }
 
         public IActionResult GetTableView(Guid barId)

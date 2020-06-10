@@ -62,15 +62,22 @@ namespace CocktailsMagician.Services
         }
         public async Task<List<CocktailDTO>> GetAllCocktails(string sortOrder, string searchString)
         {
+            var cocktails = (IQueryable<Cocktail>)_cmContext.Cocktails;               
+            var cocktailIngredients = _cmContext.CocktailIngredients
+                .Select(ci => ci.CocktailIngredientMapToDTO());
 
-            var cocktails = (IQueryable<Cocktail>)_cmContext.Cocktails;
+     
+            //cocktailsDTO = await cocktailsDTO
+            //    .Select(c => c.CocktailIngredients = cocktailIngredients.Where(ci => ci.CocktailId == c.Id)
+            //    .ToListAsync());
 
-         
             if (!String.IsNullOrEmpty(searchString))
             {
                 cocktails = cocktails
                     .Where(s => s.Name.Contains(searchString)
-                    || s.AvgRating.ToString().Equals(searchString));
+                    || s.AvgRating.ToString().Equals(searchString)
+                    /*|| s.CocktailIngredients.Select(ci => ci.CocktailName).Any(ci => ci.Contains(searchString)*/
+                   ); 
             }
 
             switch (sortOrder)
@@ -88,16 +95,10 @@ namespace CocktailsMagician.Services
                     cocktails = cocktails.OrderBy(c => c.Name);
                     break;
             }
-            var cocktailIngredientsDTO = await GetAllCocktailIngredients();
 
             var cocktailsDTO = cocktails
-                .Where(c => c.UnlistedOn == null)
-                .Select(c => c.CocktailMapToDTO());
-
-            //foreach (var cocktail in cocktailsDTO)
-            //{
-            //    cocktail.CocktailIngredients = cocktailIngredientsDTO.FindAll(cr => cr.CocktailId == cocktail.Id).ToList();
-            //}
+            .Where(c => c.UnlistedOn == null)
+            .Select(c => c.CocktailMapToDTO());
 
             return await cocktailsDTO.ToListAsync();
         }

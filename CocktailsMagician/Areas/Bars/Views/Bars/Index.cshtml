@@ -24,13 +24,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .fa-star {
-            color: gainsboro;
+            /*color: gainsboro;*/
+            color: #F7F7F7;
             /*width: 50px;*/
             /*height: 100px;*/
         }
 
         .checked {
-            color: orange;
+            color: #EF8354;
         }
     </style>
 </head>
@@ -54,7 +55,7 @@
 @foreach (var bar in Model)
 {
     <div class="container">
-        <div class="row">
+        <div class="row" style="background-color: #DFDFDF">
             <div class="col-sm-4">
                 <img src="@($"{@ViewData["imgPath"]}{bar.Id}.jpg")" width="250" ; height:auto onerror="this.src='/Images/barPlaceholder.jpg';" />
             </div>
@@ -62,12 +63,12 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <h3>
-                            <a asp-action="Details" asp-route-id="@bar.Id">@bar.Name</a>
+                            <a asp-action="Details" asp-route-id="@bar.Id" style="color:#4F5D75">@bar.Name</a>
                         </h3>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" style="font-family: 'Roboto', sans-serif;">
                         @bar.Description
                     </div>
                 </div>

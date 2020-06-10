@@ -30,12 +30,16 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+        dd{
+            font-family: 'Open Sans', sans-serif;
+            color:#4F5D75;
+        }
     </style>
 </head>
 
 
 
-<h1>@Model.Name</h1>
+<h1 style="color:#2D3142">@Model.Name</h1>
 @if (Model.AvgRating > 0)
 {
     <div>
@@ -60,23 +64,23 @@ else
     <hr />
     <div class="row">
         <dl class="col-sm-8">
-            <dt class="col-sm-3">
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Description)
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Description)
             </dd>
             <p>&nbsp;</p>
-            <dt class="col-sm-3">
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Phone)
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Phone)
             </dd>
-            <dt class="col-sm-3">
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Website)
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 @if (Model.HasWebsite)
                 {
                     <a href="@Model.Website" target="_blank">Website</a>
@@ -86,22 +90,22 @@ else
                     <input type="text" value="-" readonly>
                 }
             </dd>
-            <dt class="col-sm-3">
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.City)
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.City)
             </dd>
-            <dt class="col-sm-3">
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Address)
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Address)
             </dd>
-            <dt class="col-sm-3">
+            <dt class="col-sm-4">
                 Location
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 <a asp-action="BarLocation" asp-route-id="@Model.Id"> Map </a>
             </dd>
         </dl>

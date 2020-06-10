@@ -5,7 +5,7 @@ stages:
   - test
 
 variables:
-  test: "CocktailsMagician.Tests"
+  test: "CocktailsMagician.Tests/ServiceTests"
 
 before_script:
     - "cd CocktailsMagician"

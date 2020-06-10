@@ -32,6 +32,33 @@
             transform: translate(-50%, -50%);
         }
     </style>
+    <style>
+        #bar-info-tab-buttons {
+            margin: 0 auto;
+            justify-content: center;
+            border-bottom: 2px solid red;
+        }
+
+        .tab-button {
+            font-size: 17px;
+            padding: 1em;
+            color: red;
+            cursor: default;
+        }
+
+            .tab-button:hover {
+                background-color: palegoldenrod;
+                border-radius: 5px 5px 0 0;
+            }
+
+            .tab-button.active {
+                background-color: red;
+                color: white;
+                padding: 1em;
+                cursor: not-allowed;
+                border-radius: 5px 5px 0 0;
+            }
+    </style>
 </head>
 
 
@@ -120,8 +147,8 @@ else
     </div>
 
     <div class="row" id="bar-info-tab-buttons">
-        <a href="#" class="tab-button active" data-tabtarget="reviews-section">Reviews</a>
-        <a href="#" class="tab-button" data-tabtarget="cocktails-section">Cocktail List</a>
+        <span class="tab-button active" data-tabtarget="reviews-section">Reviews</span>
+        <span class="tab-button" data-tabtarget="cocktails-section">Cocktail List</span>
     </div>
 
     <br />
@@ -256,6 +283,36 @@ else
 
             $cocktailsSection.hide();
 
+              $('.' + defaultTabClass).click(function () {
+                //$('.tab-button').click(function () {
+                    debugger;
+                    var $this = $(this);
+                    var buttonFor = $this.data('tabtarget');
+                    $this.attr('class', activeTabClass);
+
+                    if (buttonFor === 'reviews-section') {
+
+                        $cocktailsSection.hide();
+                        $reviewsSection.show();
+                    }
+                    else {
+                        $reviewsSection.hide();
+
+                        $.ajax({
+                            url: "@Url.Action("GetTableView","Bars",new { area = "Bars", barId = Model.Id })",
+                            type: "GET"
+                        }).then(function (rData) {
+                            debugger;
+                            console.log(rData);
+                            $cocktailsSection.html(rData);
+                        });
+
+                        $cocktailsSection.show();
+                    }
+
+                    $this.siblings().first().attr('class', defaultTabClass);
+                });
+
             function SCRate() {
                 for (var i = 1; i <= @Model.AvgRating; i++) {
                     $("#sRate" + i).attr('class', 'starGlowN');
@@ -309,36 +366,7 @@ else
                     dataType: "json",
                 });
 
-                $('.' + defaultTabClass).click(function () {
-                    var $this = $(this);
-                    var buttonFor = $this.data('tabtarget');
-                    debugger;
-                    $this.attr('class', activeTabClass);
 
-                    if (buttonFor === 'reviews-section') {
-
-                        $cocktailsSection.hide();
-                        $reviewsSection.show();
-
-
-                    }
-                    else {
-                        $reviewsSection.hide();
-
-                        $.ajax({
-                            url: "@Url.Action("GetTableView","Bars",new { area = "Bars", barId = Model.Id })",
-                            type: "GET"
-                        }).then(function (rData) {
-
-                            console.log(rData);
-                            $cocktailsSection.html(rData);
-                        });
-
-                        $cocktailsSection.show();
-                    }
-
-                    $this.siblings().first().attr('class', defaultTabClass);
-                });
             });
         });
     </script>

@@ -354,6 +354,9 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             return _context.Cocktails.Any(e => e.Id == id);
         }
 
-
+        public IActionResult GetTableView(Guid cocktailId)
+        {
+            return PartialView("_BarsWithCocktailsDatabale", cocktailId);
+        }
     }
 }

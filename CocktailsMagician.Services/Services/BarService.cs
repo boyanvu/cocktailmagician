@@ -12,6 +12,7 @@ using CocktailsMagician.Data.Entities;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using CocktailsMagician.Services.Utilities.Extensions;
 
 namespace CocktailsMagician.Services.Services
 {
@@ -324,6 +325,62 @@ namespace CocktailsMagician.Services.Services
               .ToListAsync();
 
             return barsDto;
+        }
+        private IQueryable<Bar> FilterBarsBySearchValue(IQueryable<Bar> barsQry, string searchValue)
+        {
+            return barsQry = string.IsNullOrEmpty(searchValue)
+                   ? barsQry
+                   : barsQry
+                   .Where(c => c.Name.Contains(searchValue));
+        }
+
+        private IQueryable<Bar> FilterBarsByColumn(IQueryable<Bar> barsQuery, string sortBy, string orderBy)
+        {
+            return string.IsNullOrEmpty(sortBy)
+                   ? barsQuery
+                   : SortBars(barsQuery, sortBy, orderBy);
+        }
+        private IQueryable<Bar> SortBars(IQueryable<Bar> barsQuery, string sortBy, string orderBy)
+        {
+            return orderBy == "asc"
+                    ? barsQuery.OrderBy(sortBy)
+                    : barsQuery.OrderByDescending(sortBy);
+        }
+
+        public async Task<List<BarDTO>> GetBarsWithCocktails(Guid cocktailId, int skip, int take, string searchValue, string sortBy, string orderBy)
+        {
+            var barsQry = (IQueryable<Bar>)_cmContext.BarCocktails
+                .Include(bc => bc.Bar)
+                 .ThenInclude(b => b.City)
+                .Where(bc => bc.CocktailId == cocktailId)
+                .Skip(skip)
+                .Take(take)
+                .Select(bc => bc.Bar);
+
+            barsQry = FilterBarsBySearchValue(barsQry, searchValue);
+            barsQry = FilterBarsByColumn(barsQry, sortBy, orderBy);
+
+            return await barsQry
+                        .Select(b => b.MapBarToDTO())
+                        .ToListAsync();
+        }
+
+        public async Task<int> GetBarsCount(Guid? cocktailId = null, string searchValue = null)
+        {
+            var bars = cocktailId == null
+             ? _cmContext.Bars
+             : _cmContext.BarCocktails
+                 .Include(bc => bc.Bar)
+                 .Where(bc => bc.CocktailId == cocktailId.Value)
+                 .Select(bc => bc.Bar);
+
+            var count = string.IsNullOrEmpty(searchValue)
+                ? bars.CountAsync()
+                : bars
+                    .Where(c => c.Name.Contains(searchValue))
+                    .CountAsync();
+
+            return await count;
         }
     }
 }

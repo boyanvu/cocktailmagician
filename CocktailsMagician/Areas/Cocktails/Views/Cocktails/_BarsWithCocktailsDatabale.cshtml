@@ -1,0 +1,55 @@
+﻿@model Guid
+@{
+    ViewData["Title"] = "_BarsDataTable";
+}
+<table id="bars-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Avg Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+
+<link href="~/DataTables/datatables.css" rel="stylesheet" type="text/css" />
+<link href="~/DataTables/Buttons-1.6.2/css/buttons.dataTables.css" rel="stylesheet" />
+<script src="~/DataTables/datatables.js" type="text/javascript" charset="utf8"></script>
+
+<script>
+
+
+    $(document).ready(function () {
+        debugger;
+            $('#bars-table').DataTable
+                ({
+                    "serverSide": true,
+                    "destroy": true,
+                    "ordering": true,
+                    "processing": true,
+                    "paging": true,
+                    "pageLength": 5,
+                    "lengthMenu": [5, 10, 25, 50, 100],
+                    "pagingType": "simple_numbers",
+                    "ajax": {
+                        "url": "@Url.Action("ListBarsWithCocktail", "Bars", new { area = "Bars", id = Model})",
+                        "type": "POST",
+                        "dataType": "json",
+                    },
+                    drawCallback: function (settings) {
+                        var response = settings.json;
+                        console.log(response);
+
+                    },
+                    "columns": [
+                        { "data": "name", "name": "Name", "autoWidth": true, "orderable": true, },
+                        { "data": "description", "name": "Description", "autoWidth": true, "orderable": false, },
+                        { "data": "avgRating", "name": "AvgRating", "autoWidth": true, "orderable": true, },
+
+                    ]
+                });
+        });
+</script>

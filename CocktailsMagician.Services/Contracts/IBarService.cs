@@ -14,12 +14,14 @@ namespace CocktailsMagician.Services.Contracts
         Task<List<BarDTO>> GetBarsFiltered(string sortOrder, string searchString);
         Task<BarDTO> CreateBarAsync(BarDTO barDTO);
         Task<bool> DeleteBarAsync(Guid id);
-        Task<BarDTO> UpdateBarAsync(/*Guid id, string name, string phone, string website, string description, Guid cityId, string address*/BarDTO barDTO);
+        Task<BarDTO> UpdateBarAsync(BarDTO barDTO);
 
         Task<bool> AddCocktailToBarAsync(Guid barId, Guid cocktailId);
         Task<bool> RemoveCocktailFromBarAsync(Guid barId, Guid cocktailId);
 
         Task<string> CallApiForLocation(string url);
         Task<BarDTO> ParseApiLocationResult(BarDTO barDTO);
+        Task<List<BarDTO>> GetBarsWithCocktails(Guid cocktailId, int skip, int take, string searchValue, string sortBy, string orderBy);
+        Task<int> GetBarsCount(Guid? cocktailId = null, string searchValue = null);
     }
 }

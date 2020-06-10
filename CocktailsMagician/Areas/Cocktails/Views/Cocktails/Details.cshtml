@@ -11,8 +11,10 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <link href="~/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
+
 <head>
     <style>
+
         input[readonly] {
             border: none;
             background: none;
@@ -37,8 +39,36 @@
 
         dd {
             font-family: 'Open Sans', sans-serif;
-            color:#4F5D75;
+            color: #4F5D75;
         }
+    </style>
+    <style>
+
+        #bar-info-tab-buttons {
+            margin: 0 auto;
+            justify-content: center;
+            border-bottom: 2px solid red;
+        }
+
+        .tab-button {
+            font-size: 17px;
+            padding: 1em;
+            color: red;
+            cursor: default;
+        }
+
+            .tab-button:hover {
+                background-color: palegoldenrod;
+                border-radius: 5px 5px 0 0;
+            }
+
+            .tab-button.active {
+                background-color: red;
+                color: white;
+                padding: 1em;
+                cursor: not-allowed;
+                border-radius: 5px 5px 0 0;
+            }
     </style>
 </head>
 
@@ -65,41 +95,48 @@ else
 <div>
     <input type="hidden" id="cId" name="cocktailId" value="@Model.Id">
 </div>
+<hr />
+<div class="row">
+    <dl class="col-sm-8">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <p>&nbsp;</p>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.CocktailIngredients)
+        </dt>
+        <dd class="col-sm-8">
+            @{
+                await Html.RenderPartialAsync("_ListCI", Model.CocktailIngredients);
+            }
+        </dd>
+    </dl>
+    <div class="col-sm-4">
+        <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.jpg")" alt="Image not found" onerror="this.src ='/Images/cocktail.jpg';" width="380" ; height:auto>
+    </div>
+</div>
+
 <div>
-    <hr />
-    <div class="row">
-        <dl class="col-sm-8">
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-            <p>&nbsp;</p>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.CocktailIngredients)
-            </dt>
-            <dd class="col-sm-8">
-                @{
-                    await Html.RenderPartialAsync("_ListCI", Model.CocktailIngredients);
-                }
-            </dd>
-        </dl>
-        <div class="col-sm-4">
-            <img src="@($"{@ViewData["imgPath"]}{@Model.Id}.jpg")" alt="Image not found" onerror="this.src ='/Images/cocktail.jpg';" width="380" ; height:auto>
-        </div>
-    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    }
+    <a class="btn btn-info" asp-action="Index">Back to List</a>
+</div>
+<br />
 
-    <div>
-        @if (User.IsInRole("Admin"))
-        {
-            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-        }
-        <a class="btn btn-info" asp-action="Index">Back to List</a>
-    </div>
-    <br />
+<div class="row" id="bar-info-tab-buttons">
+    <span class="tab-button active" data-tabtarget="reviews-section">Reviews</span>
+    <span class="tab-button" data-tabtarget="bars-section">Bars List</span>
+</div>
 
+
+
+<div class="reviews-section">
     @if (User.IsInRole("Admin") || User.IsInRole("User"))
     {
         <div>
@@ -212,12 +249,52 @@ else
     }
     else
     {
-
         <center> <h5> No Reviews for this cocktail! </h5> </center>
-
     }
+</div>
 
-    <script>
+<div class="bars-section">
+
+</div>
+
+<script>
+         $(document).ready(function () {
+            const $reviewsSection = $('.reviews-section');
+            const $barsSection = $('.bars-section');
+            const defaultTabClass = 'tab-button';
+            const activeTabClass = 'tab-button active';
+
+            $barsSection.hide();
+
+              $('.' + defaultTabClass).click(function () {
+                    debugger;
+                    var $this = $(this);
+                    var buttonFor = $this.data('tabtarget');
+                    $this.attr('class', activeTabClass);
+
+                    if (buttonFor === 'reviews-section') {
+
+                        $barsSection.hide();
+                        $reviewsSection.show();
+                    }
+                    else {
+                        $reviewsSection.hide();
+
+                        $.ajax({
+                            url: "@Url.Action("GetTableView","Cocktails",new { area = "Cocktails", cocktailId = Model.Id })",
+                            type: "GET"
+                        }).then(function (rData) {
+                            debugger;
+                            console.log(rData);
+                            $barsSection.html(rData);
+                        });
+
+                        $barsSection.show();
+                    }
+
+                    $this.siblings().first().attr('class', defaultTabClass);
+                });
+
     function SCRate() {
         for (var i = 1; i <= @Model.AvgRating; i++) {
             $("#sRate" + i).attr('class', 'starGlowN');
@@ -274,31 +351,128 @@ else
                 dataType: "json",
             });
     });
-    </script>
+    });
+</script>
+<script>
+         $(document).ready(function () {
+            const $reviewsSection = $('.reviews-section');
+            const $barsSection = $('.bars-section');
+            const defaultTabClass = 'tab-button';
+            const activeTabClass = 'tab-button active';
 
+            $barsSection.hide();
 
-    <!-- Modal -->
-    <div class="modal modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModal3Label">Review</h5>
-                    <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-container">
-                    @{
-                        await Html.RenderPartialAsync("_CommentRating");
+              $('.' + defaultTabClass).click(function () {
+                    debugger;
+                    var $this = $(this);
+                    var buttonFor = $this.data('tabtarget');
+                    $this.attr('class', activeTabClass);
+
+                    if (buttonFor === 'reviews-section') {
+
+                        $barsSection.hide();
+                        $reviewsSection.show();
                     }
-                </div>
+                    else {
+                        $reviewsSection.hide();
+
+                        $.ajax({
+                            url: "@Url.Action("GetTableView","Cocktails",new { area = "Cocktails", cocktailId = Model.Id })",
+                            type: "GET"
+                        }).then(function (rData) {
+                            debugger;
+                            console.log(rData);
+                            $barsSection.html(rData);
+                        });
+
+                        $barsSection.show();
+                    }
+
+                    $this.siblings().first().attr('class', defaultTabClass);
+                });
+
+    function SCRate() {
+        for (var i = 1; i <= @Model.AvgRating; i++) {
+            $("#sRate" + i).attr('class', 'starGlowN');
+        }
+    }
+    $(function(){
+        SCRate();
+    });
+
+    var input = $(":button")
+    input.click(function () {
+
+        var $button = $(this);
+                   console.log($button);
+            var buttonId = $button.data('id');
+            var divCount = $('#likes-' + buttonId);
+            var divText = divCount.text();
+            var likeCount = parseInt(divCount.text());
+            debugger;
+            var likedAttr = $(this).attr("data-liked");
+            var likedSpan = 'greenColor fa fa-thumbs-o-up';
+            var defaultSpan = 'fa fa-thumbs-o-up';
+            var isLiked = likedAttr === "true";
+        var span = $button.children().first();
+
+            var cReviewId = $button.closest($(".crId")).children().eq(0).children().eq(0).val();
+
+        if (span.attr('id')) {
+            debugger;
+            likeCount = likeCount - 1;
+            //console.log(likeCount);
+                isLiked = false;
+                $button.attr("data-liked", "false");
+                span.attr('class', defaultSpan);
+                span.text(' Like');
+                span.removeAttr('id');
+                divCount.text(likeCount);
+                }
+                else {
+            likeCount = likeCount + 1;
+             //console.log(likeCount);
+                isLiked = true;
+                $button.attr("data-liked", "true");
+                span.attr('class', likedSpan);
+                span.text(' Liked');
+                span.attr('id', buttonId);
+                divCount.text(likeCount);
+                }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("LikeReview","CocktailReviews",new { area = "Cocktails" })",
+                data: { cocktailReviewId: cReviewId, IsLiked: isLiked },
+                dataType: "json",
+            });
+            });
+    });
+</script>
+
+
+<!-- Modal -->
+<div class="modal modal-xl" id="newReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal3Label">Review</h5>
+                <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form-container">
+                @{
+                    await Html.RenderPartialAsync("_CommentRating");
+                }
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        //TODO
-        $('#newReviewModal').on('hidden.bs.modal', function () {
-            $(this).removeData('bs.modal');
-        });
-    </script>
+<script>
+    //TODO
+    $('#newReviewModal').on('hidden.bs.modal', function () {
+        $(this).removeData('bs.modal');
+    });
+</script>

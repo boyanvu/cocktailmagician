@@ -2,10 +2,8 @@
 using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Services.DTO_s;
 using CocktailsMagician.Services.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CocktailsMagician.Tests.ServiceTests.CityTests

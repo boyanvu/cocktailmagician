@@ -1,9 +1,5 @@
 ﻿using CocktailsMagician.Areas.Ingredients.Models;
 using CocktailsMagician.Services.DTO_s;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CocktailsMagician.Mappers
 {

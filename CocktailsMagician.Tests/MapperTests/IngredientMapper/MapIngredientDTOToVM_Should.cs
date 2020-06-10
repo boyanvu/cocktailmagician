@@ -1,11 +1,8 @@
 ﻿using CocktailsMagician.Areas.Ingredients.Models;
-using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Mappers;
 using CocktailsMagician.Services.DTO_s;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CocktailsMagician.Tests.MapperTests.IngredientMapper
 {

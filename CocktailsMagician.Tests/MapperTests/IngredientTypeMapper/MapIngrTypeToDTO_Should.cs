@@ -3,8 +3,6 @@ using CocktailsMagician.Services.DTO_s;
 using CocktailsMagician.Services.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CocktailsMagician.Tests.MapperTests.IngredientTypeMapper
 {

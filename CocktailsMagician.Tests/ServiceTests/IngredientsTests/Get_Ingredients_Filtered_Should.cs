@@ -1,12 +1,9 @@
 ﻿using CocktailsMagician.Data;
 using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Services;
-using CocktailsMagician.Services.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailsMagician.Tests.ServiceTests.IngredientsTests

@@ -1,12 +1,9 @@
 ﻿using CocktailsMagician.Data;
 using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Services.Contracts;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailsMagician.Services.Services

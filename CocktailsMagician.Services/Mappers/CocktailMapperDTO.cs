@@ -1,9 +1,6 @@
 ﻿using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Services.DTO_s;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CocktailsMagician.Services.Mappers
 {

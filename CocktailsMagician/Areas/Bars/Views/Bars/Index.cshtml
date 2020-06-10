@@ -5,33 +5,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*<h1>Index</h1>
-
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-
-    @using (Html.BeginForm())
-    {
-        <p>
-            Find by name: @Html.TextBox("SearchString")
-            <input type="submit" value="Search" />
-        </p>
-    }*@
 
 <head>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .fa-star {
-            /*color: gainsboro;*/
             color: #F7F7F7;
-            /*width: 50px;*/
-            /*height: 100px;*/
         }
 
         .checked {
-            color: #EF8354;
+            color: #04D420;
         }
     </style>
 </head>
@@ -108,85 +92,3 @@
     @Html.PagedListPager(Model, page => Url.Action("Index",
         new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 </center>
-
-@*<table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Phone)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Website)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().UnlistedOn)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Address)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().City)
-                </th>
-                <th>
-                    @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Phone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Website)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UnlistedOn)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Address)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AvgRating)
-                    </td>
-                    <td>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        }
-
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <center>
-        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-
-        @Html.PagedListPager(Model, page => Url.Action("Index",
-            new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
-    </center>*@
-
-

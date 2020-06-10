@@ -2,8 +2,6 @@
 using CocktailsMagician.Services.DTO_s;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using CocktailsMagician.Mappers;
 
 namespace CocktailsMagician.Tests.MapperTests.CocktailReviewsMapper

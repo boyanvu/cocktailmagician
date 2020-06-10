@@ -4,8 +4,6 @@ using CocktailsMagician.Services.DTO_s;
 using CocktailsMagician.Services.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailsMagician.Tests.ServiceTests.BarTests

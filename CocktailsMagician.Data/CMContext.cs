@@ -1,7 +1,6 @@
 ﻿using BeerOverflow.Data.Configuration;
 using CocktailsMagician.Data.Configuration;
 using CocktailsMagician.Data.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;

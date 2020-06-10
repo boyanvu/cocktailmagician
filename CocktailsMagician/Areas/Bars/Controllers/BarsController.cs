@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using CocktailsMagician.Data;
 using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Services.Contracts;
@@ -188,11 +187,6 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(/*Guid id, */[Bind("Id,Name,Phone,Website,Description,Address,CityId")] BarViewModel barVM)
         {
-            //if (id != bar.Id)
-            //{
-            //    return NotFound();
-            //}
-
             if (ModelState.IsValid)
             {
                 try
@@ -210,7 +204,6 @@ namespace CocktailsMagician.Areas.Bars.Controllers
                 }
                
             }
-            //ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", bar.CityId);
 
             return View(barVM);
         }
@@ -253,7 +246,7 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         public async Task<IActionResult> AddRmvCocktailsFromBar(Guid Id, string sortOrder, string currentFilter, string searchString, int? page)
         {
             var bar = await barService.GetBarAsync(Id);
-            //var barVM = bar.BarDTOtoVM();
+
             if (bar == null)
             {
                 throw new ArgumentNullException();
@@ -282,15 +275,10 @@ namespace CocktailsMagician.Areas.Bars.Controllers
                 .Select(c => c.CocktailDTOMapToVM())
                 .ToList();
 
-            //var cocktailsDTO = await cocktailService.GetAllCocktails();
-            //var cocktailsVM = cocktailsDTO.Select(c => c.CocktailDTOMapToVM()).ToList();
-
             foreach (var cocktail in cocktailsVM)
             {
                 cocktail.IsAvailableInBar = await cocktailService.IsCocktailAvailableInBar(Id, cocktail.Id);
             }
-
-            //var cocktailsVM = cocktailsVM.Select(c => c.IsAvailableInBar = cocktailService.)
 
             int pageSize = 3;
             int pageNumber = (page ?? 1);
@@ -314,8 +302,7 @@ namespace CocktailsMagician.Areas.Bars.Controllers
                     await barService.RemoveCocktailFromBarAsync(Id, cocktail.Id);
                 }
             }
-            //return RedirectToActionResult("AddRmvCocktailsFromBar", new { Id = Id, sortOrder = null, currentFilter = null, searchString = null, page = null });
-            //sortOrder, string currentFilter, string searchString, int? page
+
             return RedirectToAction("AddRmvCocktailsFromBar");
         }
 

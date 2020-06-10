@@ -73,10 +73,6 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         public async Task<ActionResult> CheckIfPostedReview(Guid barId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
-            //if (barId==null || user==null)
-            //{
-            //    return Json(false);
-            //}
             var hasAlreadyReviewed = await barReviewService.HasAlreadyReviewedAsync(barId, user.Id);
 
             return Json(hasAlreadyReviewed);

@@ -3,8 +3,6 @@ using CocktailsMagician.Data.Entities;
 using CocktailsMagician.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailsMagician.Tests.ServiceTests.BarCocktailTests

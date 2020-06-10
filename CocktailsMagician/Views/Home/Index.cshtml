@@ -15,7 +15,8 @@
         }
 
         .checked {
-            color: orange;
+            /*color: orange;*/
+            color: #EF8354;
         }
 
         * {
@@ -35,13 +36,14 @@
         }
 
         .text-block {
-            font-style: oblique;
+            /*font-style: oblique;
             font-size: xx-large;
             position: absolute;
             top: 7%;
             left: 25%;
             right: 25%;
-            text-shadow: 2px 2px 5px red;
+            text-shadow: 2px 2px 5px red;*/
+
         }
         /*body {
                 background-image: url("/Images/barbackground.jpg");
@@ -52,13 +54,16 @@
                 overflow-y: hidden;
                 overflow-x: hidden;
             }*/
+        h3{
+            color:#4F5D75
+        }
     </style>
 
 </head>
 
 <center>
     <div class="imgbox">
-        <img class="center-fit" src="~/Images/coca-cola-logo-1.jpg">
+        @*<img class="center-fit" src="~/Images/coca-cola-logo-1.jpg">*@
         <div class="text-block">
             <h2>Cocktails Magician</h2>
         </div>
@@ -70,7 +75,7 @@
 <br />
 
 
-<div class="container">
+<div class="container"  style="background-color: #BFC0C0">
     <div class="row">
         <div class="col">
             <center> <h3> Top rated bars </h3> </center>
@@ -79,13 +84,12 @@
     <div class="row">
         @foreach (var bar in Model.Bars)
         {
-            <div class="col" style="padding-right: 20px;
+            <div class="col" style="        padding-right: 20px;
         border-right: 1px solid #ccc;
         border-left: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-">
+        border-bottom: 1px solid #ccc;">
                 <div class="row d-flex justify-content-center">
-                    <img src="@($"{@ViewData["imgPath"]}{bar.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/barPlaceholder.jpg';" width="300" ; height:auto>
+                    <img src="@($"{@ViewData["imgPath"]}{bar.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/barPlaceholder.jpg';" width="250" ; height="250">
                 </div>
                 <div class="row d-flex justify-content-center">
                     <a class="text-dark" asp-area="Bars" asp-controller="Bars" asp-action="Details" asp-route-id="@bar.Id">@bar.Name</a>
@@ -109,7 +113,7 @@
 
 <br />
 
-<div class="container">
+<div class="container"  style="background-color: #BFC0C0">
     <div class="row">
         <div class="col">
             <center> <h3> Top rated cocktails </h3> </center>
@@ -118,9 +122,13 @@
     <div class="row">
         @foreach (var cocktail in Model.Cocktails)
         {
-            <div class="col" style="padding-right:20px; border-right: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">
+            <div class="col" style="        padding-right: 20px;
+        border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+">
                 <div class="row d-flex justify-content-center">
-                    <img src="@($"{@ViewData["imgPath"]}{cocktail.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/cocktail.jpg';" width="300" ; height:auto>
+                    <img src="@($"{@ViewData["imgPath"]}{cocktail.Id}.jpg")" alt="Image not found" onerror="this.src='/Images/cocktail.jpg';" width="250" ; height="250">
                 </div>
                 <div class="row d-flex justify-content-center">
                     <a class="text-dark" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Details" asp-route-id="@cocktail.Id">@cocktail.Name</a>

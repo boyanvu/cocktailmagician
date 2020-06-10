@@ -13,6 +13,7 @@ namespace CocktailsMagician.Data.Entities
         public DateTime? UnlistedOn { get; set; }
         public Guid TypeId { get; set; }
         public IngredientType Type { get; set; }
+        public ICollection<CocktailIngredients> CocktailIngredients { get; set; }
 
     }
 }

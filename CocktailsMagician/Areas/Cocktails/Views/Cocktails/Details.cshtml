@@ -34,12 +34,17 @@
             width: 380px;
             height: auto
         }
+
+        dd {
+            font-family: 'Open Sans', sans-serif;
+            color:#4F5D75;
+        }
     </style>
 </head>
 
 
 
-<h1>@Model.Name</h1>
+<h1 style="color:#2D3142">@Model.Name</h1>
 @if (Model.AvgRating > 0)
 {
     <div>
@@ -64,17 +69,17 @@ else
     <hr />
     <div class="row">
         <dl class="col-sm-8">
-            <dt class="col-sm-3">
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Description)
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Description)
             </dd>
             <p>&nbsp;</p>
-            <dt class="col-sm-3">
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.CocktailIngredients)
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 @{
                     await Html.RenderPartialAsync("_ListCI", Model.CocktailIngredients);
                 }

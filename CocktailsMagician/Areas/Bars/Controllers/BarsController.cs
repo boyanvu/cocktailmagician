@@ -14,6 +14,7 @@ using X.PagedList;
 using CocktailsMagician.Areas.Cocktails.Models;
 using Microsoft.AspNetCore.Identity;
 using CocktailsMagician.Helpers;
+using NToastNotify;
 
 namespace CocktailsMagician.Areas.Bars.Controllers
 {
@@ -24,13 +25,16 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         private readonly IBarService barService;
         private readonly ICocktailService cocktailService;
         private readonly UserManager<User> userManager;
+        private readonly IToastNotification _toastNotification;
 
-        public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService, UserManager<User> userManager)
+        public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService, UserManager<User> userManager,
+            IToastNotification toastNotification)
         {
             _context = context;
             this.barService = barService;
             this.cocktailService = cocktailService;
             this.userManager = userManager;
+            this._toastNotification = toastNotification;
         }
 
         // GET: Bars/Bars
@@ -146,11 +150,13 @@ namespace CocktailsMagician.Areas.Bars.Controllers
                 {
                     var newBarDTO = await barService.CreateBarAsync(barDTOWithLocation);
                     var newBarVM = newBarDTO.BarDTOtoVM();
+                    _toastNotification.AddSuccessToastMessage($"Bar {newBarVM.Name} created successfully!");
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception)
                 {
-                    throw;
+                    _toastNotification.AddErrorToastMessage("Bar cannot be created!");
+                    return RedirectToAction(nameof(Index));
                 }
             }
             return View(barVM);
@@ -189,10 +195,20 @@ namespace CocktailsMagician.Areas.Bars.Controllers
 
             if (ModelState.IsValid)
             {
-                var barDTO = barVM.BarVMtoDTO();
-                var barDTOWithLocation = await barService.ParseApiLocationResult(barDTO);
-                await barService.UpdateBarAsync(barDTOWithLocation);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var barDTO = barVM.BarVMtoDTO();
+                    var barDTOWithLocation = await barService.ParseApiLocationResult(barDTO);
+                    await barService.UpdateBarAsync(barDTOWithLocation);
+                    _toastNotification.AddSuccessToastMessage($"Bar {barDTOWithLocation.Name} edited successfully!");
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    _toastNotification.AddErrorToastMessage("Bar cannot be edited!");
+                    return RedirectToAction(nameof(Index));
+                }
+               
             }
             //ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", bar.CityId);
 
@@ -223,7 +239,8 @@ namespace CocktailsMagician.Areas.Bars.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            barService.DeleteBarAsync(id);
+            await barService.DeleteBarAsync(id);
+            _toastNotification.AddSuccessToastMessage($"Bar unlisted successfully!");
 
             return RedirectToAction(nameof(Index));
         }

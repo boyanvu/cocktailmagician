@@ -63,18 +63,9 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
 
             var cocktails = await cocktailService.GetAllCocktails(sortOrder, searchString);
 
-            //var cocktailIngredientsDTO = await cocktailService.GetAllCocktailIngredients();
-            //var cocktailIngredientsVM = cocktailIngredientsDTO
-            //   .Select(ci => ci.CocktailIngredientDTOMapToVM());
-
             var cocktailsVM = cocktails
                 .Select(c => c.CocktailDTOMapToVM())
                 .ToList();
-
-            //foreach (var cocktail in cocktailsVM)
-            //{
-            //    cocktail.CocktailIngredients = cocktailIngredientsVM.Where(ci => ci.CocktailId == cocktail.Id).ToList();
-            //}
 
             int pageSize = 3;
             int pageNumber = (page ?? 1);
@@ -95,7 +86,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             var cocktailIngredients = await cocktailService.ShowCocktailIngredients(id);
             var cocktailIngredientsVM = cocktailIngredients
                 .Select(ci => ci.CocktailIngredientDTOMapToVM());
-           
+
             if (cocktail == null)
             {
                 return NotFound();
@@ -111,7 +102,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                 (cr => cr.CocktailReviewsDTOMapToVM())
                 .ToList();
 
-            if(user != null)
+            if (user != null)
             {
                 var cocktailReviewLikes = await this.cocktailReviewLikeService.GetAllSpecificCocktailReviewLikes(id);
                 var userCRL = cocktailReviewLikes
@@ -129,23 +120,23 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                     }
                 }
             }
-          
+
             foreach (var cReview in cocktailReviewsVM)
             {
                 cReview.NumberOfLikes = await this.cocktailReviewLikeService.GetCocktailReviewNumberOfLikes(cReview.Id);
             }
 
             ViewBag.Reviews = cocktailReviewsVM;
-          
+
             var ratings = cocktailReviewsVM;
-           
+
             var cocktailVM = cocktail.CocktailDTOMapToVM();
             cocktailVM.CocktailIngredients = cocktailIngredientsVM.ToList();
 
             return View(cocktailVM);
         }
 
-      
+
 
         // GET: Cocktails/Cocktails/Create
         public async Task<IActionResult> Create(CocktailViewModel cocktail)
@@ -169,42 +160,40 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         {
             if (ModelState.IsValid)
             {
-                cocktail.Id = Guid.NewGuid();
-
-                var cocktailDTO = new CocktailDTO
+                try
                 {
-                    Id = cocktail.Id,
-                    Name = cocktail.Name,
-                    Description = cocktail.Description
-                };
-
-                //var allCocktails = await cocktailService.GetAllCocktails();
-                //var doesCocktailExist = allCocktails.Where(c => c.Name == cocktailDTO.Name).Any();
-
-                //if (doesCocktailExist == true)
-                //{
-                //    _toastNotification.AddErrorToastMessage("Cocktail already exists!");
-                //    return View();
-                //}
-                var newCocktail = await cocktailService.CreateCocktail(cocktailDTO);
-
-                foreach (var ingredient in allIngredients)
-                {
-                    if (ingredient.isSelected)
+                    cocktail.Id = Guid.NewGuid();
+                    var cocktailDTO = new CocktailDTO
                     {
-                        var cocktailIngredientDTO = new CocktailIngredientsDTO
+                        Id = cocktail.Id,
+                        Name = cocktail.Name,
+                        Description = cocktail.Description
+                    };
+
+                    var newCocktail = await cocktailService.CreateCocktail(cocktailDTO);
+
+                    foreach (var ingredient in allIngredients)
+                    {
+                        if (ingredient.isSelected)
                         {
-                            CocktailId = cocktail.Id,
-                            IngredientId = ingredient.Id                   
-                        };
+                            var cocktailIngredientDTO = new CocktailIngredientsDTO
+                            {
+                                CocktailId = cocktail.Id,
+                                IngredientId = ingredient.Id
+                            };
 
-                        await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
+                            await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
+                        }
                     }
-                }
 
-                           
-                _toastNotification.AddSuccessToastMessage("Cocktail created successfully!");
-                return RedirectToAction(nameof(Index));
+                    _toastNotification.AddSuccessToastMessage($"Cocktail {newCocktail.Name} created successfully!");
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    _toastNotification.AddErrorToastMessage("Cocktail cannot be created!");
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(cocktail);
         }
@@ -234,7 +223,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                     .DoesCocktailHaveIngredient(cocktailVM.Id, ingredient.Id);
             }
 
-             return View(cocktailVM);
+            return View(cocktailVM);
         }
 
         // POST: Cocktails/Cocktails/Edit/5
@@ -270,7 +259,7 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                             else
                             {
                                 var existingCIDTO = await cocktailService.GetCocktailIngredient(cocktail.Id, ingredient.Id);
-                                if(existingCIDTO == null)
+                                if (existingCIDTO == null)
                                 {
                                     var cocktailIngredientDTO = new CocktailIngredientsDTO
                                     {
@@ -278,8 +267,8 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                                         IngredientId = ingredient.Id
                                     };
                                     await cocktailService.AddIngredientToCocktail(cocktailIngredientDTO);
-                                }                          
-                            }                  
+                                }
+                            }
                         }
                         else
                         {
@@ -287,26 +276,21 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
                             if (existingCIDTO != null)
                             {
                                 var isUnlisted = await cocktailService.IngredientIsUnlisted(cocktail.Id, ingredient.Id);
-                                if(isUnlisted == false)
+                                if (isUnlisted == false)
                                 {
                                     await cocktailService.RemoveIngredientFromCocktail(cocktail.Id, ingredient.Id);
                                 }
-                            }                          
+                            }
                         }
                     }
                 }
-                catch (DbUpdateConcurrencyException)
+                catch
                 {
-                    if (!CocktailExists(cocktail.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _toastNotification.AddErrorToastMessage("Cocktail cannot be edited!");
+                    return RedirectToAction(nameof(Index));
                 }
-                _toastNotification.AddSuccessToastMessage("Cocktail edited successfully!");
+
+                _toastNotification.AddSuccessToastMessage($"Cocktail {cocktail.Name} edited successfully!");
                 return RedirectToAction(nameof(Index));
             }
             return View(cocktail);

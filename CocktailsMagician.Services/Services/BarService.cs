@@ -247,35 +247,66 @@ namespace CocktailsMagician.Services.Services
 
             if (bar == null)
             {
-                throw new ArgumentNullException("Bar does not exist.");
-            }
+                var city = await _cmContext.Cities
+               .Where(b => b.UnlistedOn == null)
+               .FirstOrDefaultAsync(c => c.Id == barDTO.CityId);
+                var barCity = city.Name.ToLower();
+                var barCountry = "bulgaria";
+                var barAdress = barDTO.Address.Replace(" ", "&").TrimEnd('.');
 
-            var barCity = bar.City.Name.ToLower();
-            var barCountry = "bulgaria";
-            var barAdress = bar.Address.Replace(" ", "&").TrimEnd('.');
+                var url = $"https://nominatim.openstreetmap.org/search?q={barCountry}+{barCity}+{barAdress}&accept-language=en&format=json&addressdetails=1&limit=10&polygon_svg=1&email=lssah@protonmail.com";
+               
+                var apiResult = await CallApiForLocation(url);
 
-            var url = $"https://nominatim.openstreetmap.org/search?q={barCountry}+{barCity}+{barAdress}&accept-language=en&format=json&addressdetails=1&limit=10&polygon_svg=1&email=lssah@protonmail.com";
-            //https://nominatim.openstreetmap.org/search?q=bulgaria%20sofia%20vitosha%20boulevard%2097&accept-language=en&format=json&addressdetails=1&limit=10&polygon_svg=1&lssah%40protonmail.com
-            var apiResult = await CallApiForLocation(url);
-
-            if (string.IsNullOrEmpty(apiResult) || apiResult == "[]")
-            {
-                barDTO.Latitude = 0;
-                barDTO.Longitude = 0;
-            }
-
-            var apiStringToJArr = JsonConvert.DeserializeObject<JArray>(apiResult);
-            var firstResultJObj = apiStringToJArr.First().ToObject<JObject>();
-
-            foreach (JProperty item in firstResultJObj.Children())
-            {
-                if (item.Name == "lat")
+                if (string.IsNullOrEmpty(apiResult) || apiResult == "[]")
                 {
-                    barDTO.Latitude = Convert.ToDouble(item.Value);
+                    barDTO.Latitude = 0;
+                    barDTO.Longitude = 0;
                 }
-                else if (item.Name == "lon")
+
+                var apiStringToJArr = JsonConvert.DeserializeObject<JArray>(apiResult);
+                var firstResultJObj = apiStringToJArr.First().ToObject<JObject>();
+
+                foreach (JProperty item in firstResultJObj.Children())
                 {
-                    barDTO.Longitude = Convert.ToDouble(item.Value);
+                    if (item.Name == "lat")
+                    {
+                        barDTO.Latitude = Convert.ToDouble(item.Value);
+                    }
+                    else if (item.Name == "lon")
+                    {
+                        barDTO.Longitude = Convert.ToDouble(item.Value);
+                    }
+                }
+            }
+            else
+            {
+                var barCity = bar.City.Name.ToLower();
+                var barCountry = "bulgaria";
+                var barAdress = bar.Address.Replace(" ", "&").TrimEnd('.');
+
+                var url = $"https://nominatim.openstreetmap.org/search?q={barCountry}+{barCity}+{barAdress}&accept-language=en&format=json&addressdetails=1&limit=10&polygon_svg=1&email=lssah@protonmail.com";
+                var apiResult = await CallApiForLocation(url);
+
+                if (string.IsNullOrEmpty(apiResult) || apiResult == "[]")
+                {
+                    barDTO.Latitude = 0;
+                    barDTO.Longitude = 0;
+                }
+
+                var apiStringToJArr = JsonConvert.DeserializeObject<JArray>(apiResult);
+                var firstResultJObj = apiStringToJArr.First().ToObject<JObject>();
+
+                foreach (JProperty item in firstResultJObj.Children())
+                {
+                    if (item.Name == "lat")
+                    {
+                        barDTO.Latitude = Convert.ToDouble(item.Value);
+                    }
+                    else if (item.Name == "lon")
+                    {
+                        barDTO.Longitude = Convert.ToDouble(item.Value);
+                    }
                 }
             }
 

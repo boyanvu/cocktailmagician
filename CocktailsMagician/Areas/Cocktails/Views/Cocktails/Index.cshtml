@@ -12,14 +12,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .fa-star {
-            color: gainsboro;
+            /*color: gainsboro;*/
+            color: #F7F7F7;
             /*width: 50px;*/
             /*height: 100px;*/
         }
 
         .checked {
-            color: orange;
+            color: #EF8354;
         }
+        
     </style>
 </head>
 
@@ -38,67 +40,11 @@
 <br />
 <br />
 
-
-@*<table class="table table-striped">
-        <thead>
-            <tr>
-                <th>
-                    @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam, currentFilter = ViewBag.CurrentFilter })
-                </th>
-                <th>
-                    @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @if (item.AvgRating == 0)
-                        {
-                            <p class="text-secondary">Not rated</p>
-                        }
-                        else
-                        {
-                            @for (int i = 0; i < (int)item.AvgRating; i++)
-                            {
-                                <span class="fa fa-star checked"></span>
-                            }
-                            @for (int i = (int)item.AvgRating; i < 5; i++)
-                            {
-                                <span class="fa fa-star"></span>
-                            }
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        }
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <br />*@
 @foreach (var cocktail in Model)
 {
 
     <div class="container">
-        <div class="row">
+        <div class="row" style="background-color: #DFDFDF">
             <div class="col-sm-4">
                 <img src="@($"{@ViewData["imgPath"]}{cocktail.Id}.jpg")" width="250" ; height:auto onerror="this.src='/Images/cocktail.jpg';" />
             </div>
@@ -106,12 +52,12 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <h3>
-                            <a asp-action="Details" asp-route-id="@cocktail.Id">@cocktail.Name</a>
+                            <a asp-action="Details" asp-route-id="@cocktail.Id" style="color:#4F5D75">@cocktail.Name</a>
                         </h3>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" style="font-family: 'Roboto', sans-serif;">
                         @cocktail.Description
                     </div>
                 </div>
@@ -132,6 +78,11 @@
                                 <span class="fa fa-star"></span>
                             }
                         }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        @String.Join(", ", cocktail.CocktailIngredients.Select(ci => ci.IngredientName).ToArray())                      
                     </div>
                 </div>
             </div>

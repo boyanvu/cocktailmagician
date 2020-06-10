@@ -24,6 +24,5 @@ namespace CocktailsMagician.Services.Utilities.Extensions
 
             return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
         }
-
     }
 }

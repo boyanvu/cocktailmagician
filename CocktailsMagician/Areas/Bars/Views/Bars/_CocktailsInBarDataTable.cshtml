@@ -1,0 +1,63 @@
+﻿@model Guid
+@{
+    ViewData["Title"] = "_CocktailsDataTable";
+}
+<table id="cocktails-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Ingredients</th>
+            <th>Avg Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@*<link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+    <link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="~/DataTables/js/jquery.dataTables.js" type="text/javascript" language="javascript" defer></script>
+    <script src="~/DataTables/js/jquery.dataTables.min.js" type="text/javascript" language="javascript" defer></script>
+    <script src="~/DataTables/js/dataTables.bootstrap4.js" defer></script>
+    <script type="text/javascript" class="init"></script>*@
+
+    <link href="~/DataTables/datatables.css" rel="stylesheet" type="text/css" />
+    <link href="~/DataTables/Buttons-1.6.2/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/DataTables/datatables.js" type="text/javascript" charset="utf8"></script>
+
+    <script>
+
+
+    $(document).ready(function () {
+        debugger;
+            $('#cocktails-table').DataTable
+                ({
+                    "serverSide": true,
+                    "ordering": true,
+                    "processing": true,
+                    "paging": true,
+                    "pageLength": 5,
+                    "lengthMenu": [5, 10, 25, 50, 100],
+                    "pagingType": "simple_numbers",
+                    "ajax": {
+                        "url": "@Url.Action("ListCocktailsForBar", "Cocktails", new { area = "Cocktails", id = Model})",
+						// от този урл ще черпи информация DataTable-а.
+                        "type": "POST",
+                        "dataType": "json",
+                    },
+                    drawCallback: function (settings) {
+                        var response = settings.json;
+                        console.log(response);
+
+                    },
+                    "columns": [
+                        { "data": "name", "name": "Name", "autoWidth": true, "orderable": false, },
+                        { "data": "description", "name": "Description", "autoWidth": true, "orderable": false, },
+                        { "data": "avgRating", "name": "AvgRating", "autoWidth": true, "orderable": false, },
+
+                    ]
+                });
+        });
+    </script>

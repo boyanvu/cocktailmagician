@@ -12,5 +12,6 @@ namespace CocktailsMagician.Data.Entities
         public DateTime? UnlistedOn { get; set; }
         public double AvgRating { get; set; }
         public ICollection<CocktailReview> CocktailReviews { get; set; }
+        public ICollection<CocktailIngredients> CocktailIngredients { get; set; }
     }
 }

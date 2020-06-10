@@ -63,10 +63,6 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
 
             var cocktails = await cocktailService.GetAllCocktails(sortOrder, searchString);
 
-            //var cocktailIngredientsDTO = await cocktailService.GetAllCocktailIngredients();
-            //var cocktailIngredientsVM = cocktailIngredientsDTO
-            //   .Select(ci => ci.CocktailIngredientDTOMapToVM());
-
             var cocktailsVM = cocktails
                 .Select(c => c.CocktailDTOMapToVM())
                 .ToList();

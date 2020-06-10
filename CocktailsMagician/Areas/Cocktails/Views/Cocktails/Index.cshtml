@@ -80,6 +80,11 @@
                         }
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        @String.Join(", ", cocktail.CocktailIngredients.Select(ci => ci.IngredientName).ToArray())                      
+                    </div>
+                </div>
             </div>
         </div>
     </div>

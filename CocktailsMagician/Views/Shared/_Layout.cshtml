@@ -23,64 +23,65 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3 " style="background-color: #2D3142">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CocktailsMagician</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                <partial name="_LoginPartial" />
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    @if (!User.IsInRole("Admin"))
-                    {
+            <div class="container">
+                <img src="~/Images/coca-cola-cap.png" height="50" width="50" />
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CocktailsMagician</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="Bars" asp-controller="Bars" asp-action="Index">Bars</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                    }
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Bars" asp-controller="Bars" asp-action="Index">Bars</a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" asp-area="Bars" asp-controller="Bars" asp-action="Index">View All</a>
-                                <a class="dropdown-item" asp-area="Bars" asp-controller="Bars" asp-action="Create">Create new</a>
-                            </div>
-                        </li>
-                    }
-                    @if (!User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">Cocktails</a>
-                        </li>
-                    }
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">Cocktails</a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">View All</a>
-                                <a class="dropdown-item" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Create">Create new</a>
-                            </div>
-                        </li>
-                    }
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Index">Ingredients</a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Index">View All</a>
-                                <a class="dropdown-item" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Create">Create new</a>
-                            </div>
-                        </li>
-                    }
-                </ul>
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="Bars" asp-controller="Bars" asp-action="Index">Bars</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Bars" asp-controller="Bars" asp-action="Index">Bars</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-area="Bars" asp-controller="Bars" asp-action="Index">View All</a>
+                                    <a class="dropdown-item" asp-area="Bars" asp-controller="Bars" asp-action="Create">Create new</a>
+                                </div>
+                            </li>
+                        }
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">Cocktails</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">Cocktails</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Index">View All</a>
+                                    <a class="dropdown-item" asp-area="Cocktails" asp-controller="Cocktails" asp-action="Create">Create new</a>
+                                </div>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Index">Ingredients</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Index">View All</a>
+                                    <a class="dropdown-item" asp-area="Ingredients" asp-controller="Ingredients" asp-action="Create">Create new</a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
 
+                </div>
             </div>
-        </div>
         </nav>
     </header>
     <div class="container">

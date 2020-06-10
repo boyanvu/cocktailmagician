@@ -26,5 +26,7 @@ namespace CocktailsMagician.Services.Contracts
         Task<List<CocktailIngredientsDTO>> GetAllCocktailIngredients();
         Task<List<CocktailDTO>> GetCocktailsInBar(Guid barId, int skip, int take, string searchValue, string sortBy, string orderBy);
         Task<int> GetCocktailsCount(Guid? barId = null, string searchValue = null);
+
+
     }
 }

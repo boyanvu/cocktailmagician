@@ -31,11 +31,10 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
         private readonly IToastNotification _toastNotification;
         private readonly ICocktailReviewLikeService cocktailReviewLikeService;
 
-        public CocktailsController(CMContext context, ICocktailService cocktailService, IIngredientService ingredientService,
+        public CocktailsController(ICocktailService cocktailService, IIngredientService ingredientService,
             ICocktailReviewService cocktailReviewService, UserManager<User> userManager, IToastNotification toastNotification,
             ICocktailReviewLikeService cocktailReviewLikeService)
         {
-            _context = context;
             this.cocktailService = cocktailService;
             this.ingredientService = ingredientService;
             this.cocktailReviewService = cocktailReviewService;
@@ -354,6 +353,10 @@ namespace CocktailsMagician.Areas.Cocktails.Controllers
             return _context.Cocktails.Any(e => e.Id == id);
         }
 
+        public IActionResult GetTableView(Guid cocktailId)
+        {
+            return PartialView("_BarsWithCocktailsDatabale", cocktailId);
+        }
 
     }
 }

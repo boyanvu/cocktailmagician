@@ -21,11 +21,11 @@ namespace CocktailsMagician.Areas.Bars.Controllers
     [Area("Bars")]
     public class BarsController : Controller
     {
-        private readonly CMContext _context;
         private readonly IBarService barService;
         private readonly ICocktailService cocktailService;
         private readonly UserManager<User> userManager;
         private readonly IToastNotification _toastNotification;
+        private readonly CMContext _context;
 
         public BarsController(CMContext context, IBarService barService, ICocktailService cocktailService, UserManager<User> userManager,
             IToastNotification toastNotification)
@@ -333,6 +333,29 @@ namespace CocktailsMagician.Areas.Bars.Controllers
             }
             return RedirectToAction("AddRmvCocktailsFromBar");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ListBarsWithCocktail(Guid? id)
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+
+            int totalCount = await this.barService.GetBarsCount();
+
+            int filteredBars = await this.barService.GetBarsCount(id, searchValue);
+
+            var barDTOs = await this.barService.GetBarsWithCocktails(id.Value, skip, pageSize, searchValue, sortColumn, sortColumnDirection);
+
+            return Json(new { draw = draw, recordsFiltered = filteredBars, recordsTotal = totalCount, data = barDTOs.Select(bar => bar.BarDTOtoVM()) });
+        }
+
 
         public IActionResult GetTableView(Guid barId)
         {

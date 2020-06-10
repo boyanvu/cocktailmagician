@@ -21,5 +21,8 @@ namespace CocktailsMagician.Services.Contracts
 
         Task<string> CallApiForLocation(string url);
         Task<BarDTO> ParseApiLocationResult(BarDTO barDTO);
+
+        Task<List<BarDTO>> GetBarsWithCocktails(Guid cocktailId, int skip, int take, string searchValue, string sortBy, string orderBy);
+        Task<int> GetBarsCount(Guid? cocktailId = null, string searchValue = null);
     }
 }

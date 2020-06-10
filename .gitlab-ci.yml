@@ -15,6 +15,8 @@ build:
   stage: build
   script:
     - "dotnet build"
+  artifacts:
+  paths: -CocktailsMagician/
 
 test:
   stage: test

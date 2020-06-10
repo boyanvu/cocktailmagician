@@ -8,7 +8,7 @@ variables:
   test: "CocktailsMagician.Tests"
 
 before_script:
-    - "cd src"
+    - "cd CocktailsMagician"
     - "dotnet restore"
 
 build:
